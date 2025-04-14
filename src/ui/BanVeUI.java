@@ -102,8 +102,8 @@ public class BanVeUI extends JPanel {
             System.out.println("Font " + FONT_PATH + " loaded successfully for PDF.");
 
         } catch (DocumentException | IOException e) {
-             System.err.println("Không thể load font Tiếng Việt cho PDF tại: " + FONT_PATH);
-             System.err.println("PDF sẽ không hiển thị đúng tiếng Việt.");
+             System.err.println("!!! Lỗi nghiêm trọng: Không thể load font Tiếng Việt cho PDF tại: " + FONT_PATH);
+             System.err.println("!!! PDF sẽ không hiển thị đúng tiếng Việt.");
              e.printStackTrace();
            
              fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD);
@@ -121,14 +121,14 @@ public class BanVeUI extends JPanel {
         setPreferredSize(new Dimension(1000, 680));
 
 		JPanel panelDanhSach_1 = new JPanel();
-		panelDanhSach_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Chọn Suất Chiếu", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelDanhSach_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Chọn Suất Chiếu Hôm Nay", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panelDanhSach_1.setBounds(38, 15, 927, 140);
 		add(panelDanhSach_1);
 		panelDanhSach_1.setLayout(new BorderLayout(0, 0));
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		panelDanhSach_1.add(scrollPane_1, BorderLayout.CENTER);
- 
+
 		tableSuatChieu = new JTable();
         tableModelSuatChieu = new DefaultTableModel() {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -315,6 +315,7 @@ public class BanVeUI extends JPanel {
             }
         });
     }
+
 
 
 

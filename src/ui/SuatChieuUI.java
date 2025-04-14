@@ -252,7 +252,7 @@ public class SuatChieuUI extends JPanel {
         } catch (Exception e) { handleDataLoadError("Lỗi tải danh sách phim", e); }
     }
 
-    private void loadPhongChieuComboBox() {
+    public void loadPhongChieuComboBox() {
         try {
             List<PhongChieu> phongList = PhongChieuDAO.readAll();
             DefaultComboBoxModel<PhongChieu> model = new DefaultComboBoxModel<>();
@@ -509,16 +509,8 @@ public class SuatChieuUI extends JPanel {
 
         try {
             gia = Float.parseFloat(giaStr);
-            if (gia < 0) {
-                System.err.println("Lỗi: Giá vé phải là một số không âm."); // Thêm dòng này
-                showValidationError("Giá vé phải là một số không âm.", txtGia);
-                return;
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Lỗi: Giá vé không hợp lệ. Vui lòng nhập một số."); // Thêm dòng này
-            showValidationError("Giá vé không hợp lệ. Vui lòng nhập một số.", txtGia);
-            return;
-        }
+            if (gia < 0) { showValidationError("Giá vé phải là một số không âm.", txtGia); return; }
+        } catch (NumberFormatException e) { showValidationError("Giá vé không hợp lệ. Vui lòng nhập một số.", txtGia); return; }
 
         try {
             String datePart = DATE_ONLY_FORMAT.format(startDateOnly);
