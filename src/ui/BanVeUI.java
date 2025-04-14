@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File; // Import File
 import java.io.FileOutputStream; // Import for PDF output stream
 import java.io.IOException; // Import for file IO exception
@@ -271,8 +272,13 @@ public class BanVeUI extends JPanel {
     }
 
     
-    private void setupAutoCompleteForTextField() {
+    public void setupAutoCompleteForTextField() {
         List<KhachHang> khList = KhachHangDAO.readAll();
+
+        // Xóa toàn bộ KeyListener cũ để tránh bị chồng
+        for (KeyListener listener : txtKhachHang.getKeyListeners()) {
+            txtKhachHang.removeKeyListener(listener);
+        }
 
         txtKhachHang.addKeyListener(new KeyAdapter() {
             @Override
@@ -281,15 +287,14 @@ public class BanVeUI extends JPanel {
                     String input = txtKhachHang.getText().trim().toLowerCase();
 
                     List<KhachHang> matched = khList.stream()
-                            .filter(kh -> kh.getTenKhachHang().toLowerCase().contains(input) || kh.getSDT().toLowerCase().contains(input))
+                            .filter(kh -> kh.getTenKhachHang().toLowerCase().contains(input)
+                                    || kh.getSDT().toLowerCase().contains(input))
                             .collect(Collectors.toList());
 
                     if (matched.size() == 1) {
-                        // Chọn khách hàng đầu tiên khớp
                         KhachHang selected = matched.get(0);
                         txtKhachHang.setText(selected.getTenKhachHang() + " - " + selected.getSDT());
-
-                        // TODO: Có thể gán selected vào 1 biến hoặc dùng cho logic tiếp theo
+                        // TODO: Gán selected vào biến xử lý tiếp
                     } else if (matched.size() > 1) {
                         JPopupMenu suggestionMenu = new JPopupMenu();
 
@@ -297,8 +302,7 @@ public class BanVeUI extends JPanel {
                             JMenuItem item = new JMenuItem(kh.getTenKhachHang() + " - " + kh.getSDT());
                             item.addActionListener(ev -> {
                                 txtKhachHang.setText(kh.getTenKhachHang() + " - " + kh.getSDT());
-
-                                // TODO: Gán kh cho logic xử lý tiếp
+                                // TODO: Gán kh vào logic xử lý tiếp
                             });
                             suggestionMenu.add(item);
                         }

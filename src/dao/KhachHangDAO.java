@@ -79,13 +79,16 @@ public class KhachHangDAO {
     }
 
     public static List<KhachHang> searchByName(String keyword) {
-        String sql = "SELECT * FROM KhachHang WHERE tenKhachHang LIKE ?";
+        String sql = "SELECT * FROM KhachHang WHERE tenKhachHang LIKE ? OR SDT LIKE ?";
         List<KhachHang> ketQua = new ArrayList<>();
 
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, "%" + keyword + "%");
+            String pattern = "%" + keyword + "%";
+            stmt.setString(1, pattern);
+            stmt.setString(2, pattern);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     ketQua.add(mapKhachHang(rs));
