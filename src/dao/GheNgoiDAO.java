@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GheNgoiDAO {
-//nhớ chú thích các phuwongt thức
+
     // Phương thức tạo mới một Ghế Ngồi
     public static boolean create(GheNgoi gheNgoi) {
         String sql = "INSERT INTO GheNgoi (maGhe, maPhong, hang, soGhe, trangThai) VALUES (?, ?, ?, ?, ?)";

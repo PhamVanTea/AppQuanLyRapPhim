@@ -1,17 +1,17 @@
 package dao;
+
 import connect.DbConnect;
 import entity.HoaDon;
 import entity.NhanVien;
 import entity.KhachHang;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class HoaDonDAO {
-	   
+
+    // Phương thức tạo mới một hóa đơn
     public static boolean create(HoaDon hoaDon) {
         String sql = "INSERT INTO HoaDon (maHoaDon, maNhanVien, maKhachHang, tongTien, ngayLapHoaDon, trangThai) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
@@ -26,11 +26,12 @@ public class HoaDonDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Create failed: " + e.getMessage());
+            System.err.println("Tạo hóa đơn thất bại: " + e.getMessage());
         }
         return false;
     }
 
+    // Phương thức đọc tất cả hóa đơn
     public static List<HoaDon> readAll() {
         List<HoaDon> list = new ArrayList<>();
         String sql = "SELECT h.maHoaDon, h.maNhanVien, h.maKhachHang, h.tongTien, h.ngayLapHoaDon, h.trangThai, " +
@@ -53,11 +54,12 @@ public class HoaDonDAO {
                 list.add(new HoaDon(maHoaDon, nhanVien, khachHang, tongTien, ngayLapHoaDon, trangThai));
             }
         } catch (SQLException e) {
-            System.err.println("Read failed: " + e.getMessage());
+            System.err.println("Đọc hóa đơn thất bại: " + e.getMessage());
         }
         return list;
     }
 
+    // Phương thức cập nhật thông tin hóa đơn
     public static boolean update(HoaDon hoaDon) {
         String sql = "UPDATE HoaDon SET maNhanVien = ?, maKhachHang = ?, tongTien = ?, ngayLapHoaDon = ?, trangThai = ? WHERE maHoaDon = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -72,11 +74,12 @@ public class HoaDonDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Update failed: " + e.getMessage());
+            System.err.println("Cập nhật hóa đơn thất bại: " + e.getMessage());
         }
         return false;
     }
 
+    // Phương thức xóa hóa đơn
     public static boolean delete(String maHoaDon) {
         String sql = "DELETE FROM HoaDon WHERE maHoaDon = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -86,11 +89,12 @@ public class HoaDonDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Delete failed: " + e.getMessage());
+            System.err.println("Xóa hóa đơn thất bại: " + e.getMessage());
         }
         return false;
     }
 
+    // Phương thức tìm kiếm hóa đơn theo khách hàng
     public static List<HoaDon> searchByKhachHang(String maKhachHang) {
         List<HoaDon> list = new ArrayList<>();
         String sql = "SELECT h.maHoaDon, h.maNhanVien, h.maKhachHang, h.tongTien, h.ngayLapHoaDon, h.trangThai, " +
@@ -116,7 +120,7 @@ public class HoaDonDAO {
                 list.add(new HoaDon(maHoaDon, nhanVien, khachHang, tongTien, ngayLapHoaDon, trangThai));
             }
         } catch (SQLException e) {
-            System.err.println("Search failed: " + e.getMessage());
+            System.err.println("Tìm kiếm hóa đơn thất bại: " + e.getMessage());
         }
         return list;
     }

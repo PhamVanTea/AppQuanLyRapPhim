@@ -31,8 +31,8 @@ public class NhanVienDAO {
                 String maNhanVien = rs.getString("maNhanVien");
                 String tenNhanVien = rs.getString("tenNhanVien");
                 String chucVu = rs.getString("chucVu");
-                String fetchedTenDangNhap = rs.getString("tenDangNhap"); 
-                String fetchedMatKhau = rs.getString("matKhau");    
+                String fetchedTenDangNhap = rs.getString("tenDangNhap");
+                String fetchedMatKhau = rs.getString("matKhau");
                 return new NhanVien(maNhanVien, tenNhanVien, chucVu, fetchedTenDangNhap, fetchedMatKhau);
             }
         } catch (SQLException e) {
@@ -55,11 +55,11 @@ public class NhanVienDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-             if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
-                 System.err.println("Tạo nhân viên thất bại: Nhân viên với mã '" + nv.getMaNhanVien() + "' hoặc tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại.");
-             } else {
+            if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
+                System.err.println("Tạo nhân viên thất bại: Nhân viên với mã '" + nv.getMaNhanVien() + "' hoặc tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại.");
+            } else {
                 System.err.println("Tạo nhân viên thất bại: " + e.getMessage());
-             }
+            }
         }
         return false;
     }
@@ -100,11 +100,11 @@ public class NhanVienDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-             if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
-                 System.err.println("Cập nhật nhân viên thất bại cho maNhanVien=" + nv.getMaNhanVien() + ": Tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại cho nhân viên khác.");
-             } else {
+            if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
+                System.err.println("Cập nhật nhân viên thất bại cho maNhanVien=" + nv.getMaNhanVien() + ": Tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại cho nhân viên khác.");
+            } else {
                 System.err.println("Cập nhật nhân viên thất bại cho maNhanVien=" + nv.getMaNhanVien() + ": " + e.getMessage());
-             }
+            }
         }
         return false;
     }
@@ -120,8 +120,8 @@ public class NhanVienDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
-                 System.err.println("Xóa nhân viên thất bại cho maNhanVien=" + maNhanVien + ": Không thể xóa nhân viên vì đang được tham chiếu (ví dụ: trong bảng Hóa Đơn).");
-             } else {
+                System.err.println("Xóa nhân viên thất bại cho maNhanVien=" + maNhanVien + ": Không thể xóa nhân viên vì đang được tham chiếu (ví dụ: trong bảng Hóa Đơn).");
+            } else {
                 System.err.println("Xóa nhân viên thất bại cho maNhanVien=" + maNhanVien + ": " + e.getMessage());
             }
         }

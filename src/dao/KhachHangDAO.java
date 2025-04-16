@@ -10,10 +10,12 @@ import java.util.UUID;
 
 public class KhachHangDAO {
 
+    // Phương thức tạo mã khách hàng ngẫu nhiên
     public static String generateMaKhachHang() {
         return "KH" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 
+    // Phương thức thêm mới khách hàng
     public static boolean create(KhachHang khachHang) {
         String sql = "INSERT INTO KhachHang (maKhachHang, tenKhachHang, SDT, email) VALUES (?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
@@ -31,6 +33,7 @@ public class KhachHangDAO {
         }
     }
 
+    // Phương thức đọc danh sách tất cả khách hàng
     public static List<KhachHang> readAll() {
         String sql = "SELECT * FROM KhachHang";
         List<KhachHang> danhSach = new ArrayList<>();
@@ -48,6 +51,7 @@ public class KhachHangDAO {
         return danhSach;
     }
 
+    // Phương thức cập nhật thông tin khách hàng
     public static boolean update(KhachHang khachHang) {
         String sql = "UPDATE KhachHang SET tenKhachHang = ?, SDT = ?, email = ? WHERE maKhachHang = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -65,6 +69,7 @@ public class KhachHangDAO {
         }
     }
 
+    // Phương thức xóa khách hàng
     public static boolean delete(String maKhachHang) {
         String sql = "DELETE FROM KhachHang WHERE maKhachHang = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -78,6 +83,7 @@ public class KhachHangDAO {
         }
     }
 
+    // Phương thức tìm kiếm khách hàng theo tên hoặc số điện thoại
     public static List<KhachHang> searchByName(String keyword) {
         String sql = "SELECT * FROM KhachHang WHERE tenKhachHang LIKE ? OR SDT LIKE ?";
         List<KhachHang> ketQua = new ArrayList<>();
@@ -100,6 +106,7 @@ public class KhachHangDAO {
         return ketQua;
     }
 
+    // Phương thức ánh xạ kết quả ResultSet thành đối tượng KhachHang
     private static KhachHang mapKhachHang(ResultSet rs) throws SQLException {
         return new KhachHang(
                 rs.getString("maKhachHang"),
@@ -108,6 +115,8 @@ public class KhachHangDAO {
                 rs.getString("email")
         );
     }
+
+    // Phương thức tìm khách hàng theo mã khách hàng
     public static KhachHang findById(String maKhachHang) {
         String sql = "SELECT * FROM KhachHang WHERE maKhachHang = ?";
         KhachHang kh = null;
