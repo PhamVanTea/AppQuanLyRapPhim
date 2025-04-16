@@ -31,7 +31,11 @@ public class HoaDon {
     }
 
     public void setMaHoaDon(String maHoaDon) {
-        this.maHoaDon = maHoaDon;
+    	if (maHoaDon != null && !maHoaDon.trim().isEmpty()) {
+    		this.maHoaDon = maHoaDon;
+    	} else {
+            throw new IllegalArgumentException("Mã hóa đơn không được để trống!");
+        }
     }
 
     public NhanVien getNhanVien() {
@@ -39,7 +43,12 @@ public class HoaDon {
     }
 
     public void setNhanVien(NhanVien nhanVien) {
-        this.nhanVien = nhanVien;
+    	if (nhanVien != null) {
+    		 this.nhanVien = nhanVien;
+    	} else {
+            throw new IllegalArgumentException("Hóa đơn phải có nhân viên lập.");
+        }
+       
     }
 
     public KhachHang getKhachHang() {
@@ -47,7 +56,11 @@ public class HoaDon {
     }
 
     public void setKhachHang(KhachHang khachHang) {
-        this.khachHang = khachHang;
+    	if (khachHang != null) {
+    		this.khachHang = khachHang;
+    	} else {
+            throw new IllegalArgumentException("Hóa đơn phải có khách hàng.");
+        }
     }
 
     public float getTongTien() {
@@ -55,23 +68,44 @@ public class HoaDon {
     }
 
     public void setTongTien(float tongTien) {
-        this.tongTien = tongTien;
+    	if (tongTien >= 0) {
+    		this.tongTien = tongTien;
+    	} else {
+            throw new IllegalArgumentException("Tổng tiền phải lớn hơn hoặc bằng 0.");
+        }
+        
     }
 
     public String getNgayLapHoaDon() {
         return ngayLapHoaDon;
     }
 
-    public void setNgayLapHoaDon(String ngayLapHoaDon) {
-        this.ngayLapHoaDon = ngayLapHoaDon;
+    public void setNgayLapHoaDon(String ngayLapHoaDon) { //nên sửa lại LocalDateTim
+        if (ngayLapHoaDon != null) {
+        	this.ngayLapHoaDon = ngayLapHoaDon;
+        } else {
+            throw new IllegalArgumentException("Ngày lập hóa đơn không được null.");
+        }
     }
+//    public LocalDateTime getNgayLap() { return ngayLapHoaDon; }
+//    public void setNgayLapHoaDon(LocalDateTime ngayLap) {
+//        if (ngayLapHoaDon != null && !ngayLapHoaDon.after(new Date())) {
+//            this.ngayLapHoaDon = ngayLapHoaDon;
+//        } else {
+//            throw new IllegalArgumentException("Ngày lập hóa đơn không hợp lệ và k lập ở tương lai.");
+//        }
+//    }
 
     public String getTrangThai() {
         return trangThai;
     }
 
     public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    	if (trangThai != null && !trangThai.trim().isEmpty()) {
+            this.trangThai = trangThai;
+        } else {
+            throw new IllegalArgumentException("Trạng thái hóa đơn không được để trống.");
+        }
     }
 
     @Override

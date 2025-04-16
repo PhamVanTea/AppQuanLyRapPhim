@@ -29,7 +29,12 @@ public class GheNgoi {
     }
 
     public void setMaGhe(String maGhe) {
-        this.maGhe = maGhe;
+    	if (maGhe != null && !maGhe.trim().isEmpty()) {
+    		this.maGhe = maGhe;
+    	} else {
+    		throw new IllegalArgumentException("Mã ghế không để trống!");
+    	}
+        
     }
 
     public PhongChieu getPhongChieu() {
@@ -37,7 +42,12 @@ public class GheNgoi {
     }
 
     public void setPhongChieu(PhongChieu phongChieu) {
-        this.phongChieu = phongChieu;
+    	if (phongChieu != null) {
+    		this.phongChieu = phongChieu;
+    	} else {
+    		throw new IllegalArgumentException("Ghế ngồi phải thuộc về một phòng chiếu hợp lệ.");
+    	}
+        
     }
 
     public String getHang() {
@@ -45,7 +55,11 @@ public class GheNgoi {
     }
 
     public void setHang(String hang) {
-        this.hang = hang;
+    	if (hang != null && hang.matches("[A-Z]")) {
+    		this.hang = hang;
+    	} else {
+    		throw new IllegalArgumentException("Hàng ghế là một ký tự in hoa từ A-Z.");    	}
+        
     }
 
     public int getSoGhe() {
@@ -53,7 +67,12 @@ public class GheNgoi {
     }
 
     public void setSoGhe(int soGhe) {
-        this.soGhe = soGhe;
+    	if (soGhe > 0) {
+    		this.soGhe = soGhe;
+    	} else {
+    		 throw new IllegalArgumentException("Số ghế phải lớn hơn 0.");
+    	}
+        
     }
 
     public String getTrangThai() {
@@ -61,7 +80,14 @@ public class GheNgoi {
     }
 
     public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    	if (trangThai != null && (trangThai.equalsIgnoreCase("Trống") ||
+    			 trangThai.equalsIgnoreCase("Đã đặt") ||
+    			 trangThai.equalsIgnoreCase("Bảo trì"))) {
+    		this.trangThai = trangThai;
+    	} else {
+    		 throw new IllegalArgumentException("Trạng thái là: 'Trống' | 'Đã đặt' | 'Bảo trì'.");
+    	}
+        
     }
 
 

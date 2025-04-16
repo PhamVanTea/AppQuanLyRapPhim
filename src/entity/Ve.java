@@ -20,7 +20,11 @@ public class Ve {
     }
 
     public void setMaVe(String maVe) {
-        this.maVe = maVe;
+    	if (maVe != null && !maVe.trim().isEmpty()) {
+            this.maVe = maVe;
+        } else {
+            throw new IllegalArgumentException("Mã vé không được để trống.");
+        }
     }
 
     public HoaDon getHoaDon() {
@@ -28,7 +32,11 @@ public class Ve {
     }
 
     public void setHoaDon(HoaDon hoaDon) {
-        this.hoaDon = hoaDon;
+    	if (hoaDon != null) {
+            this.hoaDon = hoaDon;
+        } else {
+            throw new IllegalArgumentException("Vé phải thuộc về hóa đơn hợp lệ.");
+        }
     }
 
     public SuatChieu getSuatChieu() {
@@ -36,7 +44,11 @@ public class Ve {
     }
 
     public void setSuatChieu(SuatChieu suatChieu) {
-        this.suatChieu = suatChieu;
+    	if (suatChieu != null) {
+            this.suatChieu = suatChieu;
+        } else {
+            throw new IllegalArgumentException("Vé phải có suất chiếu hợp lệ.");
+        }
     }
 
     public float getGiaVe() {
@@ -44,7 +56,11 @@ public class Ve {
     }
 
     public void setGiaVe(float giaVe) {
-        this.giaVe = giaVe;
+    	if (giaVe >= 0) {
+            this.giaVe = giaVe;
+        } else {
+            throw new IllegalArgumentException("Giá vé không hợp lệ.");
+        }
     }
 
     public GheNgoi getGheNgoi() {
@@ -52,6 +68,10 @@ public class Ve {
     }
 
     public void setGheNgoi(GheNgoi gheNgoi) {
-        this.gheNgoi = gheNgoi;
+    	 if (gheNgoi != null) {
+             this.gheNgoi = gheNgoi;
+         } else {
+             throw new IllegalArgumentException("Vé phải có ghế ngồi.");
+         }
     }
 }

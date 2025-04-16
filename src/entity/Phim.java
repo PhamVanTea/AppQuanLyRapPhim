@@ -35,7 +35,11 @@ public class Phim {
     }
 
     public void setMaPhim(String maPhim) {
-        this.maPhim = maPhim;
+    	if (maPhim != null && !maPhim.trim().isEmpty()) {
+            this.maPhim = maPhim;
+        } else {
+            throw new IllegalArgumentException("Mã phim không được để trống.");
+        }
     }
 
     public String getTenPhim() {
@@ -43,7 +47,11 @@ public class Phim {
     }
 
     public void setTenPhim(String tenPhim) {
-        this.tenPhim = tenPhim;
+    	if (tenPhim != null && !tenPhim.trim().isEmpty()) {
+            this.tenPhim = tenPhim;
+        } else {
+            throw new IllegalArgumentException("Tên phim không được để trống.");
+        }
     }
 
     public String getDaoDien() {
@@ -51,7 +59,11 @@ public class Phim {
     }
 
     public void setDaoDien(String daoDien) {
-        this.daoDien = daoDien;
+    	if (daoDien != null && !daoDien.trim().isEmpty()) {
+            this.daoDien = daoDien;
+        } else {
+            throw new IllegalArgumentException("Đạo diễn không được để trống.");
+        }
     }
 
     public String getDienVien() {
@@ -59,7 +71,11 @@ public class Phim {
     }
 
     public void setDienVien(String dienVien) {
-        this.dienVien = dienVien;
+    	if (dienVien != null && !dienVien.trim().isEmpty()) {
+            this.dienVien = dienVien;
+        } else {
+            throw new IllegalArgumentException("Diễn viên không được để trống.");
+        }
     }
 
     public TheLoai getTheLoai() {
@@ -67,7 +83,11 @@ public class Phim {
     }
 
     public void setTheLoai(TheLoai theLoai) {
-        this.theLoai = theLoai;
+    	if (theLoai != null) {
+            this.theLoai = theLoai;
+        } else {
+            throw new IllegalArgumentException("Thể loại không được null.");
+        }
     }
 
     public int getThoiLuong() {
@@ -75,7 +95,11 @@ public class Phim {
     }
 
     public void setThoiLuong(int thoiLuong) {
-        this.thoiLuong = thoiLuong;
+    	if (thoiLuong > 0) {
+            this.thoiLuong = thoiLuong;
+        } else {
+            throw new IllegalArgumentException("Thời lượng phải lớn hơn 0.");
+        }
     }
 
     public String getXepHang() {
@@ -83,7 +107,11 @@ public class Phim {
     }
 
     public void setXepHang(String xepHang) {
-        this.xepHang = xepHang;
+    	if (xepHang != null && !xepHang.trim().isEmpty()) {
+            this.xepHang = xepHang;
+        } else {
+            throw new IllegalArgumentException("Xếp hạng không được để trống.");
+        }
     }
 
     public String getMoTa() {
@@ -91,6 +119,7 @@ public class Phim {
     }
 
     public void setMoTa(String moTa) {
+    	//mô tả được null
         this.moTa = moTa;
     }
 

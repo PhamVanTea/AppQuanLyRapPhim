@@ -26,7 +26,11 @@ public class TheLoai {
     }
 
     public void setMaTheLoai(String maTheLoai) {
-        this.maTheLoai = maTheLoai;
+    	if (maTheLoai != null && !maTheLoai.trim().isEmpty()) {
+            this.maTheLoai = maTheLoai;
+        } else {
+            throw new IllegalArgumentException("Mã thể loại không được để trống.");
+        }
     }
 
     public String getTenTheLoai() {
@@ -34,7 +38,11 @@ public class TheLoai {
     }
 
     public void setTenTheLoai(String tenTheLoai) {
-        this.tenTheLoai = tenTheLoai;
+    	if (tenTheLoai != null && !tenTheLoai.trim().isEmpty()) {
+            this.tenTheLoai = tenTheLoai;
+        } else {
+            throw new IllegalArgumentException("Tên thể loại không được để trống.");
+        }
     }
 
     public String getMoTa() {

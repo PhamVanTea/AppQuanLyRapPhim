@@ -30,7 +30,11 @@ public class NhanVien {
     }
 
     public void setMaNhanVien(String maNhanVien) {
-        this.maNhanVien = maNhanVien;
+    	if (maNhanVien != null && !maNhanVien.trim().isEmpty()) {
+            this.maNhanVien = maNhanVien;
+        } else {
+            throw new IllegalArgumentException("Mã nhân viên không được để trống.");
+        }
     }
 
     public String getTenNhanVien() {
@@ -38,7 +42,11 @@ public class NhanVien {
     }
 
     public void setTenNhanVien(String tenNhanVien) {
-        this.tenNhanVien = tenNhanVien;
+    	if (tenNhanVien != null && !tenNhanVien.trim().isEmpty()) {
+            this.tenNhanVien = tenNhanVien.trim();
+        } else {
+            throw new IllegalArgumentException("Tên nhân viên không được để trống.");
+        }
     }
 
     public String getChucVu() {
@@ -46,7 +54,11 @@ public class NhanVien {
     }
 
     public void setChucVu(String chucVu) {
-        this.chucVu = chucVu;
+    	if (chucVu != null && !chucVu.trim().isEmpty()) {
+            this.chucVu = chucVu;
+        } else {
+            throw new IllegalArgumentException("Chức vụ không được để trống.");
+        }
     }
 
     public String getTenDangNhap() {
@@ -54,7 +66,11 @@ public class NhanVien {
     }
 
     public void setTenDangNhap(String tenDangNhap) {
-        this.tenDangNhap = tenDangNhap;
+    	if (tenDangNhap != null && !tenDangNhap.trim().isEmpty()) {
+            this.tenDangNhap = tenDangNhap;
+        } else {
+            throw new IllegalArgumentException("Tên đăng nhập không được để trống.");
+        }
     }
 
     public String getMatKhau() {
@@ -62,7 +78,11 @@ public class NhanVien {
     }
 
     public void setMatKhau(String matKhau) {
-        this.matKhau = matKhau;
+    	if (matKhau != null && matKhau.length() >= 6) {
+            this.matKhau = matKhau;
+        } else {
+            throw new IllegalArgumentException("Mật khẩu phải có ít nhất 6 ký tự.");
+        }
     }
 
     @Override

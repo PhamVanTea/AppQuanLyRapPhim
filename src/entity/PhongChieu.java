@@ -25,7 +25,11 @@ public class PhongChieu {
     }
 
     public void setMaPhong(String maPhong) {
-        this.maPhong = maPhong;
+    	if (maPhong != null && !maPhong.trim().isEmpty()) {
+            this.maPhong = maPhong;
+        } else {
+            throw new IllegalArgumentException("Mã phòng không được để trống.");
+        }
     }
 
     public String getTenPhong() {
@@ -33,7 +37,11 @@ public class PhongChieu {
     }
 
     public void setTenPhong(String tenPhong) {
-        this.tenPhong = tenPhong;
+    	if (tenPhong != null && !tenPhong.trim().isEmpty()) {
+            this.tenPhong = tenPhong.trim();
+        } else {
+            throw new IllegalArgumentException("Tên phòng không được để trống.");
+        }
     }
 
     public int getSoGhe() {
@@ -41,7 +49,11 @@ public class PhongChieu {
     }
 
     public void setSoGhe(int soGhe) {
-        this.soGhe = soGhe;
+    	if (soGhe > 0) {
+            this.soGhe = soGhe;
+        } else {
+            throw new IllegalArgumentException("Số ghế phải lớn hơn 0.");
+        }
     }
 
     @Override

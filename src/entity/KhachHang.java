@@ -5,7 +5,7 @@ import java.util.Objects;
 public class KhachHang {
     private String maKhachHang;
     private String tenKhachHang;
-    private String SDT;
+    private String sdt;
     private String email;
 
     public KhachHang() {
@@ -16,10 +16,10 @@ public class KhachHang {
         this.tenKhachHang = tenKhachHang;
     }
 
-    public KhachHang(String maKhachHang, String tenKhachHang, String SDT, String email) {
+    public KhachHang(String maKhachHang, String tenKhachHang, String sdt, String email) {
         this.maKhachHang = maKhachHang;
         this.tenKhachHang = tenKhachHang;
-        this.SDT = SDT;
+        this.sdt = sdt;
         this.email = email;
     }
 
@@ -28,7 +28,11 @@ public class KhachHang {
     }
 
     public void setMaKhachHang(String maKhachHang) {
-        this.maKhachHang = maKhachHang;
+    	if (maKhachHang != null && !maKhachHang.trim().isEmpty()) {
+            this.maKhachHang = maKhachHang;
+        } else {
+            throw new IllegalArgumentException("Mã khách hàng không được để trống.");
+        }
     }
 
     public String getTenKhachHang() {
@@ -36,15 +40,24 @@ public class KhachHang {
     }
 
     public void setTenKhachHang(String tenKhachHang) {
-        this.tenKhachHang = tenKhachHang;
+    	if (tenKhachHang != null && !tenKhachHang.trim().isEmpty()) {
+            this.tenKhachHang = tenKhachHang.trim();
+        } else {
+            throw new IllegalArgumentException("Tên khách hàng không được để trống.");
+        }
     }
 
     public String getSDT() {
-        return SDT;
+        return sdt;
     }
 
-    public void setSDT(String SDT) {
-        this.SDT = SDT;
+    //đổi SDT -> sdt (Nếu có lỗi biết chỗ fix)
+    public void setSDT(String sdt) {
+    	if (sdt != null && sdt.matches("\\d{10,11}")) {
+            this.sdt = sdt;
+        } else {
+            throw new IllegalArgumentException("Số điện thoại phải có 10-11 chữ số.");
+        }
     }
 
     public String getEmail() {
@@ -52,7 +65,11 @@ public class KhachHang {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+    	if (email != null) { //ktra nhập vào emmail ở lớp ui
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException("Email không để trống.");
+        }
     }
 
     @Override

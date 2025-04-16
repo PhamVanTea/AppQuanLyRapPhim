@@ -31,7 +31,11 @@ public class SuatChieu {
     }
 
     public void setMaSuatChieu(String maSuatChieu) {
-        this.maSuatChieu = maSuatChieu;
+    	if (maSuatChieu != null && !maSuatChieu.trim().isEmpty()) {
+            this.maSuatChieu = maSuatChieu;
+        } else {
+            throw new IllegalArgumentException("Mã suất chiếu không được để trống.");
+        }
     }
 
     public Phim getPhim() {
@@ -39,7 +43,11 @@ public class SuatChieu {
     }
 
     public void setPhim(Phim phim) {
-        this.phim = phim;
+    	 if (phim != null) {
+             this.phim = phim;
+         } else {
+             throw new IllegalArgumentException("Phim không được null.");
+         }
     }
 
     public PhongChieu getPhongChieu() {
@@ -47,7 +55,11 @@ public class SuatChieu {
     }
 
     public void setPhongChieu(PhongChieu phongChieu) {
-        this.phongChieu = phongChieu;
+    	if (phongChieu != null) {
+            this.phongChieu = phongChieu;
+        } else {
+            throw new IllegalArgumentException("Phòng chiếu không được null.");
+        }
     }
 
     public float getGia() {
@@ -55,11 +67,10 @@ public class SuatChieu {
     }
 
     public void setGia(float gia) {
-        if (gia < 0) {
-        	System.out.println("Lỗi: Giá phải là số dương!");
-            return;
-        } else {
+    	if (gia >= 0) {
             this.gia = gia;
+        } else {
+            throw new IllegalArgumentException("Giá phải là số dương.");
         }
     }
 
@@ -67,16 +78,32 @@ public class SuatChieu {
         return thoiGianBD;
     }
 
-    public void setThoiGianBD(String thoiGianBD) {
-        this.thoiGianBD = thoiGianBD;
+    public void setThoiGianBD(String thoiGianBD) { //nen sua LocalDateTime?
+    	if (thoiGianBD != null) {
+            this.thoiGianBD = thoiGianBD;
+        } else {
+            throw new IllegalArgumentException("Thời gian bắt đầu không được null.");
+        }
     }
 
     public String getThoiGianKetThuc() {
         return thoiGianKetThuc;
     }
+//    public LocalDateTime getThoiGianKetThuc() { return thoiGianKetThuc; }
 
+//    public void setThoiGianKetThuc(LocalDateTime thoiGianKetThuc) {
+//        if (thoiGianKetThuc != null && thoiGianKetThuc.isAfter(thoiGianBD)) {
+//            this.thoiGianKetThuc = thoiGianKetThuc;
+//        } else {
+//            throw new IllegalArgumentException("Thời gian kết thúc phải sau thời gian bắt đầu.");
+//        }
+//    }
     public void setThoiGianKetThuc(String thoiGianKetThuc) {
-        this.thoiGianKetThuc = thoiGianKetThuc;
+    	if (thoiGianKetThuc != null) {
+            this.thoiGianKetThuc = thoiGianKetThuc;
+        } else {
+            throw new IllegalArgumentException("Thời gian kết thúc không để trống.");
+        }
     }
 
     @Override
