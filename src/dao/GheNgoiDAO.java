@@ -9,6 +9,7 @@ import java.util.List;
 
 public class GheNgoiDAO {
 
+    // Phương thức tạo mới một Ghế Ngồi
     public static boolean create(GheNgoi gheNgoi) {
         String sql = "INSERT INTO GheNgoi (maGhe, maPhong, hang, soGhe, trangThai) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
@@ -23,16 +24,17 @@ public class GheNgoiDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
              if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
-                 System.err.println("GheNgoiDAO Create failed: Ghế với mã '" + gheNgoi.getMaGhe() + "' đã tồn tại.");
+                 System.err.println("Tạo Ghế Ngồi thất bại: Ghế với mã '" + gheNgoi.getMaGhe() + "' đã tồn tại.");
              } else if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
-                 System.err.println("GheNgoiDAO Create failed: Mã phòng '" + gheNgoi.getPhongChieu().getMaPhong() + "' không tồn tại trong bảng PhongChieu.");
+                 System.err.println("Tạo Ghế Ngồi thất bại: Mã phòng '" + gheNgoi.getPhongChieu().getMaPhong() + "' không tồn tại trong bảng Phòng Chiếu.");
              } else {
-                 System.err.println("GheNgoiDAO Create failed: " + e.getMessage());
+                 System.err.println("Tạo Ghế Ngồi thất bại: " + e.getMessage());
              }
         }
         return false;
     }
 
+    // Phương thức đọc tất cả Ghế Ngồi
     public static List<GheNgoi> readAll() {
         List<GheNgoi> list = new ArrayList<>();
         String sql = "SELECT g.maGhe, g.hang, g.soGhe AS ghe_soGhe, g.trangThai, " +
@@ -56,11 +58,12 @@ public class GheNgoiDAO {
                 list.add(new GheNgoi(maGhe, phongChieu, hang, soGhe, trangThai));
             }
         } catch (SQLException e) {
-            System.err.println("GheNgoiDAO ReadAll failed: " + e.getMessage());
+            System.err.println("Đọc tất cả Ghế Ngồi thất bại: " + e.getMessage());
         }
         return list;
     }
 
+    // Phương thức cập nhật Ghế Ngồi
     public static boolean update(GheNgoi gheNgoi) {
         String sql = "UPDATE GheNgoi SET maPhong = ?, hang = ?, soGhe = ?, trangThai = ? WHERE maGhe = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -75,14 +78,15 @@ public class GheNgoiDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
              if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
-                 System.err.println("GheNgoiDAO Update failed for maGhe=" + gheNgoi.getMaGhe() + ": Mã phòng '" + gheNgoi.getPhongChieu().getMaPhong() + "' không tồn tại trong bảng PhongChieu.");
+                 System.err.println("Cập nhật Ghế Ngồi thất bại cho maGhe=" + gheNgoi.getMaGhe() + ": Mã phòng '" + gheNgoi.getPhongChieu().getMaPhong() + "' không tồn tại trong bảng Phòng Chiếu.");
              } else {
-                System.err.println("GheNgoiDAO Update failed for maGhe=" + gheNgoi.getMaGhe() + ": " + e.getMessage());
+                System.err.println("Cập nhật Ghế Ngồi thất bại cho maGhe=" + gheNgoi.getMaGhe() + ": " + e.getMessage());
              }
         }
         return false;
     }
 
+    // Phương thức xóa Ghế Ngồi
     public static boolean delete(String maGhe) {
         String sql = "DELETE FROM GheNgoi WHERE maGhe = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -94,14 +98,15 @@ public class GheNgoiDAO {
             return rowsAffected > 0;
         } catch (SQLException e) {
              if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
-                 System.err.println("GheNgoiDAO Delete failed for maGhe=" + maGhe + ": Không thể xóa ghế vì đang được tham chiếu (ví dụ: trong bảng Ve).");
+                 System.err.println("Xóa Ghế Ngồi thất bại cho maGhe=" + maGhe + ": Không thể xóa ghế vì đang được tham chiếu (ví dụ: trong bảng Vé).");
              } else {
-                System.err.println("GheNgoiDAO Delete failed for maGhe=" + maGhe + ": " + e.getMessage());
+                System.err.println("Xóa Ghế Ngồi thất bại cho maGhe=" + maGhe + ": " + e.getMessage());
              }
         }
         return false;
     }
 
+    // Phương thức tìm kiếm Ghế Ngồi theo mã Phòng Chiếu
     public static List<GheNgoi> searchByPhongChieu(String maPhongSearch) {
         List<GheNgoi> list = new ArrayList<>();
         String sql = "SELECT g.maGhe, g.hang, g.soGhe AS ghe_soGhe, g.trangThai, " +
@@ -129,12 +134,13 @@ public class GheNgoiDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("GheNgoiDAO Search failed for maPhong=" + maPhongSearch + ": " + e.getMessage());
+            System.err.println("Tìm kiếm Ghế Ngồi thất bại cho maPhong=" + maPhongSearch + ": " + e.getMessage());
         }
         return list;
     }
 
-     public static GheNgoi findById(String maGhe) {
+    // Phương thức tìm Ghế Ngồi theo ID
+    public static GheNgoi findById(String maGhe) {
         GheNgoi gheNgoi = null;
         String sql = "SELECT g.maGhe, g.hang, g.soGhe AS ghe_soGhe, g.trangThai, " +
                      "p.maPhong, p.tenPhong, p.soGhe AS phong_soGhe " +
@@ -160,7 +166,7 @@ public class GheNgoiDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("GheNgoiDAO Find by ID failed for maGhe=" + maGhe + ": " + e.getMessage());
+            System.err.println("Tìm Ghế Ngồi theo ID thất bại cho maGhe=" + maGhe + ": " + e.getMessage());
         }
         return gheNgoi;
     }

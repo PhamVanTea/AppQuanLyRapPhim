@@ -11,9 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class NhanVienDAO {
+
+    // Phương thức tạo mã nhân viên duy nhất
     public static String generateMaNhanVien() {
         return "NV" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
+
+    // Phương thức đăng nhập cho nhân viên
     public static NhanVien login(String tenDangNhap, String matKhau) {
         String sql = "SELECT * FROM NhanVien WHERE tenDangNhap = ? AND matKhau = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -32,11 +36,12 @@ public class NhanVienDAO {
                 return new NhanVien(maNhanVien, tenNhanVien, chucVu, fetchedTenDangNhap, fetchedMatKhau);
             }
         } catch (SQLException e) {
-            System.err.println("Login failed: " + e.getMessage());
+            System.err.println("Đăng nhập thất bại: " + e.getMessage());
         }
         return null;
     }
 
+    // Phương thức tạo mới một nhân viên
     public static boolean create(NhanVien nv) {
         String sql = "INSERT INTO NhanVien (maNhanVien, tenNhanVien, chucVu, tenDangNhap, matKhau) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
@@ -51,14 +56,15 @@ public class NhanVienDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
              if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
-                 System.err.println("NhanVienDAO Create failed: Nhân viên với mã '" + nv.getMaNhanVien() + "' hoặc tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại.");
+                 System.err.println("Tạo nhân viên thất bại: Nhân viên với mã '" + nv.getMaNhanVien() + "' hoặc tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại.");
              } else {
-                System.err.println("NhanVienDAO Create failed: " + e.getMessage());
+                System.err.println("Tạo nhân viên thất bại: " + e.getMessage());
              }
         }
         return false;
     }
 
+    // Phương thức đọc tất cả nhân viên
     public static List<NhanVien> readAll() {
         List<NhanVien> list = new ArrayList<>();
         String sql = "SELECT * FROM NhanVien";
@@ -75,11 +81,12 @@ public class NhanVienDAO {
                 list.add(new NhanVien(maNhanVien, tenNhanVien, chucVu, tenDangNhap, matKhau));
             }
         } catch (SQLException e) {
-            System.err.println("NhanVienDAO Read failed: " + e.getMessage());
+            System.err.println("Đọc nhân viên thất bại: " + e.getMessage());
         }
         return list;
     }
 
+    // Phương thức cập nhật thông tin nhân viên
     public static boolean update(NhanVien nv) {
         String sql = "UPDATE NhanVien SET tenNhanVien = ?, chucVu = ?, tenDangNhap = ?, matKhau = ? WHERE maNhanVien = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -94,14 +101,15 @@ public class NhanVienDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
              if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
-                 System.err.println("NhanVienDAO Update failed for maNhanVien=" + nv.getMaNhanVien() + ": Tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại cho nhân viên khác.");
+                 System.err.println("Cập nhật nhân viên thất bại cho maNhanVien=" + nv.getMaNhanVien() + ": Tên đăng nhập '" + nv.getTenDangNhap() + "' đã tồn tại cho nhân viên khác.");
              } else {
-                System.err.println("NhanVienDAO Update failed for maNhanVien=" + nv.getMaNhanVien() + ": " + e.getMessage());
+                System.err.println("Cập nhật nhân viên thất bại cho maNhanVien=" + nv.getMaNhanVien() + ": " + e.getMessage());
              }
         }
         return false;
     }
 
+    // Phương thức xóa nhân viên
     public static boolean delete(String maNhanVien) {
         String sql = "DELETE FROM NhanVien WHERE maNhanVien = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -112,14 +120,15 @@ public class NhanVienDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
-                 System.err.println("NhanVienDAO Delete failed for maNhanVien=" + maNhanVien + ": Không thể xóa nhân viên vì đang được tham chiếu (ví dụ: trong bảng HoaDon).");
+                 System.err.println("Xóa nhân viên thất bại cho maNhanVien=" + maNhanVien + ": Không thể xóa nhân viên vì đang được tham chiếu (ví dụ: trong bảng Hóa Đơn).");
              } else {
-                System.err.println("NhanVienDAO Delete failed for maNhanVien=" + maNhanVien + ": " + e.getMessage());
+                System.err.println("Xóa nhân viên thất bại cho maNhanVien=" + maNhanVien + ": " + e.getMessage());
             }
         }
         return false;
     }
 
+    // Phương thức tìm kiếm nhân viên theo tên
     public static List<NhanVien> searchByName(String keyword) {
         List<NhanVien> list = new ArrayList<>();
         String sql = "SELECT * FROM NhanVien WHERE tenNhanVien LIKE ?";
@@ -138,11 +147,12 @@ public class NhanVienDAO {
                 list.add(new NhanVien(maNhanVien, tenNhanVien, chucVu, tenDangNhap, matKhau));
             }
         } catch (SQLException e) {
-            System.err.println("NhanVienDAO Search failed: " + e.getMessage());
+            System.err.println("Tìm kiếm nhân viên thất bại: " + e.getMessage());
         }
         return list;
     }
 
+    // Phương thức tìm nhân viên theo ID
     public static NhanVien findById(String maNhanVien) {
         NhanVien nv = null;
         String sql = "SELECT * FROM NhanVien WHERE maNhanVien = ?";
@@ -160,7 +170,7 @@ public class NhanVienDAO {
                 nv = new NhanVien(maNhanVien, tenNhanVien, chucVu, tenDangNhap, matKhau);
             }
         } catch (SQLException e) {
-            System.err.println("NhanVienDAO Find by ID failed for maNhanVien=" + maNhanVien + ": " + e.getMessage());
+            System.err.println("Tìm nhân viên theo ID thất bại cho maNhanVien=" + maNhanVien + ": " + e.getMessage());
         }
         return nv;
     }

@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class VeDAO {
-	
+
+    // Phương thức tạo mã vé duy nhất
     public static String generateMaVe() {
         return "VE" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
     
+    // Phương thức tạo mới một vé
     public static boolean create(Ve ve) {
         String sql = "INSERT INTO Ve (maVe, maHoaDon, maSuatChieu, giaVe, maGhe) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
@@ -31,27 +33,27 @@ public class VeDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-             if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
-                 System.err.println("VeDAO Create failed: Vé với mã '" + ve.getMaVe() + "' hoặc ghế '" + ve.getGheNgoi().getMaGhe() + "' cho suất chiếu '" + ve.getSuatChieu().getMaSuatChieu() + "' đã tồn tại."); // More specific message
-             } else if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
-                 String failedKey = "";
-                 if (e.getMessage().contains("maHoaDon")) failedKey = "Hóa Đơn '" + ve.getHoaDon().getMaHoaDon() + "'";
-                 else if (e.getMessage().contains("maSuatChieu")) failedKey = "Suất Chiếu '" + ve.getSuatChieu().getMaSuatChieu() + "'";
-                 else if (e.getMessage().contains("maGhe")) failedKey = "Ghế Ngồi '" + ve.getGheNgoi().getMaGhe() + "'";
-                 System.err.println("VeDAO Create failed: Không tìm thấy " + failedKey + ".");
-             } else {
-                System.err.println("VeDAO Create failed: " + e.getMessage());
-             }
+            if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
+                System.err.println("Tạo vé thất bại: Vé với mã '" + ve.getMaVe() + "' hoặc ghế '" + ve.getGheNgoi().getMaGhe() + "' cho suất chiếu '" + ve.getSuatChieu().getMaSuatChieu() + "' đã tồn tại.");
+            } else if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
+                String failedKey = "";
+                if (e.getMessage().contains("maHoaDon")) failedKey = "Hóa Đơn '" + ve.getHoaDon().getMaHoaDon() + "'";
+                else if (e.getMessage().contains("maSuatChieu")) failedKey = "Suất Chiếu '" + ve.getSuatChieu().getMaSuatChieu() + "'";
+                else if (e.getMessage().contains("maGhe")) failedKey = "Ghế Ngồi '" + ve.getGheNgoi().getMaGhe() + "'";
+                System.err.println("Tạo vé thất bại: Không tìm thấy " + failedKey + ".");
+            } else {
+                System.err.println("Tạo vé thất bại: " + e.getMessage());
+            }
         }
         return false;
     }
 
+    // Phương thức ánh xạ từ ResultSet sang đối tượng Ve
     private static Ve mapResultSetToVe(ResultSet rs) throws SQLException {
         String maVe = rs.getString("maVe");
         float giaVe = rs.getFloat("giaVe");
 
         HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"));
-
 
         Phim phim = new Phim();
         phim.setMaPhim(rs.getString("maPhim"));
@@ -83,7 +85,7 @@ public class VeDAO {
         return new Ve(maVe, hoaDon, suatChieu, giaVe, gheNgoi);
     }
 
-
+    // Phương thức đọc tất cả vé
     public static List<Ve> readAll() {
         List<Ve> list = new ArrayList<>();
         String sql = "SELECT v.maVe, v.giaVe, " +
@@ -106,14 +108,14 @@ public class VeDAO {
                 list.add(mapResultSetToVe(rs));
             }
         } catch (SQLException e) {
-            System.err.println("VeDAO ReadAll failed: " + e.getMessage());
+            System.err.println("Đọc vé thất bại: " + e.getMessage());
         }
         return list;
     }
 
-     public static Ve findById(String maVe) {
+    // Phương thức tìm vé theo mã
+    public static Ve findById(String maVe) {
         Ve ve = null;
-        // SQL remains the same
         String sql = "SELECT v.maVe, v.giaVe, " +
                      "h.maHoaDon, " +
                      "sc.maSuatChieu, sc.gia AS suatChieuGia, sc.thoiGianBD, sc.thoiGianKetThuc, " +
@@ -132,46 +134,49 @@ public class VeDAO {
 
             stmt.setString(1, maVe);
             try (ResultSet rs = stmt.executeQuery()) {
-                 if (rs.next()) {
-                     ve = mapResultSetToVe(rs);
-                 }
+                if (rs.next()) {
+                    ve = mapResultSetToVe(rs);
+                }
             }
         } catch (SQLException e) {
-             System.err.println("VeDAO FindById failed for maVe=" + maVe + ": " + e.getMessage());
+            System.err.println("Tìm vé theo ID thất bại cho maVe=" + maVe + ": " + e.getMessage());
         }
         return ve;
-     }
-     public static List<Ve> findByHoaDonId(String maHoaDon) {
-         List<Ve> list = new ArrayList<>();
-         String sql = "SELECT v.maVe, v.giaVe, " +
-                      "h.maHoaDon, " + 
-                      "sc.maSuatChieu, sc.gia AS suatChieuGia, sc.thoiGianBD, sc.thoiGianKetThuc, " +
-                      "p.maPhim, p.tenPhim, p.thoiLuong, " +
-                      "pc.maPhong, pc.tenPhong, pc.soGhe AS phongSoGhe, " +
-                      "gn.maGhe, gn.hang, gn.soGhe AS gheSoGhe, gn.trangThai " +
-                      "FROM Ve v " +
-                      "JOIN HoaDon h ON v.maHoaDon = h.maHoaDon " + 
-                      "JOIN SuatChieu sc ON v.maSuatChieu = sc.maSuatChieu " +
-                      "JOIN Phim p ON sc.maPhim = p.maPhim " +
-                      "JOIN PhongChieu pc ON sc.maPhong = pc.maPhong " +
-                      "JOIN GheNgoi gn ON v.maGhe = gn.maGhe " +
-                      "WHERE v.maHoaDon = ?";
+    }
 
-         try (Connection conn = DbConnect.getConnection();
-              PreparedStatement stmt = conn.prepareStatement(sql)) {
+    // Phương thức tìm vé theo mã hóa đơn
+    public static List<Ve> findByHoaDonId(String maHoaDon) {
+        List<Ve> list = new ArrayList<>();
+        String sql = "SELECT v.maVe, v.giaVe, " +
+                     "h.maHoaDon, " + 
+                     "sc.maSuatChieu, sc.gia AS suatChieuGia, sc.thoiGianBD, sc.thoiGianKetThuc, " +
+                     "p.maPhim, p.tenPhim, p.thoiLuong, " +
+                     "pc.maPhong, pc.tenPhong, pc.soGhe AS phongSoGhe, " +
+                     "gn.maGhe, gn.hang, gn.soGhe AS gheSoGhe, gn.trangThai " +
+                     "FROM Ve v " +
+                     "JOIN HoaDon h ON v.maHoaDon = h.maHoaDon " + 
+                     "JOIN SuatChieu sc ON v.maSuatChieu = sc.maSuatChieu " +
+                     "JOIN Phim p ON sc.maPhim = p.maPhim " +
+                     "JOIN PhongChieu pc ON sc.maPhong = pc.maPhong " +
+                     "JOIN GheNgoi gn ON v.maGhe = gn.maGhe " +
+                     "WHERE v.maHoaDon = ?";
 
-             stmt.setString(1, maHoaDon); 
-             ResultSet rs = stmt.executeQuery();
+        try (Connection conn = DbConnect.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-             while (rs.next()) {
-                  list.add(mapResultSetToVe(rs));
-             }
-         } catch (SQLException e) {
-             System.err.println("VeDAO FindByHoaDonId failed for maHoaDon=" + maHoaDon + ": " + e.getMessage());
-         }
-         return list;
-     }
+            stmt.setString(1, maHoaDon); 
+            ResultSet rs = stmt.executeQuery();
 
+            while (rs.next()) {
+                list.add(mapResultSetToVe(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Tìm vé theo mã hóa đơn thất bại cho maHoaDon=" + maHoaDon + ": " + e.getMessage());
+        }
+        return list;
+    }
+
+    // Phương thức cập nhật thông tin vé
     public static boolean update(Ve ve) {
         String sql = "UPDATE Ve SET maHoaDon = ?, maSuatChieu = ?, giaVe = ?, maGhe = ? WHERE maVe = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -186,18 +191,19 @@ public class VeDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
-                 String failedKey = "";
-                 if (e.getMessage().contains("maHoaDon")) failedKey = "Hóa Đơn '" + ve.getHoaDon().getMaHoaDon() + "'";
-                 else if (e.getMessage().contains("maSuatChieu")) failedKey = "Suất Chiếu '" + ve.getSuatChieu().getMaSuatChieu() + "'";
-                 else if (e.getMessage().contains("maGhe")) failedKey = "Ghế Ngồi '" + ve.getGheNgoi().getMaGhe() + "'";
-                 System.err.println("VeDAO Update failed for " + ve.getMaVe() + ": Không tìm thấy " + failedKey + ".");
+                String failedKey = "";
+                if (e.getMessage().contains("maHoaDon")) failedKey = "Hóa Đơn '" + ve.getHoaDon().getMaHoaDon() + "'";
+                else if (e.getMessage().contains("maSuatChieu")) failedKey = "Suất Chiếu '" + ve.getSuatChieu().getMaSuatChieu() + "'";
+                else if (e.getMessage().contains("maGhe")) failedKey = "Ghế Ngồi '" + ve.getGheNgoi().getMaGhe() + "'";
+                System.err.println("Cập nhật vé thất bại cho " + ve.getMaVe() + ": Không tìm thấy " + failedKey + ".");
             } else {
-                System.err.println("VeDAO Update failed for maVe=" + ve.getMaVe() + ": " + e.getMessage());
+                System.err.println("Cập nhật vé thất bại cho maVe=" + ve.getMaVe() + ": " + e.getMessage());
             }
         }
         return false;
     }
 
+    // Phương thức xóa vé
     public static boolean delete(String maVe) {
         String sql = "DELETE FROM Ve WHERE maVe = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -207,11 +213,12 @@ public class VeDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("VeDAO Delete failed for maVe=" + maVe + ": " + e.getMessage());
+            System.err.println("Xóa vé thất bại cho maVe=" + maVe + ": " + e.getMessage());
         }
         return false;
     }
 
+    // Phương thức tìm vé theo khoảng giá
     public static List<Ve> searchByPrice(float minPrice, float maxPrice) {
         List<Ve> list = new ArrayList<>();
         String sql = "SELECT v.maVe, v.giaVe, " +
@@ -238,12 +245,13 @@ public class VeDAO {
                 list.add(mapResultSetToVe(rs));
             }
         } catch (SQLException e) {
-            System.err.println("VeDAO SearchByPrice failed: " + e.getMessage());
+            System.err.println("Tìm vé theo khoảng giá thất bại: " + e.getMessage());
         }
         return list;
     }
 
-     public static List<Ve> findBySuatChieuId(String maSuatChieu) {
+    // Phương thức tìm vé theo mã suất chiếu
+    public static List<Ve> findBySuatChieuId(String maSuatChieu) {
         List<Ve> list = new ArrayList<>();
         String sql = "SELECT v.maVe, v.giaVe, " +
                      "h.maHoaDon, " +
@@ -265,14 +273,15 @@ public class VeDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                 list.add(mapResultSetToVe(rs));
+                list.add(mapResultSetToVe(rs));
             }
         } catch (SQLException e) {
-            System.err.println("VeDAO FindBySuatChieuId failed for maSuatChieu=" + maSuatChieu + ": " + e.getMessage());
+            System.err.println("Tìm vé theo mã suất chiếu thất bại cho maSuatChieu=" + maSuatChieu + ": " + e.getMessage());
         }
         return list;
     }
 
+    // Phương thức kiểm tra ghế đã được đặt cho suất chiếu chưa
     public static boolean isSeatBookedForShowtime(String maSuatChieu, String maGhe) {
         String sql = "SELECT COUNT(*) FROM Ve WHERE maSuatChieu = ? AND maGhe = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -287,9 +296,8 @@ public class VeDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("VeDAO isSeatBookedForShowtime check failed: " + e.getMessage());
+            System.err.println("Kiểm tra ghế đã được đặt cho suất chiếu thất bại: " + e.getMessage());
         }
         return false; 
     }
-
 }
