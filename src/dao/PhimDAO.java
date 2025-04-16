@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class PhimDAO {
 
-    // Phương thức tạo mã phim duy nhất
+    // Phương thức tạo mã phim duy nhất...
     public static String generateMaPhim() {
         return "P" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
