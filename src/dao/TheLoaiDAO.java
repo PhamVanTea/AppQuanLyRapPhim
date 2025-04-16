@@ -12,10 +12,12 @@ import java.util.UUID;
 
 public class TheLoaiDAO {
 
+    // Phương thức tạo mã thể loại duy nhất
     public static String generateMaTheLoai() {
         return "TL" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
     
+    // Phương thức tạo mới một thể loại
     public static boolean create(TheLoai theLoai) {
         String sql = "INSERT INTO TheLoai (maTheLoai, tenTheLoai, moTa) VALUES (?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
@@ -27,11 +29,12 @@ public class TheLoaiDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Create failed: " + e.getMessage());
+            System.err.println("Tạo thể loại thất bại: " + e.getMessage());
         }
         return false;
     }
 
+    // Phương thức đọc tất cả thể loại
     public static List<TheLoai> readAll() {
         List<TheLoai> list = new ArrayList<>();
         String sql = "SELECT * FROM TheLoai";
@@ -46,11 +49,12 @@ public class TheLoaiDAO {
                 list.add(new TheLoai(maTheLoai, tenTheLoai, moTa));
             }
         } catch (SQLException e) {
-            System.err.println("Read failed: " + e.getMessage());
+            System.err.println("Đọc thể loại thất bại: " + e.getMessage());
         }
         return list;
     }
 
+    // Phương thức cập nhật thông tin thể loại
     public static boolean update(TheLoai theLoai) {
         String sql = "UPDATE TheLoai SET tenTheLoai = ?, moTa = ? WHERE maTheLoai = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -62,11 +66,12 @@ public class TheLoaiDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Update failed: " + e.getMessage());
+            System.err.println("Cập nhật thể loại thất bại: " + e.getMessage());
         }
         return false;
     }
 
+    // Phương thức xóa thể loại
     public static boolean delete(String maTheLoai) {
         String sql = "DELETE FROM TheLoai WHERE maTheLoai = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -76,11 +81,12 @@ public class TheLoaiDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Delete failed: " + e.getMessage());
+            System.err.println("Xóa thể loại thất bại: " + e.getMessage());
         }
         return false;
     }
 
+    // Phương thức tìm kiếm thể loại theo tên
     public static List<TheLoai> searchByName(String keyword) {
         List<TheLoai> list = new ArrayList<>();
         String sql = "SELECT * FROM TheLoai WHERE tenTheLoai LIKE ?";
@@ -97,7 +103,7 @@ public class TheLoaiDAO {
                 list.add(new TheLoai(maTheLoai, tenTheLoai, moTa));
             }
         } catch (SQLException e) {
-            System.err.println("Search failed: " + e.getMessage());
+            System.err.println("Tìm kiếm thể loại thất bại: " + e.getMessage());
         }
         return list;
     }

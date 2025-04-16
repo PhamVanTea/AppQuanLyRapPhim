@@ -14,10 +14,12 @@ public class ThongKeDAO {
 
     private ThongKeDAO() {}
 
+    // Phương thức tạo mã thống kê duy nhất
     public static String generateMaThongKe() {
         return "TK" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 
+    // Phương thức tạo mới một thống kê
     public static boolean create(ThongKe thongKe) {
         String sql = "INSERT INTO ThongKe (MaThongKe, TongDoanhThu, TongSoVe, TongSoKhachHang, " +
                      "TongSoNhanVien, TongSoPhim, TongSoPhongChieu, TuNgay, DenNgay) " +
@@ -37,16 +39,17 @@ public class ThongKeDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-             // Check for SQL Server Primary Key violation (Error Number 2627)
-             if (e.getErrorCode() == 2627 || (e.getSQLState() != null && e.getSQLState().startsWith("23"))) {
-                 System.err.println("ThongKeDAO Create failed: Mã thống kê '" + thongKe.getMaThongKe() + "' đã tồn tại.");
-             } else {
-                System.err.println("ThongKeDAO Create failed: [" + e.getErrorCode() + "] " + e.getMessage());
-             }
-             return false;
+            // Kiểm tra vi phạm khóa chính
+            if (e.getErrorCode() == 2627 || (e.getSQLState() != null && e.getSQLState().startsWith("23"))) {
+                System.err.println("Tạo thống kê thất bại: Mã thống kê '" + thongKe.getMaThongKe() + "' đã tồn tại.");
+            } else {
+                System.err.println("Tạo thống kê thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
+            }
+            return false;
         }
     }
 
+    // Phương thức ánh xạ từ ResultSet sang đối tượng ThongKe
     private static ThongKe mapResultSetToThongKe(ResultSet rs) throws SQLException {
         ThongKe tk = new ThongKe();
         tk.setMaThongKe(rs.getString("MaThongKe"));
@@ -61,6 +64,7 @@ public class ThongKeDAO {
         return tk;
     }
 
+    // Phương thức đọc tất cả thống kê
     public static List<ThongKe> readAll() {
         List<ThongKe> list = new ArrayList<>();
         String sql = "SELECT * FROM ThongKe ORDER BY TuNgay DESC";
@@ -72,11 +76,12 @@ public class ThongKeDAO {
                 list.add(mapResultSetToThongKe(rs));
             }
         } catch (SQLException e) {
-            System.err.println("ThongKeDAO ReadAll failed: [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Đọc thống kê thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
         }
         return list;
     }
 
+    // Phương thức tìm thống kê theo mã
     public static ThongKe findById(String maThongKe) {
         String sql = "SELECT * FROM ThongKe WHERE MaThongKe = ?";
         ThongKe tk = null;
@@ -90,14 +95,14 @@ public class ThongKeDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("ThongKeDAO FindById failed for MaThongKe=" + maThongKe + ": [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Tìm thống kê theo ID thất bại cho MaThongKe=" + maThongKe + ": [" + e.getErrorCode() + "] " + e.getMessage());
         }
         return tk;
     }
 
-     public static List<ThongKe> findByDateRange(LocalDate startDate, LocalDate endDate) {
+    // Phương thức tìm thống kê theo khoảng thời gian
+    public static List<ThongKe> findByDateRange(LocalDate startDate, LocalDate endDate) {
         List<ThongKe> list = new ArrayList<>();
-        // Query finds records where the stats period overlaps with the query period
         String sql = "SELECT * FROM ThongKe WHERE TuNgay <= ? AND DenNgay >= ? ORDER BY TuNgay DESC";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -111,11 +116,12 @@ public class ThongKeDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("ThongKeDAO findByDateRange failed: [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Tìm thống kê theo khoảng thời gian thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
         }
         return list;
-     }
+    }
 
+    // Phương thức cập nhật thông tin thống kê
     public static boolean update(ThongKe thongKe) {
         String sql = "UPDATE ThongKe SET TongDoanhThu = ?, TongSoVe = ?, TongSoKhachHang = ?, " +
                      "TongSoNhanVien = ?, TongSoPhim = ?, TongSoPhongChieu = ?, TuNgay = ?, DenNgay = ? " +
@@ -135,11 +141,12 @@ public class ThongKeDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("ThongKeDAO Update failed for MaThongKe=" + thongKe.getMaThongKe() + ": [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Cập nhật thống kê thất bại cho MaThongKe=" + thongKe.getMaThongKe() + ": [" + e.getErrorCode() + "] " + e.getMessage());
             return false;
         }
     }
 
+    // Phương thức xóa thống kê
     public static boolean delete(String maThongKe) {
         String sql = "DELETE FROM ThongKe WHERE MaThongKe = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -148,58 +155,58 @@ public class ThongKeDAO {
             stmt.setString(1, maThongKe);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("ThongKeDAO Delete failed for MaThongKe=" + maThongKe + ": [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Xóa thống kê thất bại cho MaThongKe=" + maThongKe + ": [" + e.getErrorCode() + "] " + e.getMessage());
             return false;
         }
     }
 
-     public static BigDecimal calculateTongDoanhThu(LocalDate startDate, LocalDate endDate) {
-         // Use CAST AS DATE for SQL Server compatibility
-         String sql = "SELECT SUM(tongTien) FROM HoaDon WHERE CAST(ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
-         BigDecimal total = BigDecimal.ZERO;
-         try (Connection conn = DbConnect.getConnection();
-              PreparedStatement stmt = conn.prepareStatement(sql)) {
+    // Phương thức tính tổng doanh thu
+    public static BigDecimal calculateTongDoanhThu(LocalDate startDate, LocalDate endDate) {
+        String sql = "SELECT SUM(tongTien) FROM HoaDon WHERE CAST(ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
+        BigDecimal total = BigDecimal.ZERO;
+        try (Connection conn = DbConnect.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-             stmt.setDate(1, Date.valueOf(startDate));
-             stmt.setDate(2, Date.valueOf(endDate));
+            stmt.setDate(1, Date.valueOf(startDate));
+            stmt.setDate(2, Date.valueOf(endDate));
 
-             try (ResultSet rs = stmt.executeQuery()) {
-                 if (rs.next()) {
-                     BigDecimal sum = rs.getBigDecimal(1);
-                     if (sum != null) {
-                         total = sum;
-                     }
-                 }
-             }
-         } catch (SQLException e) {
-             System.err.println("Error calculating TongDoanhThu: [" + e.getErrorCode() + "] " + e.getMessage());
-         }
-         return total;
-     }
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    BigDecimal sum = rs.getBigDecimal(1);
+                    if (sum != null) {
+                        total = sum;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Tính tổng doanh thu thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
+        }
+        return total;
+    }
 
-     public static int calculateTongSoVe(LocalDate startDate, LocalDate endDate) {
-         // Use CAST AS DATE for SQL Server compatibility
-         String sql = "SELECT COUNT(v.maVe) FROM Ve v JOIN HoaDon h ON v.maHoaDon = h.maHoaDon WHERE CAST(h.ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
-         int count = 0;
-         try (Connection conn = DbConnect.getConnection();
-              PreparedStatement stmt = conn.prepareStatement(sql)) {
+    // Phương thức tính tổng số vé
+    public static int calculateTongSoVe(LocalDate startDate, LocalDate endDate) {
+        String sql = "SELECT COUNT(v.maVe) FROM Ve v JOIN HoaDon h ON v.maHoaDon = h.maHoaDon WHERE CAST(h.ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
+        int count = 0;
+        try (Connection conn = DbConnect.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-             stmt.setDate(1, Date.valueOf(startDate));
-             stmt.setDate(2, Date.valueOf(endDate));
+            stmt.setDate(1, Date.valueOf(startDate));
+            stmt.setDate(2, Date.valueOf(endDate));
 
-             try (ResultSet rs = stmt.executeQuery()) {
-                 if (rs.next()) {
-                     count = rs.getInt(1);
-                 }
-             }
-         } catch (SQLException e) {
-             System.err.println("Error calculating TongSoVe: [" + e.getErrorCode() + "] " + e.getMessage());
-         }
-         return count;
-     }
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Tính tổng số vé thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
+        }
+        return count;
+    }
 
+    // Phương thức tính tổng số khách hàng
     public static int calculateTongSoKhachHang(LocalDate startDate, LocalDate endDate) {
-        // Use CAST AS DATE for SQL Server compatibility
         String sql = "SELECT COUNT(DISTINCT maKhachHang) FROM HoaDon WHERE CAST(ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -214,13 +221,13 @@ public class ThongKeDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error calculating TongSoKhachHang: [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Tính tổng số khách hàng thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
         }
         return count;
     }
 
+    // Phương thức tính tổng số nhân viên
     public static int calculateTongSoNhanVien(LocalDate startDate, LocalDate endDate) {
-        // Use CAST AS DATE for SQL Server compatibility
         String sql = "SELECT COUNT(DISTINCT maNhanVien) FROM HoaDon WHERE CAST(ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -235,13 +242,13 @@ public class ThongKeDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error calculating TongSoNhanVien: [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Tính tổng số nhân viên thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
         }
         return count;
     }
 
+    // Phương thức tính tổng số phim
     public static int calculateTongSoPhim(LocalDate startDate, LocalDate endDate) {
-        // Use CAST AS DATE for SQL Server compatibility
         String sql = "SELECT COUNT(DISTINCT maPhim) FROM SuatChieu WHERE CAST(thoiGianBD AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -256,13 +263,13 @@ public class ThongKeDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error calculating TongSoPhim: [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Tính tổng số phim thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
         }
         return count;
     }
 
+    // Phương thức tính tổng số phòng chiếu
     public static int calculateTongSoPhongChieu(LocalDate startDate, LocalDate endDate) {
-        // Use CAST AS DATE for SQL Server compatibility
         String sql = "SELECT COUNT(DISTINCT maPhong) FROM SuatChieu WHERE CAST(thoiGianBD AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -277,7 +284,7 @@ public class ThongKeDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error calculating TongSoPhongChieu: [" + e.getErrorCode() + "] " + e.getMessage());
+            System.err.println("Tính tổng số phòng chiếu thất bại: [" + e.getErrorCode() + "] " + e.getMessage());
         }
         return count;
     }
