@@ -404,9 +404,24 @@ public class NhanVienUI extends JPanel {
         String rawPassword = new String(passwordChars);
 
 		if (ten.isEmpty()) { showValidationError("Tên nhân viên không được để trống.", txtTenNhanVien); Arrays.fill(passwordChars, ' '); return; }
+		// Kiểm tra định dạng Tên Nhân Viên
+		if (!ten.matches("^[A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$")) {
+		    showValidationError("Tên nhân viên chỉ chứa chữ cái, viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng. Ví dụ: Trần Văn B", txtTenNhanVien);
+		    Arrays.fill(passwordChars, ' ');
+		    return;
+		}
         if (chucVu.isEmpty()) { showValidationError("Chức vụ không được để trống.", txtChucVu); Arrays.fill(passwordChars, ' '); return; }
+        if (!chucVu.matches("^[A-Za-zÀ-ỹ]+( [A-Za-zÀ-ỹ]+)*( [0-9]+)?$")) {
+            showValidationError("Chức vụ không hợp lệ. Chứa chữ cái và có thể có số ở cuối từ sau cùng, được có khoảng trắng . VD: Nhân viên 1", txtChucVu);
+            Arrays.fill(passwordChars, ' ');
+            return;
+        } //Ví dụ hợp lệ: Nhân viên 1 - VD không hợp lệ: Nhân vie1n 1 (không cho phép có số và chữ cái lần vào một từ) - Cho phép kh/trắng giữa các từ
         if (tenDN.isEmpty()) { showValidationError("Tên đăng nhập không được để trống.", txtTenDangNhap); Arrays.fill(passwordChars, ' '); return; }
-
+        if (!tenDN.matches("^[a-z][a-z0-9._%+#-]*$")) {
+            showValidationError("Tên đăng nhập không hợp lệ. Phải bắt đầu bằng chữ thường không dấu, không chứa chữ hoa, dấu hoặc khoảng trắng.", txtTenDangNhap);
+            Arrays.fill(passwordChars, ' ');
+            return;
+        } //VD hợp lệ: admin, admin1, admin_1  -  VD không hợp lệ: Admin1, Âdmin, adm in,
         if (currentState == EditState.ADDING && rawPassword.isEmpty()) {
             showValidationError("Mật khẩu là bắt buộc khi thêm nhân viên mới.", txtMatKhau);
             Arrays.fill(passwordChars, ' ');
