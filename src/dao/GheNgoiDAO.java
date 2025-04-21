@@ -11,6 +11,7 @@ public class GheNgoiDAO {
 
     // Phương thức tạo mới một Ghế Ngồi
     public static boolean create(GheNgoi gheNgoi) {
+    	//Tạo câu lệnh SQL INSERT với 5 tham số (maGhe, maPhong, hang, soGhe, trangThai)
         String sql = "INSERT INTO GheNgoi (maGhe, maPhong, hang, soGhe, trangThai) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -23,6 +24,9 @@ public class GheNgoiDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
+        	// ("duplicate entry", "unique constraint") vì đây là thông báo lỗi được trả về từ hệ quản trị cơ sở dữ liệu.
+        	//Duplicate entry (Mục nhập trùng lặp)      
+        	//Unique constraint (Ràng buộc duy nhất)
              if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
                  System.err.println("Tạo Ghế Ngồi thất bại: Ghế với mã '" + gheNgoi.getMaGhe() + "' đã tồn tại.");
              } else if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
