@@ -522,12 +522,33 @@ public class GheNgoiUI extends JPanel {
         String currentMaGhe = txtMaGhe.getText().trim();
 
         if (selectedPhong == null) { showValidationError("Lỗi: Phòng chiếu không hợp lệ.", comboBoxPhong); return; }
-        if (hangInput.isEmpty() || hangInput.length() != 1 || !Character.isLetter(hangInput.charAt(0))) { showValidationError("Hàng ghế phải là một chữ cái (A-Z).", txtHang); return; }
-        if (soGheStr.isEmpty()) { showValidationError("Số ghế không được để trống.", txtSoGhe); return; }
+//        if (hangInput.isEmpty() || hangInput.length() != 1 || !Character.isLetter(hangInput.charAt(0))) { 
+//        	showValidationError("Hàng ghế phải là một chữ cái (A-Z).", txtHang); 
+//        	throw new RuntimeException("Lỗi: Chưa nhập Hàng ghế / Nhập sai định dạng");
+////        	return; 
+//        	}
+        if (hangInput.isEmpty()) {
+        	showValidationError("Hàng ghế không được để trống", txtHang);
+        	throw new RuntimeException("Lỗi: Chưa nhập hàng ghế!");
+        }
+        
+        if (!hangInput.matches("^[A-Z]{1,2}$")) {
+        	//hangInPut . toUpperCase() tự động chuyển từ in thường sang từ in hoa khi nhập
+        	showValidationError("Hàng ghế chỉ cho phép 1 hoặc 2 chữ cái in hoa không dấu liên tiếp", txtHang);
+        	throw new RuntimeException("Lỗi: Hàng ghế nhập không đúng định dạng");
+        }
+        
+        if (soGheStr.isEmpty()) {
+        	showValidationError("Số ghế không được để trống.", txtSoGhe); 
+//        	return; 
+        	throw new RuntimeException("Lỗi: Chưa nhập số ghế!");
+        	}
+        
         if (trangThai == null || trangThai.isEmpty()) { 
         	showValidationError("Vui lòng chọn trạng thái.", comboBoxTrangThai); 
-        	System.err.println("");
-        return; 
+//        	System.err.println("");
+//        return; 
+        	throw new RuntimeException("Lỗi: Chưa chọn trạng thái ghế trong ComboBox");
         }
 
         int soGhe;
@@ -536,8 +557,9 @@ public class GheNgoiUI extends JPanel {
             if (soGhe <= 0) throw new NumberFormatException();
         } catch (NumberFormatException e) { 
         	showValidationError("Số ghế phải là một số nguyên dương.", txtSoGhe); 
-        	System.err.println("");
-        return; 
+//        	System.err.println("");
+//        return; 
+        	throw new RuntimeException("Lỗi: Số ghế nhập vào không hợp lệ!");
         }
 
         GheNgoi gheNgoi;

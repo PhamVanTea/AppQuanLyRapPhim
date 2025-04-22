@@ -353,6 +353,11 @@ public class PhongChieuUI extends JPanel {
 			throw new RuntimeException("Tên phòng chiếu không được để trống.");
 //		return; 
 		}
+		if (!ten.matches("^[A-ZÀ-Ỹ][a-zà-ỹA-ZÀ-Ỹ0-9]*(\\s[A-ZÀ-Ỹ0-9][a-zà-ỹA-ZÀ-Ỹ0-9]*)*$")) {
+			showValidationError("Tên phòng chiếu không hợp lệ. Mỗi từ bắt đầu bằng chữ cái in hoa, cho phép chữ số và khoảng trắng.",txtTenPhongChieu);
+			//VD hợp lệ: Phòng
+			throw new RuntimeException("Tên phòng chiếu nhập vào không hợp lệ.");
+		}
 		if (soGheStr.isEmpty()) { 
 			showValidationError("Số ghế không được để trống.", txtSoGhe);
 			throw new RuntimeException("Số ghế không được để trống.");
