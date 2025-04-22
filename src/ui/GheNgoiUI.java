@@ -524,13 +524,21 @@ public class GheNgoiUI extends JPanel {
         if (selectedPhong == null) { showValidationError("Lỗi: Phòng chiếu không hợp lệ.", comboBoxPhong); return; }
         if (hangInput.isEmpty() || hangInput.length() != 1 || !Character.isLetter(hangInput.charAt(0))) { showValidationError("Hàng ghế phải là một chữ cái (A-Z).", txtHang); return; }
         if (soGheStr.isEmpty()) { showValidationError("Số ghế không được để trống.", txtSoGhe); return; }
-        if (trangThai == null || trangThai.isEmpty()) { showValidationError("Vui lòng chọn trạng thái.", comboBoxTrangThai); return; }
+        if (trangThai == null || trangThai.isEmpty()) { 
+        	showValidationError("Vui lòng chọn trạng thái.", comboBoxTrangThai); 
+        	System.err.println("");
+        return; 
+        }
 
         int soGhe;
         try {
             soGhe = Integer.parseInt(soGheStr);
             if (soGhe <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) { showValidationError("Số ghế phải là một số nguyên dương.", txtSoGhe); return; }
+        } catch (NumberFormatException e) { 
+        	showValidationError("Số ghế phải là một số nguyên dương.", txtSoGhe); 
+        	System.err.println("");
+        return; 
+        }
 
         GheNgoi gheNgoi;
         boolean success = false;

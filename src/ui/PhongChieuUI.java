@@ -347,14 +347,22 @@ public class PhongChieuUI extends JPanel {
 		String ten = txtTenPhongChieu.getText().trim();
 		String soGheStr = txtSoGhe.getText().trim();
 
-		if (ten.isEmpty()) { showValidationError("Tên phòng chiếu không được để trống.", txtTenPhongChieu); return; }
+		if (ten.isEmpty()) { 
+			showValidationError("Tên phòng chiếu không được để trống.", txtTenPhongChieu); 
+			System.err.println("");
+		return; 
+		}
 		if (soGheStr.isEmpty()) { showValidationError("Số ghế không được để trống.", txtSoGhe); return; }
 
         int soGhe;
         try {
             soGhe = Integer.parseInt(soGheStr);
             if (soGhe <= 0) { throw new NumberFormatException(); }
-        } catch (NumberFormatException e) { showValidationError("Số ghế phải là một số nguyên dương hợp lệ.", txtSoGhe); return; }
+        } catch (NumberFormatException e) { 
+        	showValidationError("Số ghế phải là một số nguyên dương hợp lệ.", txtSoGhe); 
+        	System.err.println("");
+        return; 
+        }
 
 		PhongChieu phongChieu;
 		boolean success = false;

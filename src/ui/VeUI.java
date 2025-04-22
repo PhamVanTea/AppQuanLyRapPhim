@@ -113,6 +113,7 @@ public class VeUI extends JPanel {
             results = VeDAO.findByHoaDonId(keyword);
              if (results.isEmpty()) {
                  JOptionPane.showMessageDialog(this, "Không tìm thấy vé nào cho Mã Hóa Đơn: " + keyword, "Không tìm thấy", JOptionPane.INFORMATION_MESSAGE);
+                 System.err.println("Không tìm thấy vé nào cho Mã Hóa Đơn");
              }
         }
         loadTableData(results);

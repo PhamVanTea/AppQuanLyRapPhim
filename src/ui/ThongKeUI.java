@@ -118,14 +118,17 @@ public class ThongKeUI extends JPanel {
 
         if (tuNgayDate == null) {
             showValidationError("Vui lòng chọn 'Từ ngày'.", dateChooserTuNgay);
+            System.err.println("Vui lòng chọn 'Từ ngày'.");
             return;
         }
         if (denNgayDate == null) {
             showValidationError("Vui lòng chọn 'Đến ngày'.", dateChooserDenNgay);
+            System.err.println("Vui lòng chọn 'Đến ngày'.");
             return;
         }
         if (denNgayDate.before(tuNgayDate)) {
             showValidationError("'Đến ngày' không được trước 'Từ ngày'.", dateChooserDenNgay);
+            System.err.println("'Đến ngày' không được trước 'Từ ngày'.");
             return;
         }
 

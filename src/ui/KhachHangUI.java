@@ -367,10 +367,15 @@ public class KhachHangUI extends JPanel {
 		String ten = txtTenKhachHang.getText().trim();
 		String sdt = txtSDT.getText().trim();
         String email = txtEmail.getText().trim();
-		if (ten.isEmpty()) { showValidationError("Tên khách hàng không được để trống.", txtTenKhachHang); return; }
+		if (ten.isEmpty()) { 
+			showValidationError("Tên khách hàng không được để trống.", txtTenKhachHang); 
+			System.err.println("Tên khách hàng không được để trống.");
+		return; 
+		}
 		//Thêm biểu thức chính quy ktra nhập Tên
 		if (!ten.matches("^[A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$")) {
 		    showValidationError("Tên khách hàng chỉ chứa chữ cái, phải viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng. Ví dụ: Nguyễn Văn A", txtTenKhachHang);
+		    System.err.println("Tên khách hàng chỉ chứa chữ cái, phải viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng. Ví dụ: Nguyễn Văn A");
 //		    txtTenKhachHang.requestFocus();
 		    return;
 		}
@@ -381,6 +386,7 @@ public class KhachHangUI extends JPanel {
         //Thay đổi biểu thức chính quy kiểm tra nhập vào sdt
         if (!sdt.matches("^(02|03|05|07|08|09)\\d{8,9}$")) {
             showValidationError("Số điện thoại không hợp lệ. Phải bắt đầu bằng các đầu số hiện hành, và có 10 hoặc 11 chữ số.", txtSDT);
+            System.err.println("Số điện thoại không hợp lệ. Phải bắt đầu bằng các đầu số hiện hành, và có 10 hoặc 11 chữ số.");
             return;
         }
 //        if (!email.isEmpty() && !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
@@ -388,6 +394,8 @@ public class KhachHangUI extends JPanel {
 //        }
         if (!email.isEmpty() && !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
             showValidationError("Địa chỉ email không hợp lệ (ví dụ: example@gmail.com).", txtEmail);
+		    System.err.println("Địa chỉ email không hợp lệ (ví dụ: example@gmail.com).");
+
 //            txtEmail.requestFocus();
             return;
         }
