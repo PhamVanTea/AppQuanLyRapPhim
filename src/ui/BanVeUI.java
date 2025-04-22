@@ -555,13 +555,13 @@ public class BanVeUI extends JPanel {
         	}
         if (selectedKhachHang == null) { 
         	showValidationError("Vui lòng chọn khách hàng.", txtKhachHang);
-        	System.err.println("Vui lòng chọn khách hàng.");
-        return; 
+        	throw new RuntimeException("Vui lòng chọn khách hàng.");
+//        return; 
         }
         if (selectedSeatsList.isEmpty()) { 
         	showValidationError("Vui lòng chọn ít nhất một ghế.", panelSeatGrid);
-        	System.err.println("Vui lòng chọn ít nhất một ghế.");
-        return; 
+        	throw new RuntimeException("Vui lòng chọn ít nhất một ghế.");
+//        return; 
         }
         if (StaticVariable.nhanVien == null) { showError("Lỗi: Không xác định được nhân viên đang đăng nhập.", null); return; }
 

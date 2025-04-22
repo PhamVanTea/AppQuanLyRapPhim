@@ -502,8 +502,8 @@ public class PhimUI extends JPanel {
 	    // Kiểm tra tên phim bằng regex
 	    if (!ten.matches("^[\\p{L}0-9 ]+$")) { 
 	        showValidationError("Tên phim không hợp lệ. Chỉ chứa chữ cái và số.", txtTenPhim); 
-	        System.err.println("Tên phim không hợp lệ.");
-	        return; 
+	        throw new RuntimeException("Tên phim không hợp lệ.");
+//	        return; 
 	    }
 	    
 	    TheLoai selectedTheLoai = null;
@@ -511,22 +511,22 @@ public class PhimUI extends JPanel {
 	        selectedTheLoai = (TheLoai) selectedItem;
 	    } else {
 	        showValidationError("Vui lòng chọn một thể loại hợp lệ.", comboBoxTheLoai); 
-	        System.err.println("Vui lòng chọn một thể loại hợp lệ.");
-	        return;
+	        throw new RuntimeException("Vui lòng chọn một thể loại hợp lệ.");
+//	        return;
 	    }
 
 	    // Kiểm tra thời lượng bằng regex
 	    if (!thoiLuongStr.matches("^\\d+$")) { 
 	        showValidationError("Thời lượng phải là một số nguyên dương.", txtThoiLuong);
-	        System.err.println("Thời lượng phải là một số nguyên dương.");
-	        return; 
+	        throw new RuntimeException("Thời lượng phải là một số nguyên dương.");
+//	        return; 
 	    }
 
 	    int thoiLuong = Integer.parseInt(thoiLuongStr);
 	    if (thoiLuong <= 0) {
 	        showValidationError("Thời lượng phải lớn hơn 0.", txtThoiLuong);
-	        System.err.println("Thời lượng phải lớn hơn 0.");
-	        return;
+	        throw new RuntimeException("Thời lượng phải lớn hơn 0.");
+//	        return;
 	    }
 
 	    Phim phim;

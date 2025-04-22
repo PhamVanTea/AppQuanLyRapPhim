@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -349,10 +350,14 @@ public class PhongChieuUI extends JPanel {
 
 		if (ten.isEmpty()) { 
 			showValidationError("Tên phòng chiếu không được để trống.", txtTenPhongChieu); 
-			System.err.println("");
-		return; 
+			throw new RuntimeException("Tên phòng chiếu không được để trống.");
+//		return; 
 		}
-		if (soGheStr.isEmpty()) { showValidationError("Số ghế không được để trống.", txtSoGhe); return; }
+		if (soGheStr.isEmpty()) { 
+			showValidationError("Số ghế không được để trống.", txtSoGhe);
+			throw new RuntimeException("Số ghế không được để trống.");
+//		return;
+		}
 
         int soGhe;
         try {
@@ -360,8 +365,8 @@ public class PhongChieuUI extends JPanel {
             if (soGhe <= 0) { throw new NumberFormatException(); }
         } catch (NumberFormatException e) { 
         	showValidationError("Số ghế phải là một số nguyên dương hợp lệ.", txtSoGhe); 
-        	System.err.println("");
-        return; 
+        	throw new RuntimeException("Số ghế phải là một số nguyên dương hợp lệ.");
+//        return; 
         }
 
 		PhongChieu phongChieu;

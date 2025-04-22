@@ -494,28 +494,28 @@ public class SuatChieuUI extends JPanel {
 
         if (!(phimItem instanceof Phim)) {
             showValidationError("Vui lòng chọn một Phim.", comboBoxPhim);
-            System.err.println("Lỗi: Chưa chọn phim.");
-            return;
+            throw new RuntimeException("Lỗi: Chưa chọn phim.");
+//            return;
         }
         if (!(phongItem instanceof PhongChieu)) {
             showValidationError("Vui lòng chọn một Phòng Chiếu.", comboBoxPhongChieu);
-            System.err.println("Lỗi: Chưa chọn phòng chiếu.");
-            return;
+            throw new RuntimeException("Lỗi: Chưa chọn phòng chiếu.");
+//            return;
         }
         if (startDateOnly == null) {
             showValidationError("Vui lòng chọn Ngày bắt đầu.", dateChooserThoiGianBD);
-            System.err.println("Lỗi: Chưa chọn ngày bắt đầu.");
-            return;
+            throw new RuntimeException("Lỗi: Chưa chọn ngày bắt đầu.");
+//            return;
         }
         if (!startTimeStr.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
             showValidationError("Giờ bắt đầu không hợp lệ. Phải có định dạng HH:mm (vd: 09:30 hoặc 14:05).", txtThoiGianBD_Time);
-            System.err.println("Lỗi: Giờ bắt đầu không hợp lệ.");
-            return;
+            throw new RuntimeException("Lỗi: Giờ bắt đầu không hợp lệ.");
+//            return;
         }
         if (giaStr.isEmpty()) {
             showValidationError("Giá vé không được để trống.", txtGia);
-            System.err.println("Lỗi: Giá vé trống.");
-            return;
+            throw new RuntimeException("Lỗi: Giá vé trống.");
+//            return;
         }
 
         Phim selectedPhim = (Phim) phimItem;
@@ -528,13 +528,13 @@ public class SuatChieuUI extends JPanel {
             gia = Float.parseFloat(giaStr);
             if (gia < 0) {
                 showValidationError("Giá vé phải là một số không âm.", txtGia);
-                System.err.println("Lỗi: Giá vé âm.");
-                return;
+                throw new RuntimeException("Lỗi: Giá vé âm.");
+//                return;
             }
         } catch (NumberFormatException e) {
             showValidationError("Giá vé không hợp lệ. Vui lòng nhập một số.", txtGia);
-            System.err.println("Lỗi: Giá vé không hợp lệ.");
-            return;
+            throw new RuntimeException("Lỗi: Giá vé không hợp lệ.");
+//            return;
         }
 
         try {
@@ -543,19 +543,19 @@ public class SuatChieuUI extends JPanel {
             startDateTime = DAO_DATE_TIME_FORMAT.parse(dateTimeStr);
             if (selectedPhim.getThoiLuong() <= 0) {
                 showValidationError("Phim '" + selectedPhim.getTenPhim() + "' có thời lượng không hợp lệ (" + selectedPhim.getThoiLuong() + " phút). Không thể tính giờ kết thúc.", comboBoxPhim);
-                System.err.println("Lỗi: Thời lượng phim không hợp lệ.");
-                return;
+                throw new RuntimeException("Lỗi: Thời lượng phim không hợp lệ.");
+//                return;
             }
             endDateTime = calculateEndDate(startDateTime, selectedPhim);
             if (endDateTime == null) {
                 showValidationError("Không thể tính toán thời gian kết thúc suất chiếu.", txtThoiGianBD_Time);
-                System.err.println("Lỗi: Không thể tính giờ kết thúc.");
-                return;
+                throw new RuntimeException("Lỗi: Không thể tính giờ kết thúc.");
+//                return;
             }
         } catch (Exception e) {
             showValidationError("Định dạng Ngày hoặc Giờ bắt đầu không hợp lệ. Không thể xử lý.", txtThoiGianBD_Time);
-            System.err.println("Lỗi: Định dạng ngày hoặc giờ bắt đầu không hợp lệ.");
-            return;
+            throw new RuntimeException("Lỗi: Định dạng ngày hoặc giờ bắt đầu không hợp lệ.");
+//            return;
         }
 
         String thoiGianBDStrDAO = DAO_DATE_TIME_FORMAT.format(startDateTime);
