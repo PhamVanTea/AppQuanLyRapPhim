@@ -55,7 +55,7 @@ public class VeUI extends JPanel {
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-                // No action needed for view-only
+                // Chỉ xem
 			}
 		});
 		scrollPane.setViewportView(table);

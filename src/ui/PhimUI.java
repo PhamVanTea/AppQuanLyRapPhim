@@ -59,7 +59,7 @@ public class PhimUI extends JPanel {
 
 	public PhimUI() {
 		setLayout(null);
-        setPreferredSize(new Dimension(1000, 680)); // Added Preferred Size
+        setPreferredSize(new Dimension(1000, 680)); 
 
 		JPanel panelDanhSach = new JPanel();
 		panelDanhSach.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh sách Phim", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -119,7 +119,7 @@ public class PhimUI extends JPanel {
 		panelThongTin.add(lblMaPhim);
 		txtMaPhim = new JTextField();
 		txtMaPhim.setEditable(false);
-        txtMaPhim.setBackground(Color.LIGHT_GRAY); // Visual cue for non-editable
+        txtMaPhim.setBackground(Color.LIGHT_GRAY); // Màu xám- để biết ô không thể sửa
 		txtMaPhim.setBounds(110, row1Y, fieldWidth, 25);
 		panelThongTin.add(txtMaPhim);
 		txtMaPhim.setColumns(10);
@@ -296,7 +296,7 @@ public class PhimUI extends JPanel {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof TheLoai) {
                     setText(((TheLoai) value).getTenTheLoai());
-                } else if (value == null && index == -1) { // For selected item display
+                } else if (value == null && index == -1) { // Hiển thị mục đã chọn
                     setText("-- Chọn Thể Loại --");
                 } else if (value == null) { // For dropdown list item
                      setText("-- Chọn Thể Loại --");
@@ -377,7 +377,7 @@ public class PhimUI extends JPanel {
 	}
 
 	private void setFieldsEditable(boolean isEditable, boolean isMaEditable) {
-		txtMaPhim.setEditable(false); // MaPhim is never user-editable
+		txtMaPhim.setEditable(false); // MaPhim không để ng dùng chỉnh sửa
 		txtTenPhim.setEditable(isEditable);
 		txtDaoDien.setEditable(isEditable);
         txtDienVien.setEditable(isEditable);
@@ -390,7 +390,7 @@ public class PhimUI extends JPanel {
         txtTenPhim.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
         txtDaoDien.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
         txtDienVien.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
-        // ComboBox doesn't typically change background based on enabled state like this
+        //comboBox không thay đổi background dựa trên trạng thái được bật như này
         txtThoiLuong.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
         txtXepHang.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
         txtMoTa.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);

@@ -611,8 +611,8 @@ public class GheNgoiUI extends JPanel {
     }
 
     private void cancelEditMode() {
-        setInitialState(); // This clears object and visual selection now
-        // No need to re-select button visually, user will click again if needed.
+        setInitialState(); // Lệnh xóa dtuong và hủy chọn hiển thị hiện tại
+//        hủy chế độ chỉnh sửa, giao diện sẽ trở về trạng thái ban đầu - không cần phải thao tác lại trên các nút chức năng.
     }
 
      private void showValidationError(String message, Component componentToFocus) {

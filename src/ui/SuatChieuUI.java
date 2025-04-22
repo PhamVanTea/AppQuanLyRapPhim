@@ -153,7 +153,7 @@ public class SuatChieuUI extends JPanel {
         panel_1.add(lblGioBD);
         txtThoiGianBD_Time = new JTextField();
         txtThoiGianBD_Time.setToolTipText("HH:mm (vd: 14:30)");
-        txtThoiGianBD_Time.setBounds(fieldX2, row3Y, 100, fieldH); // Shorter field for time only
+        txtThoiGianBD_Time.setBounds(fieldX2, row3Y, 100, fieldH); // Ngắn hơn vì chỉ nhập giờ
         panel_1.add(txtThoiGianBD_Time);
 
         JLabel lblGioKT = new JLabel("Kết thúc (dự kiến):");
@@ -162,14 +162,14 @@ public class SuatChieuUI extends JPanel {
         txtThoiGianKT_Display = new JTextField();
         txtThoiGianKT_Display.setEditable(false);
         txtThoiGianKT_Display.setBackground(Color.LIGHT_GRAY);
-        txtThoiGianKT_Display.setBounds(159, 150, 271, 25); // Spanning more width
+        txtThoiGianKT_Display.setBounds(159, 150, 271, 25); // Trải rộng chiều ngang hơn
         panel_1.add(txtThoiGianKT_Display);
 
         JPanel panelChucNang = new JPanel();
         panelChucNang.setBorder(new TitledBorder(null, "Chức năng", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelChucNang.setBounds(38, 592, 927, 64);
         add(panelChucNang);
-        panelChucNang.setLayout(new GridLayout(1, 0, 15, 0)); // Increased gap
+        panelChucNang.setLayout(new GridLayout(1, 0, 15, 0)); // Tăng k/c giữa các nút
 
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -327,7 +327,7 @@ public class SuatChieuUI extends JPanel {
 
     private void populateFieldsFromSelectedRow(int selectedRow) {
         if (selectedRow != -1) {
-             if (selectedRow < tableModel.getRowCount()){ // Check bounds
+             if (selectedRow < tableModel.getRowCount()){ // Giới hạn k vượt quá số dòng trong bảng
                 String maSuat = tableModel.getValueAt(selectedRow, 0).toString();
                 SuatChieu selectedSC = SuatChieuDAO.findById(maSuat);
                 if (selectedSC != null) {
@@ -357,7 +357,7 @@ public class SuatChieuUI extends JPanel {
                     clearFields();
                 }
             } else {
-                 clearFields(); // Clear if index is invalid
+                 clearFields(); // Xóa nếu chỉ số nhập k hợp lệ
             }
         }
     }
@@ -390,7 +390,7 @@ public class SuatChieuUI extends JPanel {
              isAdjustingFields = false;
          }
          calculateAndDisplayEndTime();
-         updateButtonStates(); // Ensure buttons update after clearing
+         updateButtonStates(); // Các nút cập nhật lại trạng thái
     }
 
 

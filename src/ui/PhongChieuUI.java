@@ -45,7 +45,7 @@ public class PhongChieuUI extends JPanel {
 
 	public PhongChieuUI() {
 		setLayout(null);
-        setPreferredSize(new Dimension(1000, 680)); // Added Size
+        setPreferredSize(new Dimension(1000, 680));
 
 		JPanel panelDanhSach = new JPanel();
 		panelDanhSach.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh sách Phòng chiếu", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -82,7 +82,7 @@ public class PhongChieuUI extends JPanel {
 					} else {
 						clearFields();
 					}
-                    updateButtonStates(); // Update buttons after selection handling
+                    updateButtonStates(); // Cập nhật trạng thái nút
 				}
 			}
 		});
@@ -108,10 +108,10 @@ public class PhongChieuUI extends JPanel {
 		txtMaPhongChieu.setColumns(10);
 
 		JLabel lblTenPhongChieu = new JLabel("Tên phòng chiếu");
-		lblTenPhongChieu.setBounds(476, 35, labelWidth, 25); // Adjusted label width
+		lblTenPhongChieu.setBounds(476, 35, labelWidth, 25); // Điều chỉnh label width
 		panelThongTin.add(lblTenPhongChieu);
 		txtTenPhongChieu = new JTextField();
-		txtTenPhongChieu.setBounds(600, 35, fieldWidth, 25); // Adjusted x position
+		txtTenPhongChieu.setBounds(600, 35, fieldWidth, 25); // Chỉnh x position
 		panelThongTin.add(txtTenPhongChieu);
 		txtTenPhongChieu.setColumns(10);
 
@@ -127,7 +127,7 @@ public class PhongChieuUI extends JPanel {
 		panelChucNang.setBorder(new TitledBorder(null, "Chức năng", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelChucNang.setBounds(38, 592, 927, 64);
 		add(panelChucNang);
-		panelChucNang.setLayout(new GridLayout(1, 0, 15, 0)); // Increased gap
+		panelChucNang.setLayout(new GridLayout(1, 0, 15, 0)); // Tăng k/c các nút
 
 		btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -245,11 +245,11 @@ public class PhongChieuUI extends JPanel {
 	}
 
 	private void setFieldsEditable(boolean isEditable, boolean isMaEditable_IGNORED) {
-		txtMaPhongChieu.setEditable(false); // MaPhong never editable
+		txtMaPhongChieu.setEditable(false); // MaPhong không cho phép chỉnh sửa
 		txtTenPhongChieu.setEditable(isEditable);
 		txtSoGhe.setEditable(isEditable);
 
-        txtMaPhongChieu.setBackground(Color.LIGHT_GRAY); // Always non-editable look
+        txtMaPhongChieu.setBackground(Color.LIGHT_GRAY); // Hiển thị màu nền xám - như k cho phép chỉnh
         txtTenPhongChieu.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
         txtSoGhe.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
 	}
@@ -268,7 +268,7 @@ public class PhongChieuUI extends JPanel {
 		txtTimKiem.setEnabled(isIdle);
 
         tablePhongChieu.setEnabled(isIdle);
-        setFieldsEditable(!isIdle, false); // MaPhong never editable
+        setFieldsEditable(!isIdle, false); // MaPhong không chỉnh sửa
 
         if (!isIdle) {
              tablePhongChieu.clearSelection();
@@ -293,15 +293,15 @@ public class PhongChieuUI extends JPanel {
 	            });
 			}
 		}
-		setInitialState(); // Reset state after loading
+		setInitialState(); // Đặt lại trạng thái
 	}
 
 	private void enterAddMode() {
 		currentState = EditState.ADDING;
 		tablePhongChieu.clearSelection();
 		clearFields();
-        updateButtonStates(); // Makes fields editable
-		txtTenPhongChieu.requestFocusInWindow(); // Focus on TenPhong
+        updateButtonStates(); // Cho phép chỉnh sửa các trường
+		txtTenPhongChieu.requestFocusInWindow(); // Focus TenPhong
 	}
 
 	private void enterEditMode() {

@@ -73,7 +73,7 @@ public class ThongKeUI extends JPanel {
         dateChooserTuNgay = new JDateChooser();
         dateChooserTuNgay.setDateFormatString("dd/MM/yyyy");
         dateChooserTuNgay.setDate(new Date());
-        dateChooserTuNgay.getCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Add cursor
+        dateChooserTuNgay.getCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Add cursor con trỏ chuột
         dateChooserTuNgay.setBounds(x2, rowY, fieldW1, 25);
         panelLuaChon.add(dateChooserTuNgay);
 
@@ -84,14 +84,14 @@ public class ThongKeUI extends JPanel {
         dateChooserDenNgay = new JDateChooser();
         dateChooserDenNgay.setDateFormatString("dd/MM/yyyy");
         dateChooserDenNgay.setDate(new Date());
-        dateChooserDenNgay.getCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Add cursor
+        dateChooserDenNgay.getCalendarButton().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Add cursor con trỏ chuột
         dateChooserDenNgay.setBounds(x4, rowY, fieldW1, 25);
         panelLuaChon.add(dateChooserDenNgay);
 
         btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnThongKe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Add cursor
-        btnThongKe.setIcon(new ImageIcon(ThongKeUI.class.getResource("/icons/icons8-statistics-20.png"))); // Add icon
+        btnThongKe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Add cursor con trỏ chuột
+        btnThongKe.setIcon(new ImageIcon(ThongKeUI.class.getResource("/icons/icons8-statistics-20.png"))); // Thêm icon
         btnThongKe.setBounds(764, 29, 144, 43);
         panelLuaChon.add(btnThongKe);
         btnThongKe.addActionListener(e -> tinhVaHienThiThongKe());

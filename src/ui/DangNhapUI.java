@@ -69,8 +69,8 @@ public class DangNhapUI extends JFrame {
 
 		// --- Username Panel ---
 		JPanel panelUser = new JPanel();
-		panelUser.setBackground(new Color(240, 248, 255)); // Match content pane background
-		panelUser.setBounds(45, 80, 346, 30); // Centered position
+		panelUser.setBackground(new Color(240, 248, 255)); // Màu nền giống với content pane
+		panelUser.setBounds(45, 80, 346, 30); // Vị trí căn giữa
 		contentPane.add(panelUser);
 		panelUser.setLayout(null);
 
@@ -94,9 +94,9 @@ public class DangNhapUI extends JFrame {
 
 		// --- Password Panel ---
 		JPanel panelPassword = new JPanel();
-		panelPassword.setBackground(new Color(240, 248, 255)); // Match content pane background
+		panelPassword.setBackground(new Color(240, 248, 255)); // Màu nền giống với content pane
 		panelPassword.setLayout(null);
-		panelPassword.setBounds(45, 120, 346, 30); // Position below username
+		panelPassword.setBounds(45, 120, 346, 30); // vị trí dưới username
 		contentPane.add(panelPassword);
 
 		JLabel lblPasswordIcon = new JLabel("");
@@ -117,14 +117,14 @@ public class DangNhapUI extends JFrame {
 
 		// --- Button Panel ---
 		JPanel panelButtons = new JPanel();
-		panelButtons.setBackground(new Color(240, 248, 255)); // Match background
-		panelButtons.setBounds(10, 175, 416, 45); // Position buttons below password
+		panelButtons.setBackground(new Color(240, 248, 255)); // Đặt màu nền panel
+		panelButtons.setBounds(10, 175, 416, 45); // Đặt vị trí các nút dưới trường password
 		contentPane.add(panelButtons);
-        FlowLayout fl_panelButtons = new FlowLayout(FlowLayout.CENTER, 20, 5); // Center buttons with gap
+        FlowLayout fl_panelButtons = new FlowLayout(FlowLayout.CENTER, 20, 5); // Center buttons với k/c
 		panelButtons.setLayout(fl_panelButtons);
 
 		JButton btnDangNhap = new JButton("Đăng nhập");
-		btnDangNhap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Hand cursor
+		btnDangNhap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Hand cursor (con trỏ hình bàn tay khi di chuột đến)
 		btnDangNhap.setForeground(Color.BLACK);
 		btnDangNhap.setBackground(new Color(0, 128, 128)); // Teal background
 		btnDangNhap.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -138,9 +138,9 @@ public class DangNhapUI extends JFrame {
 		panelButtons.add(btnDangNhap);
 
 		JButton btnThoat = new JButton("Thoát");
-		btnThoat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Hand cursor
+		btnThoat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Hand cursor (con trỏ hình bàn tay khi di chuột đến)
 		btnThoat.setForeground(Color.BLACK);
-		btnThoat.setBackground(new Color(192, 57, 43)); // Red background
+		btnThoat.setBackground(new Color(192, 57, 43)); // Background đỏ
 		btnThoat.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnThoat.setIcon(new ImageIcon(DangNhapUI.class.getResource("/icons/icons8-exit-20.png"))); // Exit icon
         btnThoat.setPreferredSize(new Dimension(150, 35)); // Set preferred size

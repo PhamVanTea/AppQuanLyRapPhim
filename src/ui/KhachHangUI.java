@@ -395,9 +395,7 @@ public class KhachHangUI extends JPanel {
 //            System.err.println("Số điện thoại không hợp lệ. Phải bắt đầu bằng các đầu số hiện hành, và có 10 hoặc 11 chữ số.");
 //            return;
         }
-//        if (!email.isEmpty() && !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
-//            showValidationError("Địa chỉ email không hợp lệ.", txtEmail); return;
-//        }
+
         if (!email.isEmpty() && !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
             showValidationError("Địa chỉ email không hợp lệ (ví dụ: example@gmail.com).", txtEmail);
             throw new RuntimeException("Lỗi: Địa chỉ email trống hoặc nhập không hợp lệ");
