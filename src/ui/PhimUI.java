@@ -409,7 +409,7 @@ public class PhimUI extends JPanel {
 		btnTimKiem.setEnabled(isIdle);
 		txtTimKiem.setEnabled(isIdle);
         tablePhim.setEnabled(isIdle);
-        setFieldsEditable(!isIdle, false); // MaPhim is never editable
+        setFieldsEditable(!isIdle, false); // MaPhim k được chỉnh (tự phát sinh)
 	}
 
 	private void setInitialState() {
@@ -490,70 +490,85 @@ public class PhimUI extends JPanel {
 	}
 
 	private void savePhim() {
-        String ma;
-		String ten = txtTenPhim.getText().trim();
-        String daoDien = txtDaoDien.getText().trim();
-        String dienVien = txtDienVien.getText().trim();
-        Object selectedItem = comboBoxTheLoai.getSelectedItem();
-        String thoiLuongStr = txtThoiLuong.getText().trim();
-        String xepHang = txtXepHang.getText().trim();
-        String moTa = txtMoTa.getText().trim();
+	    String ma;
+	    String ten = txtTenPhim.getText().trim();
+	    String daoDien = txtDaoDien.getText().trim();
+	    String dienVien = txtDienVien.getText().trim();
+	    Object selectedItem = comboBoxTheLoai.getSelectedItem();
+	    String thoiLuongStr = txtThoiLuong.getText().trim();
+	    String xepHang = txtXepHang.getText().trim();
+	    String moTa = txtMoTa.getText().trim();
 
-		if (ten.isEmpty()) { showValidationError("Tên phim không được để trống.", txtTenPhim); return; }
-        TheLoai selectedTheLoai = null;
-        if (selectedItem instanceof TheLoai) {
-            selectedTheLoai = (TheLoai) selectedItem;
-        } else {
-            showValidationError("Vui lòng chọn một thể loại hợp lệ.", comboBoxTheLoai); return;
-        }
-        if (thoiLuongStr.isEmpty()) { showValidationError("Thời lượng không được để trống.", txtThoiLuong); return; }
-        int thoiLuong = 0;
-        try {
-            thoiLuong = Integer.parseInt(thoiLuongStr);
-            if (thoiLuong <= 0) { throw new NumberFormatException(); }
-        } catch (NumberFormatException e) {
-            showValidationError("Thời lượng phải là một số nguyên dương hợp lệ (ví dụ: 120).", txtThoiLuong); return;
-        }
+	    // Kiểm tra tên phim bằng regex
+	    if (!ten.matches("^[\\p{L}0-9 ]+$")) { 
+	        showValidationError("Tên phim không hợp lệ. Chỉ chứa chữ cái và số.", txtTenPhim); 
+	        System.err.println("Tên phim không hợp lệ.");
+	        return; 
+	    }
+	    
+	    TheLoai selectedTheLoai = null;
+	    if (selectedItem instanceof TheLoai) {
+	        selectedTheLoai = (TheLoai) selectedItem;
+	    } else {
+	        showValidationError("Vui lòng chọn một thể loại hợp lệ.", comboBoxTheLoai); 
+	        System.err.println("Vui lòng chọn một thể loại hợp lệ.");
+	        return;
+	    }
 
-		Phim phim;
-		boolean success = false;
-		String successMessage = "";
-		String errorMessage = "";
+	    // Kiểm tra thời lượng bằng regex
+	    if (!thoiLuongStr.matches("^\\d+$")) { 
+	        showValidationError("Thời lượng phải là một số nguyên dương.", txtThoiLuong);
+	        System.err.println("Thời lượng phải là một số nguyên dương.");
+	        return; 
+	    }
 
-		try {
-			if (currentState == EditState.ADDING) {
-                ma = PhimDAO.generateMaPhim(); // Generate ID using DAO
-                phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
-				success = PhimDAO.create(phim);
-				successMessage = "Thêm phim thành công!";
-                errorMessage = "Thêm phim thất bại. Mã phim có thể đã tồn tại."; // Added error message
-			} else if (currentState == EditState.EDITING) {
-                ma = txtMaPhim.getText().trim(); // Get existing ID from non-editable field
-                 if (ma.isEmpty() || ma.equals("(Tự động)")) {
-                     showError("Lỗi: Không xác định được Mã Phim để cập nhật.", null);
-                     return;
-                 }
-                phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
-				success = PhimDAO.update(phim);
-				successMessage = "Cập nhật phim thành công!";
-                errorMessage = "Cập nhật phim thất bại."; // Added error message
-			} else {
-                 return;
-            }
+	    int thoiLuong = Integer.parseInt(thoiLuongStr);
+	    if (thoiLuong <= 0) {
+	        showValidationError("Thời lượng phải lớn hơn 0.", txtThoiLuong);
+	        System.err.println("Thời lượng phải lớn hơn 0.");
+	        return;
+	    }
 
-			if (success) {
-				JOptionPane.showMessageDialog(this, successMessage, "Thành công", JOptionPane.INFORMATION_MESSAGE);
-				loadPhimTableData(PhimDAO.readAll());
-			} else {
-                showValidationError(errorMessage, txtTenPhim); // Show specific error message
-                 if (currentState == EditState.ADDING) {
-                    txtMaPhim.setText("(Tự động)");
-                 }
-			}
-		} catch (Exception ex) {
-            showError("Đã xảy ra lỗi hệ thống trong quá trình lưu.", ex);
-		}
+	    Phim phim;
+	    boolean success = false;
+	    String successMessage = "";
+	    String errorMessage = "";
+
+	    try {
+	        if (currentState == EditState.ADDING) {
+	            ma = PhimDAO.generateMaPhim(); // Generate ID using DAO
+	            phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
+	            success = PhimDAO.create(phim);
+	            successMessage = "Thêm phim thành công!";
+	            errorMessage = "Thêm phim thất bại. Mã phim có thể đã tồn tại.";
+	        } else if (currentState == EditState.EDITING) {
+	            ma = txtMaPhim.getText().trim(); // Get existing ID from non-editable field
+	            if (ma.isEmpty() || ma.equals("(Tự động)")) {
+	                showError("Lỗi: Không xác định được Mã Phim để cập nhật.", null);
+	                return;
+	            }
+	            phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
+	            success = PhimDAO.update(phim);
+	            successMessage = "Cập nhật phim thành công!";
+	            errorMessage = "Cập nhật phim thất bại.";
+	        } else {
+	            return;
+	        }
+
+	        if (success) {
+	            JOptionPane.showMessageDialog(this, successMessage, "Thành công", JOptionPane.INFORMATION_MESSAGE);
+	            loadPhimTableData(PhimDAO.readAll());
+	        } else {
+	            showValidationError(errorMessage, txtTenPhim);
+	            if (currentState == EditState.ADDING) {
+	                txtMaPhim.setText("(Tự động)");
+	            }
+	        }
+	    } catch (Exception ex) {
+	        showError("Đã xảy ra lỗi hệ thống trong quá trình lưu.", ex);
+	    }
 	}
+
 
 	private void cancelEditMode() {
         setInitialState();
