@@ -1,3 +1,4 @@
+// Gói giao diện người dùng
 package ui;
 
 // Các import cần thiết cho giao diện và xử lý PDF
@@ -55,6 +56,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import connect.DbConnect;
 
+// Lớp BanVeUI kế thừa từ JPanel, tạo giao diện bán vé
 public class BanVeUI extends JPanel {
     // Khai báo các thành phần giao diện và biến cần thiết
     private JTable tableSuatChieu;
@@ -545,26 +547,31 @@ public class BanVeUI extends JPanel {
         updateButtonStates();
     }
 
-    // Xử lý bán vé và in hóa đơn
+ // Xử lý bán vé và in hóa đơn
     private void processTicketSaleAndPrint() {
+        // Xác định khách hàng từ trường nhập liệu
         selectedKhachHang = getKhachHangFromText();
+        
+        // Kiểm tra các điều kiện trước khi tiếp tục
         if (selectedSuatChieu == null) { 
-        	showValidationError("Vui lòng chọn một suất chiếu.", tableSuatChieu);
-        	System.err.println("Vui lòng chọn một suất chiếu.");
-        	return; 
-        	}
+            showValidationError("Vui lòng chọn một suất chiếu.", tableSuatChieu);
+            System.err.println("Vui lòng chọn một suất chiếu.");
+            return; 
+        }
         if (selectedKhachHang == null) { 
-        	showValidationError("Vui lòng chọn khách hàng.", txtKhachHang);
-        	throw new RuntimeException("Vui lòng chọn khách hàng.");
-//        return; 
+            showValidationError("Vui lòng chọn khách hàng.", txtKhachHang);
+            throw new RuntimeException("Vui lòng chọn khách hàng.");
         }
         if (selectedSeatsList.isEmpty()) { 
-        	showValidationError("Vui lòng chọn ít nhất một ghế.", panelSeatGrid);
-        	throw new RuntimeException("Vui lòng chọn ít nhất một ghế.");
-//        return; 
+            showValidationError("Vui lòng chọn ít nhất một ghế.", panelSeatGrid);
+            throw new RuntimeException("Vui lòng chọn ít nhất một ghế.");
         }
-        if (StaticVariable.nhanVien == null) { showError("Lỗi: Không xác định được nhân viên đang đăng nhập.", null); return; }
+        if (StaticVariable.nhanVien == null) { 
+            showError("Lỗi: Không xác định được nhân viên đang đăng nhập.", null); 
+            return; 
+        }
 
+        // Tạo hóa đơn và danh sách vé
         String maHoaDon = "HD" + System.currentTimeMillis() % 1000000;
         float tongTien = selectedSuatChieu.getGia() * selectedSeatsList.size();
         String ngayLap = dbDateTimeFormatter.format(new Date());
@@ -572,7 +579,7 @@ public class BanVeUI extends JPanel {
 
         HoaDon hoaDon = new HoaDon(maHoaDon, StaticVariable.nhanVien, selectedKhachHang, tongTien, ngayLap, trangThaiHD);
         List<Ve> veList = new ArrayList<>();
-  
+      
         boolean transactionSuccess = false;
 
         try {
@@ -597,41 +604,30 @@ public class BanVeUI extends JPanel {
 
         } catch (SQLException e) {
             showError("Lỗi giao dịch khi đặt vé: " + e.getMessage(), e);
-        } finally {
         }
 
+        // Nếu giao dịch thành công, tự động lưu file PDF vào ổ D
         if (transactionSuccess) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Chọn nơi lưu hóa đơn PDF");
             String suggestedFileName = "HoaDon_" + maHoaDon + "_" + fileDateTimeFormatter.format(new Date()) + ".pdf";
-            fileChooser.setSelectedFile(new File(suggestedFileName));
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF Documents (*.pdf)", "pdf");
-            fileChooser.setFileFilter(filter);
+            File fileToSave = new File("D:\\" + suggestedFileName); // Đường dẫn lưu mặc định ở ổ D
 
-            int userSelection = fileChooser.showSaveDialog(this);
-
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToSave = fileChooser.getSelectedFile();
-                if (!fileToSave.getName().toLowerCase().endsWith(".pdf")) {
-                    fileToSave = new File(fileToSave.getParentFile(), fileToSave.getName() + ".pdf");
-                }
-
-                if(writeInvoiceToPdf(fileToSave, hoaDon, veList)) {
-                    JOptionPane.showMessageDialog(this,
-                        "Đặt vé thành công! Hóa đơn PDF đã được lưu vào:\n" + fileToSave.getAbsolutePath(),
-                        "Đặt Vé Thành Công & Đã Lưu PDF",
-                        JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                        "Đặt vé thành công nhưng đã xảy ra lỗi khi lưu hóa đơn PDF.\nHóa đơn ID: " + maHoaDon,
-                        "Đặt Vé Thành Công - Lỗi Lưu PDF",
-                        JOptionPane.WARNING_MESSAGE);
+            // Ghi hóa đơn ra file PDF
+            if (writeInvoiceToPdf(fileToSave, hoaDon, veList)) {
+                JOptionPane.showMessageDialog(this,
+                    "Đặt vé thành công! Hóa đơn PDF đã được lưu vào:\n" + fileToSave.getAbsolutePath(),
+                    "Đặt Vé Thành Công & Đã Lưu PDF",
+                    JOptionPane.INFORMATION_MESSAGE);
+                // Mở file PDF
+                try {
+                    Desktop.getDesktop().open(fileToSave);
+                } catch (IOException e) {
+                    showError("Lỗi khi mở file PDF: " + e.getMessage(), e);
                 }
             } else {
                 JOptionPane.showMessageDialog(this,
-                    "Đặt vé thành công cho hóa đơn " + maHoaDon + "! (File PDF chưa được lưu)",
-                    "Đặt Vé Thành Công",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    "Đặt vé thành công nhưng đã xảy ra lỗi khi lưu hóa đơn PDF.\nHóa đơn ID: " + maHoaDon,
+                    "Đặt Vé Thành Công - Lỗi Lưu PDF",
+                    JOptionPane.WARNING_MESSAGE);
             }
             handleSuatChieuSelectionChange();
             clearSelectionAndPrice();
@@ -640,22 +636,22 @@ public class BanVeUI extends JPanel {
 
     // Ghi hóa đơn ra file PDF
     private boolean writeInvoiceToPdf(File file, HoaDon hoaDon, List<Ve> veList) {
-        Document document = new Document(PageSize.A5); // Use A5 for a smaller receipt size
+        Document document = new Document(PageSize.A5); // Sử dụng kích thước A5 cho hóa đơn nhỏ
         try {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
             document.open();
 
-            // Title
+            // Tiêu đề
             Paragraph title = new Paragraph("HÓA ĐƠN THANH TOÁN", fontTitle);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
-            document.add(Chunk.NEWLINE); // Add empty line
+            document.add(Chunk.NEWLINE); // Thêm dòng trống
 
-            // Info Table (more structured than paragraphs)
-            PdfPTable infoTable = new PdfPTable(2); // 2 columns
+            // Bảng thông tin (cấu trúc hơn so với đoạn văn bản)
+            PdfPTable infoTable = new PdfPTable(2); // 2 cột
             infoTable.setWidthPercentage(100);
-            infoTable.setWidths(new float[]{1, 3}); // Column widths (Label, Value)
-            infoTable.getDefaultCell().setBorder(Rectangle.OUT_BOTTOM); // No borders for cells
+            infoTable.setWidths(new float[]{1, 3}); // Độ rộng cột (Nhãn, Giá trị)
+            infoTable.getDefaultCell().setBorder(Rectangle.OUT_BOTTOM); // Không có viền cho ô
 
             addInfoRow(infoTable, "Mã Hóa Đơn:", hoaDon.getMaHoaDon());
             addInfoRow(infoTable, "Ngày Lập:", dateTimeFormatter.format(new Date()));
@@ -667,7 +663,7 @@ public class BanVeUI extends JPanel {
             document.add(infoTable);
             document.add(Chunk.NEWLINE);
 
-            // Ticket Details Header
+            // Tiêu đề chi tiết vé
             Paragraph detailsHeader = new Paragraph("----- CHI TIẾT VÉ -----", fontHeader);
             detailsHeader.setAlignment(Element.ALIGN_CENTER);
             document.add(detailsHeader);
@@ -701,13 +697,13 @@ public class BanVeUI extends JPanel {
 
             document.add(Chunk.NEWLINE);
 
-            // Total Amount
+            // Tổng tiền
             Paragraph total = new Paragraph("TỔNG TIỀN:   " + currencyFormatter.format(hoaDon.getTongTien()), fontHeader);
             total.setAlignment(Element.ALIGN_RIGHT);
             document.add(total);
             document.add(Chunk.NEWLINE);
 
-            // Footer
+            // Chân trang
             Paragraph footer = new Paragraph("Cảm ơn quý khách! Hẹn gặp lại!", fontNormal);
             footer.setAlignment(Element.ALIGN_CENTER);
             document.add(footer);
@@ -722,7 +718,7 @@ public class BanVeUI extends JPanel {
         }
     }
 
-    // Helper to add rows to info tables in PDF
+    // Helper để thêm hàng vào bảng thông tin trong PDF
     private void addInfoRow(PdfPTable table, String label, String value) {
         PdfPCell labelCell = new PdfPCell(new Phrase(label, fontBold));
         labelCell.setBorder(Rectangle.OUT_BOTTOM);
