@@ -502,28 +502,13 @@ public class SuatChieuUI extends JPanel {
             throw new RuntimeException("Lỗi: Chưa chọn phòng chiếu.");
 //            return;
         }
-        if (startDateOnly == null) {
-            showValidationError("Vui lòng chọn Ngày bắt đầu.", dateChooserThoiGianBD);
-            throw new RuntimeException("Lỗi: Chưa chọn ngày bắt đầu.");
-//            return;
-        }
-        if (!startTimeStr.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
-            showValidationError("Giờ bắt đầu không hợp lệ. Phải có định dạng HH:mm (vd: 09:30 hoặc 14:05).", txtThoiGianBD_Time);
-            throw new RuntimeException("Lỗi: Giờ bắt đầu không hợp lệ.");
-//            return;
-        }
         if (giaStr.isEmpty()) {
             showValidationError("Giá vé không được để trống.", txtGia);
             throw new RuntimeException("Lỗi: Giá vé trống.");
 //            return;
         }
-
-        Phim selectedPhim = (Phim) phimItem;
-        PhongChieu selectedPhong = (PhongChieu) phongItem;
+        
         float gia;
-        Date startDateTime;
-        Date endDateTime;
-
         try {
             gia = Float.parseFloat(giaStr);
             if (gia < 0) {
@@ -536,6 +521,32 @@ public class SuatChieuUI extends JPanel {
             throw new RuntimeException("Lỗi: Giá vé không hợp lệ.");
 //            return;
         }
+        
+        if (startDateOnly == null) {
+            showValidationError("Vui lòng chọn Ngày bắt đầu.", dateChooserThoiGianBD);
+            throw new RuntimeException("Lỗi: Chưa chọn ngày bắt đầu.");
+//            return;
+        }
+        
+        if (startTimeStr.isEmpty()) {
+        	showValidationError("Chưa nhập thời gian bắt đầu", txtThoiGianBD_Time);
+        	throw new RuntimeException("Lỗi: Chưa nhập thời gian bắt đầu.");
+        }
+        
+        if (!startTimeStr.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
+            showValidationError("Giờ bắt đầu không hợp lệ. Phải có định dạng HH:mm (VD: 09:30 hoặc 14:05).", txtThoiGianBD_Time);
+            throw new RuntimeException("Lỗi: Giờ bắt đầu không hợp lệ.");
+//            return;
+        }
+      
+
+        Phim selectedPhim = (Phim) phimItem;
+        PhongChieu selectedPhong = (PhongChieu) phongItem;
+        
+        Date startDateTime;
+        Date endDateTime;
+
+       
 
         try {
             String datePart = DATE_ONLY_FORMAT.format(startDateOnly);

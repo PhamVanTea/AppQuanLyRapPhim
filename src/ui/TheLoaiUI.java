@@ -396,11 +396,13 @@ public class TheLoaiUI extends JPanel {
 			throw new RuntimeException("Tên thể loại không được để trống.");
 //			return;
 		}
-		if (moTa.isEmpty()) {
-			showValidationError("Mô tả không được để trống.", txtTenTheLoai);
-			throw new RuntimeException("Mô tả không được để trống.");
-//			return;
-		}
+		
+		//Mô tả có thể để trống
+//		if (moTa.isEmpty()) {
+//			showValidationError("Mô tả không được để trống.", txtTenTheLoai);
+//			throw new RuntimeException("Mô tả không được để trống.");
+////			return;
+//		}
 		TheLoai theLoai;
 		boolean success = false;
 		String successMessage = "";

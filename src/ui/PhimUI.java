@@ -499,12 +499,49 @@ public class PhimUI extends JPanel {
 	    String xepHang = txtXepHang.getText().trim();
 	    String moTa = txtMoTa.getText().trim();
 
+	    if (ten.isEmpty()) {
+	    	showValidationError("Tên phim không để trống", txtTenPhim);
+	    	throw new RuntimeException("Lỗi: Chưa nhập tên phim");
+	    }
 	    // Kiểm tra tên phim bằng regex
 	    if (!ten.matches("^[\\p{L}0-9 ]+$")) { 
 	        showValidationError("Tên phim không hợp lệ. Chỉ chứa chữ cái và số.", txtTenPhim); 
 	        throw new RuntimeException("Tên phim không hợp lệ.");
 //	        return; 
 	    }
+	    
+	    if (daoDien.isEmpty()) {
+	    	showValidationError("Không để trống đạo diễn", txtDaoDien);
+	    	throw new RuntimeException("Lỗi: Chưa nhập đạo diễn của phim");
+	    }
+	    
+	    if (!daoDien.matches("^[A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$")) {
+	        showValidationError("Tên đạo diễn chỉ chứa chữ cái, phải viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng.", txtDaoDien);
+	        throw new RuntimeException("Lỗi: Tên đạo diễn nhập không hợp lệ!");
+	    }
+	    
+	    if (dienVien.isEmpty()) {
+	    	showValidationError("Không để trống diễn viên", txtDienVien);
+	    	throw new RuntimeException("Lỗi: Chưa nhập diễn viên");
+	    }
+	    
+	    if (!dienVien.matches("^[A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$")) {
+	        showValidationError("Tên diễn viên chỉ chứa chữ cái, phải viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng.", txtDienVien);
+	        throw new RuntimeException("Lỗi: Tên diễn viên nhập không hợp lệ!");
+	    }
+	    
+	    if (thoiLuongStr.isEmpty()) {
+	        showValidationError("Thời lượng không được để trống.", txtThoiLuong);
+	        throw new RuntimeException("Lỗi: Chưa nhập thời lượng.");
+	    }
+	    
+	    int thoiLuong = Integer.parseInt(thoiLuongStr);
+	    if (thoiLuong <= 0) {
+	        showValidationError("Thời lượng phải lớn hơn 0.", txtThoiLuong);
+	        throw new RuntimeException("Thời lượng phải lớn hơn 0.");
+//	        return;
+	    }
+	    
 	    
 	    TheLoai selectedTheLoai = null;
 	    if (selectedItem instanceof TheLoai) {
@@ -522,12 +559,7 @@ public class PhimUI extends JPanel {
 //	        return; 
 	    }
 
-	    int thoiLuong = Integer.parseInt(thoiLuongStr);
-	    if (thoiLuong <= 0) {
-	        showValidationError("Thời lượng phải lớn hơn 0.", txtThoiLuong);
-	        throw new RuntimeException("Thời lượng phải lớn hơn 0.");
-//	        return;
-	    }
+
 
 	    Phim phim;
 	    boolean success = false;
