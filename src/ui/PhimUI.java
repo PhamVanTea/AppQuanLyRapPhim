@@ -252,7 +252,7 @@ public class PhimUI extends JPanel {
 		add(panelTimKiem);
 
 		txtTimKiem = new JTextField();
-		txtTimKiem.setToolTipText("Nhập tên phim để tìm kiếm");
+		txtTimKiem.setToolTipText("Nhập tên phim cần tìm kiếm");
 		txtTimKiem.setBounds(10, 7, 296, 21);
 		panelTimKiem.add(txtTimKiem);
 		txtTimKiem.setColumns(10);

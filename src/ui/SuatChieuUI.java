@@ -534,7 +534,7 @@ public class SuatChieuUI extends JPanel {
         }
         
         if (!startTimeStr.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
-            showValidationError("Giờ bắt đầu không hợp lệ. Phải có định dạng HH:mm (VD: 09:30 hoặc 14:05).", txtThoiGianBD_Time);
+            showValidationError("Giờ bắt đầu không hợp lệ. Phải có định dạng HH:mm (VD: 09:30 hoặc 14:05). (Giờ: 0-23; Phút: 0-59)", txtThoiGianBD_Time);
             throw new RuntimeException("Lỗi: Giờ bắt đầu không hợp lệ.");
 //            return;
         }

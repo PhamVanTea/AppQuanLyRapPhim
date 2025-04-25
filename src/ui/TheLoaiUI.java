@@ -235,6 +235,7 @@ public class TheLoaiUI extends JPanel {
 		btnTimKiem.setEnabled(true);
 
 		txtTimKiem = new JTextField();
+		txtTimKiem.setToolTipText("Nhập tên thể loại cần tìm kiếm");
 		txtTimKiem.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {

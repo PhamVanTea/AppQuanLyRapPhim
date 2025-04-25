@@ -192,7 +192,7 @@ public class PhongChieuUI extends JPanel {
 		add(panelTimKiem);
 
 		txtTimKiem = new JTextField();
-		txtTimKiem.setToolTipText("Nhập tên phòng chiếu để tìm kiếm");
+		txtTimKiem.setToolTipText("Nhập tên phòng chiếu cần tìm kiếm");
 		txtTimKiem.setColumns(10);
 		txtTimKiem.setBounds(10, 7, 296, 21);
 		panelTimKiem.add(txtTimKiem);

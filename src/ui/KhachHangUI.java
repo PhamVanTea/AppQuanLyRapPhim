@@ -130,7 +130,7 @@ public class KhachHangUI extends JPanel {
 		add(panelSearch);
 
 		txtTimKiem = new JTextField();
-		txtTimKiem.setToolTipText("Nhập tên khách hàng cần tìm");
+		txtTimKiem.setToolTipText("Nhập tên khách hàng cần tìm kiếm");
 		txtTimKiem.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
