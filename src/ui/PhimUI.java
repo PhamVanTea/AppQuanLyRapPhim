@@ -504,8 +504,9 @@ public class PhimUI extends JPanel {
 	    	throw new RuntimeException("Lỗi: Chưa nhập tên phim");
 	    }
 	    // Kiểm tra tên phim bằng regex
-	    if (!ten.matches("^[\\p{L}0-9 ]+$")) { 
-	        showValidationError("Tên phim không hợp lệ. Chỉ chứa chữ cái và số.", txtTenPhim); 
+//	    if (!ten.matches("^[\\p{L}0-9 ]+$")) { 
+	    if (!ten.matches("^[A-ZÀ-Ỹ][\\p{L}0-9 :_.,'\"!?()\\-]*$")) { 
+	        showValidationError("Tên phim không hợp lệ. Tên phim phải bắt đầu bằng chữ in hoa, cho phép chữ cái, số, và một số ký tự đặc biệt", txtTenPhim); 
 	        throw new RuntimeException("Tên phim không hợp lệ.");
 //	        return; 
 	    }
@@ -516,7 +517,7 @@ public class PhimUI extends JPanel {
 	    }
 	    
 	    if (!daoDien.matches("^[A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$")) {
-	        showValidationError("Tên đạo diễn chỉ chứa chữ cái, phải viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng.", txtDaoDien);
+	        showValidationError("Tên đạo diễn phải viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng.", txtDaoDien);
 	        throw new RuntimeException("Lỗi: Tên đạo diễn nhập không hợp lệ!");
 	    }
 	    
@@ -525,7 +526,8 @@ public class PhimUI extends JPanel {
 	    	throw new RuntimeException("Lỗi: Chưa nhập diễn viên");
 	    }
 	    
-	    if (!dienVien.matches("^[A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$")) {
+//	    if (!dienVien.matches("^[A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$")) {
+	    if (!dienVien.matches("^[a-zA-ZÀ-Ỹà-ỹ .]+(,\\s*[a-zA-ZÀ-Ỹà-ỹ .]+)*(\\s*\\.\\.\\.)?$")) {
 	        showValidationError("Tên diễn viên chỉ chứa chữ cái, phải viết hoa chữ cái đầu mỗi từ, cho phép khoảng trắng.", txtDienVien);
 	        throw new RuntimeException("Lỗi: Tên diễn viên nhập không hợp lệ!");
 	    }
