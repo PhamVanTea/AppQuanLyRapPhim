@@ -84,6 +84,7 @@ public class MainUI extends JFrame {
 		setTitle("Quản Lý Rạp Chiếu Phim");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1240, 720);
+		//làm to giao diện
         setMinimumSize(new Dimension(1000, 600));
         setResizable(false);
 		contentPane = new JPanel();
