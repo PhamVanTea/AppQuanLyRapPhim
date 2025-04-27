@@ -1,4 +1,3 @@
-// Gói giao diện người dùng
 package ui;
 
 // Các import cần thiết cho giao diện và xử lý PDF
@@ -15,6 +14,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -45,13 +45,13 @@ import com.lowagie.text.FontFactory;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.BaseFont; 
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-// Lớp BanVeUI kế thừa từ JPanel, tạo giao diện bán vé
-public class BanVeUI extends JPanel {
+// Lớp BanVeUI kế thừa từ JPanel và implements ActionListener
+public class BanVeUI extends JPanel implements ActionListener {
     // Khai báo các thành phần giao diện và biến cần thiết
     private JTable tableSuatChieu;
     private JTextField txtMaNhanVien;
@@ -69,7 +69,7 @@ public class BanVeUI extends JPanel {
 
     // Khai báo các màu sắc và định dạng
     private final Color COLOR_TRONG = new Color(0, 153, 0);
-    private final Color COLOR_DA_DAT =  Color.RED; 
+    private final Color COLOR_DA_DAT =  Color.RED;
     private final Color COLOR_BAO_TRI = Color.GRAY;
     private final Color COLOR_SELECTED = new Color(255, 153, 0);
     private final Color COLOR_GHE_THUONG = Color.GREEN;
@@ -83,14 +83,14 @@ public class BanVeUI extends JPanel {
     private static com.lowagie.text.Font fontHeader;
     private static com.lowagie.text.Font fontNormal;
     private static com.lowagie.text.Font fontBold;
-    private static String FONT_PATH = "/fonts/DejaVuSans.ttf"; 
+    private static String FONT_PATH = "/fonts/DejaVuSans.ttf";
     private JTextField txtKhachHang;
 
     // Khối static để tải font cho PDF
     static {
         try {
             URL fontUrl = BanVeUI.class.getResource(FONT_PATH);
-            String fontPath = fontUrl.getPath(); 
+            String fontPath = fontUrl.getPath();
             BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             // Tạo các kiểu font từ BaseFont đã load
             fontTitle = new com.lowagie.text.Font(bf, 18, Font.BOLD);
@@ -103,14 +103,14 @@ public class BanVeUI extends JPanel {
             System.err.println("!!! Lỗi nghiêm trọng: Không thể load font Tiếng Việt cho PDF tại: " + FONT_PATH);
             System.err.println("!!! PDF sẽ không hiển thị đúng tiếng Việt.");
             e.printStackTrace();
-           
+
             fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD);
             fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Font.BOLD);
             fontNormal = FontFactory.getFont(FontFactory.HELVETICA, 11, Font.PLAIN);
             fontBold = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Font.BOLD);
         }
     }
-    
+
     // Khởi tạo giao diện bán vé
     public BanVeUI() {
         seatButtonMap = new HashMap<>();
@@ -207,7 +207,7 @@ public class BanVeUI extends JPanel {
         txtTongTien.setHorizontalAlignment(JTextField.RIGHT);
         txtTongTien.setBounds(fieldX1, row2Y, fieldW, fieldH);
         panelInput.add(txtTongTien);
-        
+
         txtKhachHang = new JTextField();
         txtKhachHang.setBounds(140, 30, 290, 25);
         panelInput.add(txtKhachHang);
@@ -224,7 +224,7 @@ public class BanVeUI extends JPanel {
         btnDatVe.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnDatVe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnDatVe.setIcon(new ImageIcon(BanVeUI.class.getResource("/icons/icons8-print-20.png")));
-        btnDatVe.addActionListener(e -> processTicketSaleAndPrint());
+        btnDatVe.addActionListener(this); // Sử dụng this thay vì lambda
         btnDatVe.setEnabled(false);
         panelChucNang.add(btnDatVe);
 
@@ -232,7 +232,7 @@ public class BanVeUI extends JPanel {
         btnHuyChon.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnHuyChon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHuyChon.setIcon(new ImageIcon(BanVeUI.class.getResource("/icons/icons8-cancel-20.png")));
-        btnHuyChon.addActionListener(e -> clearSelectionAndPrice());
+        btnHuyChon.addActionListener(this); // Sử dụng this thay vì lambda
         btnHuyChon.setEnabled(false);
         panelChucNang.add(btnHuyChon);
 
@@ -240,19 +240,7 @@ public class BanVeUI extends JPanel {
         btnThoat.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnThoat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThoat.setIcon(new ImageIcon(BanVeUI.class.getResource("/icons/icons8-exit-20.png")));
-        btnThoat.addActionListener(e -> {
-            Window window = SwingUtilities.getWindowAncestor(this);
-            if (window != null) {
-                int confirm = JOptionPane.showConfirmDialog(this,
-                    "Bạn có chắc chắn muốn thoát khỏi màn hình Bán Vé?", "Xác nhận thoát",
-                    JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    window.dispose();
-                }
-            } else {
-                System.exit(0);
-            }
-        });
+        btnThoat.addActionListener(this); // Sử dụng this thay vì lambda
         panelChucNang.add(btnThoat);
 
         // Tải dữ liệu suất chiếu và thiết lập trạng thái ban đầu
@@ -260,7 +248,64 @@ public class BanVeUI extends JPanel {
         setInitialState();
         setupAutoCompleteForTextField();
     }
-    
+
+    // Triển khai phương thức actionPerformed từ ActionListener
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+
+        if (o.equals(btnDatVe)) {
+            processTicketSaleAndPrint();
+        } else if (o.equals(btnHuyChon)) {
+            clearSelectionAndPrice();
+        } else if (o.equals(btnThoat)) {
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) {
+                int confirm = JOptionPane.showConfirmDialog(this,
+                        "Bạn có chắc chắn muốn thoát khỏi màn hình Bán Vé?", "Xác nhận thoát",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    window.dispose();
+                }
+            } else {
+                System.exit(0);
+            }
+        } else if (o instanceof JButton) {
+            // Xử lý khi người dùng nhấn vào nút ghế
+            JButton clickedButton = (JButton) o;
+            if (seatButtonMap.containsValue(clickedButton)) {
+                handleSeatButtonClick(clickedButton);
+            }
+        }
+    }
+
+    // Xử lý sự kiện khi nhấn vào nút ghế
+    private void handleSeatButtonClick(JButton clickedButton) {
+        String maGhe = clickedButton.getActionCommand();
+        GheNgoi ghe = GheNgoiDAO.findById(maGhe);
+
+        if (ghe != null) {
+            if (selectedSeatsList.contains(ghe)) {
+                selectedSeatsList.remove(ghe);
+                boolean isMaintenance = "Bảo trì".equalsIgnoreCase(ghe.getTrangThai());
+                if (isMaintenance) {
+                    clickedButton.setBackground(COLOR_BAO_TRI);
+                } else {
+                    clickedButton.setBackground(COLOR_GHE_THUONG);
+                    clickedButton.setBorder(UIManager.getBorder("Button.border"));
+                }
+            } else {
+                selectedSeatsList.add(ghe);
+                clickedButton.setBackground(COLOR_SELECTED);
+                clickedButton.setBorder(new LineBorder(Color.BLACK, 2));
+            }
+            updateTotalPrice();
+            updateButtonStates();
+        } else {
+            showError("Lỗi: Không tìm thấy thông tin ghế " + maGhe, null);
+        }
+    }
+
     // Lấy thông tin khách hàng từ text
     private KhachHang getKhachHangFromText() {
         String input = txtKhachHang.getText().trim();
@@ -326,7 +371,7 @@ public class BanVeUI extends JPanel {
             List<SuatChieu> scList = SuatChieuDAO.getFutureShowtimes();
             if (tableModelSuatChieu.getColumnCount() == 0) {
                 tableModelSuatChieu.setColumnIdentifiers(new Object[]{
-                    "Mã SC", "Tên Phim", "Phòng", "Bắt Đầu", "Kết Thúc", "Giá Vé"
+                        "Mã SC", "Tên Phim", "Phòng", "Bắt Đầu", "Kết Thúc", "Giá Vé"
                 });
                 tableSuatChieu.getColumnModel().getColumn(0).setPreferredWidth(60);
                 tableSuatChieu.getColumnModel().getColumn(1).setPreferredWidth(250);
@@ -339,12 +384,12 @@ public class BanVeUI extends JPanel {
 
             for (SuatChieu sc : scList) {
                 tableModelSuatChieu.addRow(new Object[]{
-                    sc.getMaSuatChieu(),
-                    sc.getPhim() != null ? sc.getPhim().getTenPhim() : "N/A",
-                    sc.getPhongChieu() != null ? sc.getPhongChieu().getTenPhong() : "N/A",
-                    formatDateTime(sc.getThoiGianBD()),
-                    formatDateTime(sc.getThoiGianKetThuc()),
-                    currencyFormatter.format(sc.getGia())
+                        sc.getMaSuatChieu(),
+                        sc.getPhim() != null ? sc.getPhim().getTenPhim() : "N/A",
+                        sc.getPhongChieu() != null ? sc.getPhongChieu().getTenPhong() : "N/A",
+                        formatDateTime(sc.getThoiGianBD()),
+                        formatDateTime(sc.getThoiGianKetThuc()),
+                        currencyFormatter.format(sc.getGia())
                 });
             }
         } catch (Exception e) {
@@ -472,7 +517,7 @@ public class BanVeUI extends JPanel {
                         seatButton.setBackground(COLOR_GHE_THUONG);
                         seatButton.setForeground(Color.BLACK);
                         seatButton.setEnabled(true);
-                        seatButton.addActionListener(this::handleSeatSelection);
+                        seatButton.addActionListener(this); // Sử dụng this thay vì lambda
                     }
 
                     seatButtonMap.put(ghe.getMaGhe(), seatButton);
@@ -485,35 +530,6 @@ public class BanVeUI extends JPanel {
 
         panelSeatGrid.revalidate();
         panelSeatGrid.repaint();
-    }
-
-    // Xử lý sự kiện khi chọn ghế
-    private void handleSeatSelection(ActionEvent e) {
-        JButton clickedButton = (JButton) e.getSource();
-        String maGhe = clickedButton.getActionCommand();
-        GheNgoi ghe = GheNgoiDAO.findById(maGhe);
-
-        if (ghe != null) {
-            if (selectedSeatsList.contains(ghe)) {
-                selectedSeatsList.remove(ghe);
-                boolean isMaintenance = "Bảo trì".equalsIgnoreCase(ghe.getTrangThai());
-                if (isMaintenance) {
-                    clickedButton.setBackground(COLOR_BAO_TRI);
-                } else {
-                    clickedButton.setBackground(COLOR_GHE_THUONG);
-                    clickedButton.setBorder(UIManager.getBorder("Button.border"));
-                }
-
-            } else {
-                selectedSeatsList.add(ghe);
-                clickedButton.setBackground(COLOR_SELECTED);
-                clickedButton.setBorder(new LineBorder(Color.BLACK, 2));
-            }
-            updateTotalPrice();
-            updateButtonStates();
-        } else {
-            showError("Lỗi: Không tìm thấy thông tin ghế " + maGhe, null);
-        }
     }
 
     // Cập nhật tổng tiền
@@ -541,28 +557,28 @@ public class BanVeUI extends JPanel {
         updateButtonStates();
     }
 
- // Xử lý bán vé và in hóa đơn
+    // Xử lý bán vé và in hóa đơn
     private void processTicketSaleAndPrint() {
         // Xác định khách hàng từ trường nhập liệu
         selectedKhachHang = getKhachHangFromText();
-        
+
         // Kiểm tra các điều kiện trước khi tiếp tục
-        if (selectedSuatChieu == null) { 
+        if (selectedSuatChieu == null) {
             showValidationError("Vui lòng chọn một suất chiếu.", tableSuatChieu);
             System.err.println("Vui lòng chọn một suất chiếu.");
-            return; 
+            return;
         }
-        if (selectedKhachHang == null) { 
+        if (selectedKhachHang == null) {
             showValidationError("Vui lòng chọn khách hàng.", txtKhachHang);
             throw new RuntimeException("Vui lòng chọn khách hàng.");
         }
-        if (selectedSeatsList.isEmpty()) { 
+        if (selectedSeatsList.isEmpty()) {
             showValidationError("Vui lòng chọn ít nhất một ghế.", panelSeatGrid);
             throw new RuntimeException("Vui lòng chọn ít nhất một ghế.");
         }
-        if (StaticVariable.nhanVien == null) { 
-            showError("Lỗi: Không xác định được nhân viên đang đăng nhập.", null); 
-            return; 
+        if (StaticVariable.nhanVien == null) {
+            showError("Lỗi: Không xác định được nhân viên đang đăng nhập.", null);
+            return;
         }
 
         // Tạo hóa đơn và danh sách vé
@@ -573,7 +589,7 @@ public class BanVeUI extends JPanel {
 
         HoaDon hoaDon = new HoaDon(maHoaDon, StaticVariable.nhanVien, selectedKhachHang, tongTien, ngayLap, trangThaiHD);
         List<Ve> veList = new ArrayList<>();
-      
+
         boolean transactionSuccess = false;
 
         try {
@@ -608,9 +624,9 @@ public class BanVeUI extends JPanel {
             // Ghi hóa đơn ra file PDF
             if (writeInvoiceToPdf(fileToSave, hoaDon, veList)) {
                 JOptionPane.showMessageDialog(this,
-                    "Đặt vé thành công! Hóa đơn PDF đã được lưu vào:\n" + fileToSave.getAbsolutePath(),
-                    "Đặt Vé Thành Công & Đã Lưu PDF",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        "Đặt vé thành công! Hóa đơn PDF đã được lưu vào:\n" + fileToSave.getAbsolutePath(),
+                        "Đặt Vé Thành Công & Đã Lưu PDF",
+                        JOptionPane.INFORMATION_MESSAGE);
                 // Mở file PDF
                 try {
                     Desktop.getDesktop().open(fileToSave);
@@ -619,9 +635,9 @@ public class BanVeUI extends JPanel {
                 }
             } else {
                 JOptionPane.showMessageDialog(this,
-                    "Đặt vé thành công nhưng đã xảy ra lỗi khi lưu hóa đơn PDF.\nHóa đơn ID: " + maHoaDon,
-                    "Đặt Vé Thành Công - Lỗi Lưu PDF",
-                    JOptionPane.WARNING_MESSAGE);
+                        "Đặt vé thành công nhưng đã xảy ra lỗi khi lưu hóa đơn PDF.\nHóa đơn ID: " + maHoaDon,
+                        "Đặt Vé Thành Công - Lỗi Lưu PDF",
+                        JOptionPane.WARNING_MESSAGE);
             }
             handleSuatChieuSelectionChange();
             clearSelectionAndPrice();

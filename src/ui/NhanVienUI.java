@@ -60,6 +60,7 @@ public class NhanVienUI extends JPanel {
             table.getColumnModel().getColumn(1).setPreferredWidth(180);
             table.getColumnModel().getColumn(2).setPreferredWidth(100);
             table.getColumnModel().getColumn(3).setPreferredWidth(120);
+//            table.getColumnModel().getColumn(4).setPreferredWidth(100); //cần cải tiến vụ này
         }
 
         tableModel.setRowCount(0);
@@ -70,7 +71,8 @@ public class NhanVienUI extends JPanel {
                     nv.getMaNhanVien(),
                     nv.getTenNhanVien(),
                     nv.getChucVu(),
-                    nv.getTenDangNhap()
+                    nv.getTenDangNhap(),
+//                    nv.getMatKhau()
                 });
             }
         }

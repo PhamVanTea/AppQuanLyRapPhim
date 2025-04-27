@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.Frame;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import javax.swing.Box;
@@ -19,6 +21,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class MainUI extends JFrame {
 	private KhachHangUI khachHangUI;
 	private BanVeUI banVeUI;
 	private VeUI veUI;
-	private ThongKeUI thongKeUI;
+	private JPanel thongKeUI;
 
 	private JButton selectedButton = null;
 	private final Color defaultButtonColor = new Color(51, 51, 51);
@@ -81,7 +84,7 @@ public class MainUI extends JFrame {
 			return;
 		}
 
-		setTitle("Quản Lý Rạp Chiếu Phim");
+		setTitle("Phần Mềm Quản Lý Rạp Chiếu Phim");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1240, 720);
 		//làm to giao diện
@@ -89,7 +92,9 @@ public class MainUI extends JFrame {
         setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
+		
+	
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 

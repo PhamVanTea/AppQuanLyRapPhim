@@ -12,21 +12,19 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
-// Removed unused JTextFieldDateEditor import
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter; // Import FocusAdapter
-import java.awt.event.FocusEvent; // Import FocusEvent
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-// Removed unused Objects import
 
-
-public class SuatChieuUI extends JPanel {
+public class SuatChieuUI extends JPanel implements ActionListener {
     private JTable table;
     private JTextField txtMaSuatChieu;
     private JComboBox<Phim> comboBoxPhim;
@@ -73,8 +71,8 @@ public class SuatChieuUI extends JPanel {
         table.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
         table.getSelectionModel().addListSelectionListener(e -> {
-        	 if (!e.getValueIsAdjusting() && currentState == EditState.IDLE) {
-                 int selectedRow = table.getSelectedRow();
+            if (!e.getValueIsAdjusting() && currentState == EditState.IDLE) {
+                int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
                     populateFieldsFromSelectedRow(selectedRow);
                 } else {
@@ -119,7 +117,7 @@ public class SuatChieuUI extends JPanel {
         comboBoxPhim = new JComboBox<>();
         comboBoxPhim.setBounds(fieldX2, row1Y, fieldW, fieldH);
         panel_1.add(comboBoxPhim);
-        comboBoxPhim.addActionListener(e -> handlePhimSelectionChange());
+        comboBoxPhim.addActionListener(this);
 
         JLabel lblPhong = new JLabel("Phòng:");
         lblPhong.setBounds(labelX1, row2Y, labelW, fieldH);
@@ -172,48 +170,42 @@ public class SuatChieuUI extends JPanel {
         btnThem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnThem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThem.setIcon(new ImageIcon(SuatChieuUI.class.getResource("/icons/icons8-add-20.png")));
-        btnThem.addActionListener(e -> enterAddMode());
+        btnThem.addActionListener(this);
         panelChucNang.add(btnThem);
 
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnSua.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSua.setIcon(new ImageIcon(SuatChieuUI.class.getResource("/icons/icons8-edit-20.png")));
-        btnSua.addActionListener(e -> enterEditMode());
+        btnSua.addActionListener(this);
         panelChucNang.add(btnSua);
 
         btnXoa = new JButton("Xóa");
         btnXoa.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnXoa.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnXoa.setIcon(new ImageIcon(SuatChieuUI.class.getResource("/icons/icons8-delete-20.png")));
-        btnXoa.addActionListener(e -> deleteSelectedSuatChieu());
+        btnXoa.addActionListener(this);
         panelChucNang.add(btnXoa);
 
         btnLuu = new JButton("Lưu");
         btnLuu.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnLuu.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLuu.setIcon(new ImageIcon(SuatChieuUI.class.getResource("/icons/icons8-save-20.png")));
-        btnLuu.addActionListener(e -> saveSuatChieu());
+        btnLuu.addActionListener(this);
         panelChucNang.add(btnLuu);
 
         btnHuy = new JButton("Hủy");
         btnHuy.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnHuy.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHuy.setIcon(new ImageIcon(SuatChieuUI.class.getResource("/icons/icons8-cancel-20.png")));
-        btnHuy.addActionListener(e -> cancelEditMode());
+        btnHuy.addActionListener(this);
         panelChucNang.add(btnHuy);
 
         btnThoat = new JButton("Thoát");
         btnThoat.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnThoat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThoat.setIcon(new ImageIcon(SuatChieuUI.class.getResource("/icons/icons8-exit-20.png")));
-        btnThoat.addActionListener(e -> {
-             int confirm = JOptionPane.showConfirmDialog(this,"Bạn có chắc chắn muốn thoát?", "Xác nhận thoát", JOptionPane.YES_NO_OPTION);
-             if (confirm == JOptionPane.YES_OPTION) {
-                 Window window = SwingUtilities.getWindowAncestor(this);
-                 if (window != null) { window.dispose(); }
-             }
-        });
+        btnThoat.addActionListener(this);
         panelChucNang.add(btnThoat);
 
         addEventListeners();
@@ -222,14 +214,45 @@ public class SuatChieuUI extends JPanel {
         handlePhimSelectionChange();
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+
+        if (o.equals(btnThem)) {
+            enterAddMode();
+        } else if (o.equals(btnSua)) {
+            enterEditMode();
+        } else if (o.equals(btnXoa)) {
+            deleteSelectedSuatChieu();
+        } else if (o.equals(btnLuu)) {
+            saveSuatChieu();
+        } else if (o.equals(btnHuy)) {
+            cancelEditMode();
+        } else if (o.equals(btnThoat)) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Bạn có chắc chắn muốn thoát?", "Xác nhận thoát",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                Window window = SwingUtilities.getWindowAncestor(this);
+                if (window != null) { window.dispose(); }
+            }
+        } else if (o.equals(comboBoxPhim)) {
+            if (!isAdjustingFields) {
+                calculateAndDisplayEndTime();
+                handlePhimSelectionChange();
+            }
+        }
+    }
+
     private void addEventListeners() {
-         ActionListener recalculateListener = e -> { if(!isAdjustingFields) calculateAndDisplayEndTime(); };
-         comboBoxPhim.addActionListener(recalculateListener);
-         dateChooserThoiGianBD.addPropertyChangeListener("date", evt -> { if(!isAdjustingFields && "date".equals(evt.getPropertyName())) calculateAndDisplayEndTime(); });
-         txtThoiGianBD_Time.addActionListener(recalculateListener);
-         txtThoiGianBD_Time.addFocusListener(new FocusAdapter() {
-             public void focusLost(FocusEvent evt) { if(!isAdjustingFields) calculateAndDisplayEndTime();}
-         });
+        txtThoiGianBD_Time.addActionListener(e -> { if(!isAdjustingFields) calculateAndDisplayEndTime(); });
+        dateChooserThoiGianBD.addPropertyChangeListener("date", evt -> {
+            if(!isAdjustingFields && "date".equals(evt.getPropertyName()))
+                calculateAndDisplayEndTime();
+        });
+        txtThoiGianBD_Time.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent evt) { if(!isAdjustingFields) calculateAndDisplayEndTime(); }
+        });
     }
 
     private void loadComboBoxData() {
@@ -245,7 +268,7 @@ public class SuatChieuUI extends JPanel {
             if (phimList != null) { for (Phim p : phimList) { model.addElement(p); } }
             comboBoxPhim.setModel(model);
             setComboBoxRenderer(comboBoxPhim, "-- Chọn Phim --", Phim::getTenPhim);
-             if(model.getSize() > 1) comboBoxPhim.setSelectedIndex(1);
+            if(model.getSize() > 1) comboBoxPhim.setSelectedIndex(1);
         } catch (Exception e) { handleDataLoadError("Lỗi tải danh sách phim", e); }
     }
 
@@ -272,22 +295,22 @@ public class SuatChieuUI extends JPanel {
             }
         });
         if (comboBox.getSelectedIndex() == 0) {
-             comboBox.setSelectedIndex(0);
+            comboBox.setSelectedIndex(0);
         }
     }
 
     private void loadTableData(List<SuatChieu> list) {
         if (tableModel.getColumnCount() == 0) {
-             tableModel.setColumnIdentifiers(new Object[]{
-                     "Mã Suất", "Tên Phim", "Phòng", "Bắt Đầu", "Kết Thúc", "Giá (VNĐ)"
-             });
-             table.getColumnModel().getColumn(0).setPreferredWidth(80);
-             table.getColumnModel().getColumn(1).setPreferredWidth(180);
-             table.getColumnModel().getColumn(2).setPreferredWidth(100);
-             table.getColumnModel().getColumn(3).setPreferredWidth(140);
-             table.getColumnModel().getColumn(4).setPreferredWidth(140);
-             table.getColumnModel().getColumn(5).setPreferredWidth(90);
-             table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+            tableModel.setColumnIdentifiers(new Object[]{
+                    "Mã Suất", "Tên Phim", "Phòng", "Bắt Đầu", "Kết Thúc", "Giá (VNĐ)"
+            });
+            table.getColumnModel().getColumn(0).setPreferredWidth(80);
+            table.getColumnModel().getColumn(1).setPreferredWidth(180);
+            table.getColumnModel().getColumn(2).setPreferredWidth(100);
+            table.getColumnModel().getColumn(3).setPreferredWidth(140);
+            table.getColumnModel().getColumn(4).setPreferredWidth(140);
+            table.getColumnModel().getColumn(5).setPreferredWidth(90);
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         }
         tableModel.setRowCount(0);
         if (list != null) {
@@ -302,8 +325,8 @@ public class SuatChieuUI extends JPanel {
                 });
             }
         }
-         table.clearSelection();
-         updateButtonStates();
+        table.clearSelection();
+        updateButtonStates();
     }
 
     private void handlePhimSelectionChange() {
@@ -312,9 +335,9 @@ public class SuatChieuUI extends JPanel {
         Phim selectedPhim = (Phim) comboBoxPhim.getSelectedItem();
         List<SuatChieu> showtimes;
         if (selectedPhim != null && selectedPhim.getMaPhim() != null) {
-             showtimes = SuatChieuDAO.searchByPhim(selectedPhim.getMaPhim());
+            showtimes = SuatChieuDAO.searchByPhim(selectedPhim.getMaPhim());
         } else {
-             showtimes = SuatChieuDAO.readAll();
+            showtimes = SuatChieuDAO.readAll();
         }
         loadTableData(showtimes);
         clearFields();
@@ -324,14 +347,14 @@ public class SuatChieuUI extends JPanel {
 
     private void populateFieldsFromSelectedRow(int selectedRow) {
         if (selectedRow != -1) {
-             if (selectedRow < tableModel.getRowCount()){ // Giới hạn k vượt quá số dòng trong bảng
+            if (selectedRow < tableModel.getRowCount()){ // Giới hạn k vượt quá số dòng trong bảng
                 String maSuat = tableModel.getValueAt(selectedRow, 0).toString();
                 SuatChieu selectedSC = SuatChieuDAO.findById(maSuat);
                 if (selectedSC != null) {
                     isAdjustingFields = true;
                     try {
                         txtMaSuatChieu.setText(selectedSC.getMaSuatChieu());
-                     
+
                         selectComboBoxItem(comboBoxPhongChieu, selectedSC.getPhongChieu());
                         txtGia.setText(String.format("%.0f", selectedSC.getGia()));
                         Date startDate = parseDateTimeFromDAO(selectedSC.getThoiGianBD());
@@ -344,8 +367,8 @@ public class SuatChieuUI extends JPanel {
                         }
                         calculateAndDisplayEndTime();
                     } catch (Exception e) {
-                         handleDataLoadError("Lỗi hiển thị chi tiết suất chiếu", e);
-                         clearFields();
+                        handleDataLoadError("Lỗi hiển thị chi tiết suất chiếu", e);
+                        clearFields();
                     } finally {
                         isAdjustingFields = false;
                     }
@@ -354,40 +377,40 @@ public class SuatChieuUI extends JPanel {
                     clearFields();
                 }
             } else {
-                 clearFields(); // Xóa nếu chỉ số nhập k hợp lệ
+                clearFields(); // Xóa nếu chỉ số nhập k hợp lệ
             }
         }
     }
 
     private <T> void selectComboBoxItem(JComboBox<T> comboBox, T itemToSelect) {
-         if (itemToSelect == null) { comboBox.setSelectedIndex(0); return; }
-         DefaultComboBoxModel<T> model = (DefaultComboBoxModel<T>) comboBox.getModel();
-         for (int i = 0; i < model.getSize(); i++) {
-             T item = model.getElementAt(i);
-             if (item != null && item.equals(itemToSelect)) { comboBox.setSelectedIndex(i); return; }
-         }
-         comboBox.setSelectedIndex(0);
+        if (itemToSelect == null) { comboBox.setSelectedIndex(0); return; }
+        DefaultComboBoxModel<T> model = (DefaultComboBoxModel<T>) comboBox.getModel();
+        for (int i = 0; i < model.getSize(); i++) {
+            T item = model.getElementAt(i);
+            if (item != null && item.equals(itemToSelect)) { comboBox.setSelectedIndex(i); return; }
+        }
+        comboBox.setSelectedIndex(0);
     }
 
     private void clearFields() {
-         isAdjustingFields = true;
-         try {
+        isAdjustingFields = true;
+        try {
             if (currentState == EditState.ADDING) {
-                 txtMaSuatChieu.setText("(Tự động tạo)");
+                txtMaSuatChieu.setText("(Tự động tạo)");
             } else {
-                 txtMaSuatChieu.setText("");
+                txtMaSuatChieu.setText("");
             }
- 
+
             txtGia.setText("");
             dateChooserThoiGianBD.setDate(null);
             txtThoiGianBD_Time.setText("");
             txtThoiGianKT_Display.setText("");
 
-         } finally {
-             isAdjustingFields = false;
-         }
-         calculateAndDisplayEndTime();
-         updateButtonStates(); // Các nút cập nhật lại trạng thái
+        } finally {
+            isAdjustingFields = false;
+        }
+        calculateAndDisplayEndTime();
+        updateButtonStates(); // Các nút cập nhật lại trạng thái
     }
 
 
@@ -402,8 +425,8 @@ public class SuatChieuUI extends JPanel {
             comboBoxPhim.setEnabled(false);
             comboBoxPhongChieu.setEnabled(false);
         } else if (currentState == EditState.ADDING) {
-             comboBoxPhim.setEnabled(true);
-             comboBoxPhongChieu.setEnabled(true);
+            comboBoxPhim.setEnabled(true);
+            comboBoxPhongChieu.setEnabled(true);
         } else {
             comboBoxPhim.setEnabled(true);
             comboBoxPhongChieu.setEnabled(false);
@@ -417,14 +440,14 @@ public class SuatChieuUI extends JPanel {
         boolean rowSelected = (table.getSelectedRow() != -1);
 
         btnThem.setEnabled(isIdle);
-        btnSua.setEnabled(isIdle && rowSelected); 
-        btnXoa.setEnabled(isIdle && rowSelected); 
+        btnSua.setEnabled(isIdle && rowSelected);
+        btnXoa.setEnabled(isIdle && rowSelected);
 
         btnLuu.setEnabled(!isIdle);
         btnHuy.setEnabled(!isIdle);
         btnThoat.setEnabled(isIdle);
         setFieldsEditable(!isIdle);
-        table.setEnabled(isIdle);   
+        table.setEnabled(isIdle);
     }
 
     private void setInitialState() {
@@ -450,10 +473,10 @@ public class SuatChieuUI extends JPanel {
         txtGia.requestFocusInWindow();
     }
 
-     private void cancelEditMode() {
+    private void cancelEditMode() {
         setInitialState();
         handlePhimSelectionChange();
-     }
+    }
 
     private void deleteSelectedSuatChieu() {
         int selectedRow = table.getSelectedRow();
@@ -462,10 +485,10 @@ public class SuatChieuUI extends JPanel {
         String tenPhim = tableModel.getValueAt(selectedRow, 1).toString();
         String thoiGian = tableModel.getValueAt(selectedRow, 3).toString();
         int choice = JOptionPane.showConfirmDialog(this,
-            String.format("Bạn có chắc chắn muốn xóa suất chiếu sau?\n\nMã: %s\nPhim: %s\nThời gian bắt đầu: %s\n\n(Hành động này không thể hoàn tác)", maSuat, tenPhim, thoiGian),
-            "Xác nhận xóa Suất chiếu",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE);
+                String.format("Bạn có chắc chắn muốn xóa suất chiếu sau?\n\nMã: %s\nPhim: %s\nThời gian bắt đầu: %s\n\n(Hành động này không thể hoàn tác)", maSuat, tenPhim, thoiGian),
+                "Xác nhận xóa Suất chiếu",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
         if (choice == JOptionPane.YES_OPTION) {
             try {
                 boolean success = SuatChieuDAO.delete(maSuat);
@@ -474,8 +497,8 @@ public class SuatChieuUI extends JPanel {
                     handlePhimSelectionChange();
                 } else {
                     JOptionPane.showMessageDialog(this,
-                        "Xóa suất chiếu thất bại.\nCó thể suất chiếu này đã có vé được bán hoặc có lỗi xảy ra.",
-                        "Lỗi Xóa", JOptionPane.ERROR_MESSAGE);
+                            "Xóa suất chiếu thất bại.\nCó thể suất chiếu này đã có vé được bán hoặc có lỗi xảy ra.",
+                            "Lỗi Xóa", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) { handleDataLoadError("Lỗi hệ thống khi xóa suất chiếu", ex); }
         }
@@ -492,58 +515,49 @@ public class SuatChieuUI extends JPanel {
         if (!(phimItem instanceof Phim)) {
             showValidationError("Vui lòng chọn một Phim.", comboBoxPhim);
             throw new RuntimeException("Lỗi: Chưa chọn phim.");
-//            return;
         }
         if (!(phongItem instanceof PhongChieu)) {
             showValidationError("Vui lòng chọn một Phòng Chiếu.", comboBoxPhongChieu);
             throw new RuntimeException("Lỗi: Chưa chọn phòng chiếu.");
-//            return;
         }
         if (giaStr.isEmpty()) {
             showValidationError("Giá vé không được để trống.", txtGia);
             throw new RuntimeException("Lỗi: Giá vé trống.");
-//            return;
         }
-        
+
         float gia;
         try {
             gia = Float.parseFloat(giaStr);
             if (gia < 0) {
                 showValidationError("Giá vé phải là một số không âm.", txtGia);
                 throw new RuntimeException("Lỗi: Giá vé âm.");
-//                return;
             }
         } catch (NumberFormatException e) {
             showValidationError("Giá vé không hợp lệ. Vui lòng nhập một số.", txtGia);
             throw new RuntimeException("Lỗi: Giá vé không hợp lệ.");
-//            return;
         }
-        
+
         if (startDateOnly == null) {
             showValidationError("Vui lòng chọn Ngày bắt đầu.", dateChooserThoiGianBD);
             throw new RuntimeException("Lỗi: Chưa chọn ngày bắt đầu.");
-//            return;
         }
-        
+
         if (startTimeStr.isEmpty()) {
-        	showValidationError("Chưa nhập thời gian bắt đầu", txtThoiGianBD_Time);
-        	throw new RuntimeException("Lỗi: Chưa nhập thời gian bắt đầu.");
+            showValidationError("Chưa nhập thời gian bắt đầu", txtThoiGianBD_Time);
+            throw new RuntimeException("Lỗi: Chưa nhập thời gian bắt đầu.");
         }
-        
+
         if (!startTimeStr.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
-            showValidationError("Giờ bắt đầu không hợp lệ. Phải có định dạng HH:mm (VD: 09:30 hoặc 14:05). (Giờ: 0-23; Phút: 0-59)", txtThoiGianBD_Time);
+            showValidationError("Giờ bắt đầu không hợp lệ. Phải có định dạng HH:mm (VD: 09:30 hoặc 14:05).", txtThoiGianBD_Time);
             throw new RuntimeException("Lỗi: Giờ bắt đầu không hợp lệ.");
-//            return;
         }
-      
+
 
         Phim selectedPhim = (Phim) phimItem;
         PhongChieu selectedPhong = (PhongChieu) phongItem;
-        
+
         Date startDateTime;
         Date endDateTime;
-
-       
 
         try {
             String datePart = DATE_ONLY_FORMAT.format(startDateOnly);
@@ -552,18 +566,15 @@ public class SuatChieuUI extends JPanel {
             if (selectedPhim.getThoiLuong() <= 0) {
                 showValidationError("Phim '" + selectedPhim.getTenPhim() + "' có thời lượng không hợp lệ (" + selectedPhim.getThoiLuong() + " phút). Không thể tính giờ kết thúc.", comboBoxPhim);
                 throw new RuntimeException("Lỗi: Thời lượng phim không hợp lệ.");
-//                return;
             }
             endDateTime = calculateEndDate(startDateTime, selectedPhim);
             if (endDateTime == null) {
                 showValidationError("Không thể tính toán thời gian kết thúc suất chiếu.", txtThoiGianBD_Time);
                 throw new RuntimeException("Lỗi: Không thể tính giờ kết thúc.");
-//                return;
             }
         } catch (Exception e) {
             showValidationError("Định dạng Ngày hoặc Giờ bắt đầu không hợp lệ. Không thể xử lý.", txtThoiGianBD_Time);
             throw new RuntimeException("Lỗi: Định dạng ngày hoặc giờ bắt đầu không hợp lệ.");
-//            return;
         }
 
         String thoiGianBDStrDAO = DAO_DATE_TIME_FORMAT.format(startDateTime);
@@ -572,9 +583,9 @@ public class SuatChieuUI extends JPanel {
         try {
             if (SuatChieuDAO.hasOverlap(selectedPhong.getMaPhong(), thoiGianBDStrDAO, thoiGianKTStrDAO, currentMaSuat)) {
                 JOptionPane.showMessageDialog(this,
-                    "Lỗi: Suất chiếu này bị trùng lịch với một suất chiếu khác trong cùng phòng (" + selectedPhong.getTenPhong() + ").\n" +
-                    "Vui lòng chọn thời gian hoặc phòng khác.",
-                    "Lỗi Trùng Lịch Chiếu", JOptionPane.ERROR_MESSAGE);
+                        "Lỗi: Suất chiếu này bị trùng lịch với một suất chiếu khác trong cùng phòng (" + selectedPhong.getTenPhong() + ").\n" +
+                                "Vui lòng chọn thời gian hoặc phòng khác.",
+                        "Lỗi Trùng Lịch Chiếu", JOptionPane.ERROR_MESSAGE);
                 System.err.println("Lỗi: Trùng lịch chiếu.");
                 dateChooserThoiGianBD.requestFocusInWindow();
                 return;
@@ -652,7 +663,7 @@ public class SuatChieuUI extends JPanel {
                     endDate = calculateEndDate(startDateTime, selectedPhim);
                 } catch (ParseException e) {
                     endDate = null;
-                     System.err.println("Parse error during end time calculation: "+ e.getMessage());
+                    System.err.println("Parse error during end time calculation: "+ e.getMessage());
                 }
             }
         }
@@ -676,25 +687,25 @@ public class SuatChieuUI extends JPanel {
     }
 
     private Date parseDateTimeFromDAO(String daoDateTimeString) {
-         if (daoDateTimeString == null || daoDateTimeString.isEmpty()) { return null; }
-         try { return DAO_DATE_TIME_FORMAT.parse(daoDateTimeString); }
-         catch (ParseException e) {
-             System.err.println("Error parsing date from DAO: " + daoDateTimeString + " - " + e.getMessage());
-             return null;
-         }
+        if (daoDateTimeString == null || daoDateTimeString.isEmpty()) { return null; }
+        try { return DAO_DATE_TIME_FORMAT.parse(daoDateTimeString); }
+        catch (ParseException e) {
+            System.err.println("Error parsing date from DAO: " + daoDateTimeString + " - " + e.getMessage());
+            return null;
+        }
     }
 
     private void showValidationError(String message, Component componentToFocus) {
         JOptionPane.showMessageDialog(this, message, "Dữ liệu không hợp lệ", JOptionPane.WARNING_MESSAGE);
         if (componentToFocus != null) {
             SwingUtilities.invokeLater(() -> {
-                 componentToFocus.requestFocusInWindow();
-                 if (componentToFocus instanceof JTextField) { ((JTextField) componentToFocus).selectAll(); }
-                 if (componentToFocus instanceof JComboBox) { ((JComboBox<?>)componentToFocus).showPopup();}
-                 if (componentToFocus instanceof JDateChooser) {
-                      Component editor = ((JDateChooser) componentToFocus).getDateEditor().getUiComponent();
-                      if (editor != null) editor.requestFocusInWindow();
-                 }
+                componentToFocus.requestFocusInWindow();
+                if (componentToFocus instanceof JTextField) { ((JTextField) componentToFocus).selectAll(); }
+                if (componentToFocus instanceof JComboBox) { ((JComboBox<?>)componentToFocus).showPopup();}
+                if (componentToFocus instanceof JDateChooser) {
+                    Component editor = ((JDateChooser) componentToFocus).getDateEditor().getUiComponent();
+                    if (editor != null) editor.requestFocusInWindow();
+                }
             });
         }
     }
@@ -703,9 +714,9 @@ public class SuatChieuUI extends JPanel {
         String errorMessage = context;
         if (e != null) {
             e.printStackTrace();
-             if(e.getMessage() != null && !e.getMessage().isEmpty()) {
-                 errorMessage += ":\n" + e.getMessage();
-             }
+            if(e.getMessage() != null && !e.getMessage().isEmpty()) {
+                errorMessage += ":\n" + e.getMessage();
+            }
         } else {
             errorMessage += ". Lỗi không xác định.";
         }
