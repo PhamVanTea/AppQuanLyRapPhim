@@ -10,14 +10,11 @@ import entity.SuatChieu;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 // Removed unused JTextFieldDateEditor import
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter; // Import FocusAdapter
 import java.awt.event.FocusEvent; // Import FocusEvent
@@ -27,7 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 // Removed unused Objects import
-import java.util.ArrayList;
+
 
 public class SuatChieuUI extends JPanel {
     private JTable table;

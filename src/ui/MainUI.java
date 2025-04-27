@@ -9,15 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.GridBagLayout;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.UIManager;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,9 +22,6 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.NhanVienDAO;
-import dao.SuatChieuDAO;
-import entity.NhanVien;
 import session.StaticVariable;
 
 public class MainUI extends JFrame {
@@ -93,8 +83,9 @@ public class MainUI extends JFrame {
 
 		setTitle("Quản Lý Rạp Chiếu Phim");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1200, 720);
+		setBounds(100, 100, 1240, 720);
         setMinimumSize(new Dimension(1000, 600));
+        setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 

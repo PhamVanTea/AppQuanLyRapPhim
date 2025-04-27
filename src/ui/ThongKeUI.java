@@ -1,7 +1,6 @@
 package ui;
 
 import dao.ThongKeDAO;
-import entity.ThongKe;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -10,8 +9,6 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
