@@ -30,7 +30,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
-public class TheLoaiUI extends JPanel {
+public class TheLoaiUI extends JPanel implements ActionListener {
 	private JTable table;
 	private JTextField txtMaTheLoai;
 	private JTextField txtTenTheLoai;
@@ -47,6 +47,7 @@ public class TheLoaiUI extends JPanel {
 	private EditState currentState = EditState.IDLE;
 	private JTextField txtTimKiem;
 
+	//Giao diện thể loại
 	public TheLoaiUI() {
 		setLayout(null);
 		setPreferredSize(new Dimension(1000, 680));
@@ -151,70 +152,76 @@ public class TheLoaiUI extends JPanel {
 
 		btnThem = new JButton("Thêm");
 		btnThem.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-add-20.png")));
-		btnThem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				enterAddMode();
-			}
-		});
+//		btnThem.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				enterAddMode();
+//			}
+//		});
+		btnThem.addActionListener(this);
 		panelChucNang.add(btnThem);
 
 		btnSua = new JButton("Sửa");
 		btnSua.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-edit-20.png")));
 		btnSua.setEnabled(false);
-		btnSua.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				enterEditMode();
-			}
-		});
+//		btnSua.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				enterEditMode();
+//			}
+//		});
+		btnSua.addActionListener(this);
 		panelChucNang.add(btnSua);
 
 		btnXoa = new JButton("Xóa");
 		btnXoa.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-delete-20.png")));
 		btnXoa.setEnabled(false);
-		btnXoa.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				deleteSelectedTheLoai();
-			}
-		});
+//		btnXoa.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				deleteSelectedTheLoai();
+//			}
+//		});
+		btnXoa.addActionListener(this);
 		panelChucNang.add(btnXoa);
 
 		btnLuu = new JButton("Lưu");
 		btnLuu.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-save-20.png")));
 		btnLuu.setEnabled(false);
-		btnLuu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveTheLoai();
-			}
-		});
+//		btnLuu.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				saveTheLoai();
+//			}
+//		});
+		btnLuu.addActionListener(this);
 		panelChucNang.add(btnLuu);
 
 		btnHuy = new JButton("Hủy");
 		btnHuy.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-cancel-20.png")));
 		btnHuy.setEnabled(false);
-		btnHuy.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelEditMode();
-			}
-		});
+//		btnHuy.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				cancelEditMode();
+//			}
+//		});
+		btnHuy.addActionListener(this);
 		panelChucNang.add(btnHuy);
 
 		btnThoat = new JButton("Thoát");
 		btnThoat.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-exit-20.png")));
-		btnThoat.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Window window = SwingUtilities.getWindowAncestor(TheLoaiUI.this);
-				if (window != null) {
-					int confirm = JOptionPane.showConfirmDialog(TheLoaiUI.this,
-							"Bạn có chắc chắn muốn đóng tab Thể Loại?", "Xác nhận thoát",
-							JOptionPane.YES_NO_OPTION);
-					if (confirm == JOptionPane.YES_OPTION) {
-						window.dispose();
-					}
-				} else {
-					System.exit(0);
-				}
-			}
-		});
+//		btnThoat.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				Window window = SwingUtilities.getWindowAncestor(TheLoaiUI.this);
+//				if (window != null) {
+//					int confirm = JOptionPane.showConfirmDialog(TheLoaiUI.this,
+//							"Bạn có chắc chắn muốn đóng tab Thể Loại?", "Xác nhận thoát",
+//							JOptionPane.YES_NO_OPTION);
+//					if (confirm == JOptionPane.YES_OPTION) {
+//						window.dispose();
+//					}
+//				} else {
+//					System.exit(0);
+//				}
+//			}
+//		});
+		btnThoat.addActionListener(this);
 		panelChucNang.add(btnThoat);
 
 		JPanel panel_1_1_1_1 = new JPanel();
@@ -224,11 +231,12 @@ public class TheLoaiUI extends JPanel {
 
 		btnTimKiem = new JButton("Tìm kiếm");
 		btnTimKiem.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-search-20.png")));
-		btnTimKiem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				searchTheLoai();
-			}
-		});
+//		btnTimKiem.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				searchTheLoai();
+//			}
+//		});
+		btnTimKiem.addActionListener(this);
 		btnTimKiem.setBounds(316, 3, 117, 26);
 		panel_1_1_1_1.add(btnTimKiem);
 		btnTimKiem.setEnabled(true);
@@ -251,6 +259,8 @@ public class TheLoaiUI extends JPanel {
 		setInitialState();
 	}
 
+	//HT
+	//Hiển thị thông tin thể loại được chọn từ dòng lên ô nhập
 	private void populateFieldsFromSelectedRow(int selectedRow) {
 		if (selectedRow != -1) {
 			if (selectedRow < tableModel.getRowCount()) {
@@ -267,7 +277,9 @@ public class TheLoaiUI extends JPanel {
 			}
 		}
 	}
-
+	
+	//HT
+	//Xóa trắng (Xóa nd ô nhập liệu)
 	private void clearFields() {
 		txtMaTheLoai.setText("");
 		txtTenTheLoai.setText("");
@@ -278,6 +290,8 @@ public class TheLoaiUI extends JPanel {
 		}
 	}
 
+	//HT
+	//Cài đặt trạng thái có thể chỉnh sửa hay k cho các ô nhập
 	private void setFieldsEditable(boolean isEditable, boolean isMaEditable_IGNORED) {
 		txtMaTheLoai.setEditable(false);
 		txtTenTheLoai.setEditable(isEditable);
@@ -286,7 +300,9 @@ public class TheLoaiUI extends JPanel {
 		txtTenTheLoai.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
 		txtMoTa.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
 	}
-
+	
+	//HT
+	//Cập nhật trạng thái các btn, trường nhập liệu theo trạng thái chỉnh sửa
 	private void updateButtonStates() {
 		boolean isIdle = (currentState == EditState.IDLE);
 		boolean rowSelected = (table.getSelectedRow() != -1);
@@ -302,6 +318,8 @@ public class TheLoaiUI extends JPanel {
 		setFieldsEditable(!isIdle, false);
 	}
 
+	//HT
+	//Thiết lập trạng thái ban đầu cho GDien
 	private void setInitialState() {
 		currentState = EditState.IDLE;
 		clearFields();
@@ -320,6 +338,8 @@ public class TheLoaiUI extends JPanel {
 		loadTableData(results);
 	}
 
+	//HT
+	//Nạp dl vào bảng từ ds thể loại
 	private void loadTableData(List<TheLoai> list) {
 		if (tableModel.getColumnCount() == 0) {
 			tableModel.setColumnIdentifiers(new Object[]{"Mã Thể Loại", "Tên Thể Loại", "Mô Tả"});
@@ -340,6 +360,8 @@ public class TheLoaiUI extends JPanel {
 		setInitialState();
 	}
 
+	//CS
+	//Vào chế độ thêm mới thể loại
 	private void enterAddMode() {
 		currentState = EditState.ADDING;
 		table.clearSelection();
@@ -348,6 +370,8 @@ public class TheLoaiUI extends JPanel {
 		txtTenTheLoai.requestFocusInWindow();
 	}
 
+	//CS
+	//Vào chế độ chỉnh sửa tt
 	private void enterEditMode() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
@@ -359,6 +383,8 @@ public class TheLoaiUI extends JPanel {
 		txtTenTheLoai.requestFocusInWindow();
 	}
 
+	//CS
+	//Xóa thể loại được chọn
 	private void deleteSelectedTheLoai() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
@@ -367,6 +393,7 @@ public class TheLoaiUI extends JPanel {
 		}
 		String maTheLoai = tableModel.getValueAt(selectedRow, 0).toString();
 		String tenTheLoai = tableModel.getValueAt(selectedRow, 1).toString();
+		//Cảnh báo xóa
 		int choice = JOptionPane.showConfirmDialog(this,
 				"Bạn có chắc chắn muốn xóa thể loại:\nMã: " + maTheLoai + "\nTên: " + tenTheLoai + "?",
 				"Xác nhận xóa",
@@ -387,6 +414,8 @@ public class TheLoaiUI extends JPanel {
 		}
 	}
 
+	//CS
+	//Lưu thể loại sau khi được thêm/chỉnh sửa
 	private void saveTheLoai() {
 		String ma;
 		String ten = txtTenTheLoai.getText().trim();
@@ -441,10 +470,13 @@ public class TheLoaiUI extends JPanel {
 		}
 	}
 
+	//Hủy thao tác lúc đang Thêm/Sửa
 	private void cancelEditMode() {
-		setInitialState();
+		setInitialState();	//Quay lại trạng thái ban đầu
 	}
 
+	//HT lỗi
+	//Hiển thị tb lỗi Dữ liệu k hợp lệ - Focus vào trường lỗi
 	private void showValidationError(String message, Component componentToFocus) {
 		JOptionPane.showMessageDialog(this, message, "Dữ liệu không hợp lệ", JOptionPane.WARNING_MESSAGE);
 		if (componentToFocus != null) {
@@ -457,6 +489,8 @@ public class TheLoaiUI extends JPanel {
 		}
 	}
 
+	//HT Lỗi
+	//Hiển thị tb lỗi hệ thống, kèm theo chi tiết ngoại lệ
 	private void showError(String message, Exception ex) {
 		String detailedMessage = message;
 		if (ex != null) {
@@ -465,5 +499,38 @@ public class TheLoaiUI extends JPanel {
 			System.err.println(message + "\n" + ex.getMessage());
 		}
 		JOptionPane.showMessageDialog(this, detailedMessage, "Lỗi Hệ Thống", JOptionPane.ERROR_MESSAGE);
+	}
+
+	
+	//Xử lý sk
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+	    if (o.equals(btnThem)) {
+	        enterAddMode();
+	    } else if (o.equals(btnSua)) {
+	        enterEditMode();
+	    } else if (o.equals(btnXoa)) {
+	        deleteSelectedTheLoai();
+	    } else if (o.equals(btnLuu)) {
+	        saveTheLoai();
+	    } else if (o.equals(btnHuy)) {
+	        cancelEditMode();
+	    } else if (o.equals(btnThoat)) {
+	        Window window = SwingUtilities.getWindowAncestor(TheLoaiUI.this);
+	        if (window != null) {
+	            int confirm = JOptionPane.showConfirmDialog(TheLoaiUI.this,
+	                    "Bạn có chắc chắn muốn đóng tab Thể Loại?", "Xác nhận thoát",
+	                    JOptionPane.YES_NO_OPTION);
+	            if (confirm == JOptionPane.YES_OPTION) {
+	                window.dispose();
+	            }
+	        } else {
+	            System.exit(0);
+	        }
+	    } else if (o.equals(btnTimKiem)) {
+	        searchTheLoai();
+	    }
+		
 	}
 }

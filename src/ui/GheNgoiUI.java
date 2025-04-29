@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ import dao.PhongChieuDAO;
 import entity.GheNgoi;
 import entity.PhongChieu;
 
-public class GheNgoiUI extends JPanel {
+public class GheNgoiUI extends JPanel implements ActionListener {
     private JTextField txtMaGhe;
     private JTextField txtHang;
     private JTextField txtSoGhe;
@@ -32,17 +33,18 @@ public class GheNgoiUI extends JPanel {
     private JButton btnHuy;
     private JButton btnThoat;
     private JPanel panelSeatGrid;
-    private Map<String, JButton> seatButtonMap;
+    private Map<String, JButton> seatButtonMap; // Map lưu trữ ghế tương ứng với nút
     private enum EditState { IDLE, ADDING, EDITING }
     private EditState currentState = EditState.IDLE;
-    private GheNgoi selectedGheNgoi = null;
-    private JButton selectedSeatButton = null;
+    private GheNgoi selectedGheNgoi = null;	//theo dõi ghế đang được chọn
+    private JButton selectedSeatButton = null; //theo dõi ghế đang được chọn
     private final String[] TRANG_THAI_OPTIONS = {"Trống", "Đã đặt", "Bảo trì"};
     private final Color COLOR_TRONG = new Color(0, 153, 0);
     private final Color COLOR_DA_DAT = new Color(204, 0, 0);
     private final Color COLOR_BAO_TRI = Color.GRAY;
     private final Color COLOR_SELECTED = Color.ORANGE;
 
+    //GD QL Ghế ngồi
     public GheNgoiUI() {
         seatButtonMap = new HashMap<>();
         setLayout(null);
@@ -136,7 +138,8 @@ public class GheNgoiUI extends JPanel {
         btnThem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnThem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThem.setIcon(new ImageIcon(GheNgoiUI.class.getResource("/icons/icons8-add-20.png")));
-        btnThem.addActionListener(e -> enterAddMode());
+//        btnThem.addActionListener(e -> enterAddMode());
+        btnThem.addActionListener(this);
         panelChucNang.add(btnThem);
 
         btnSua = new JButton("Sửa TT Ghế");
@@ -144,7 +147,8 @@ public class GheNgoiUI extends JPanel {
         btnSua.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSua.setIcon(new ImageIcon(GheNgoiUI.class.getResource("/icons/icons8-edit-20.png")));
         btnSua.setEnabled(false);
-        btnSua.addActionListener(e -> enterEditMode());
+//        btnSua.addActionListener(e -> enterEditMode());
+        btnSua.addActionListener(this);
         panelChucNang.add(btnSua);
 
         btnXoa = new JButton("Xóa Ghế");
@@ -152,7 +156,8 @@ public class GheNgoiUI extends JPanel {
         btnXoa.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnXoa.setIcon(new ImageIcon(GheNgoiUI.class.getResource("/icons/icons8-delete-20.png")));
         btnXoa.setEnabled(false);
-        btnXoa.addActionListener(e -> deleteSelectedGheNgoi());
+//        btnXoa.addActionListener(e -> deleteSelectedGheNgoi());
+        btnXoa.addActionListener(this);
         panelChucNang.add(btnXoa);
 
         btnLuu = new JButton("Lưu");
@@ -160,7 +165,8 @@ public class GheNgoiUI extends JPanel {
         btnLuu.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLuu.setIcon(new ImageIcon(GheNgoiUI.class.getResource("/icons/icons8-save-20.png")));
         btnLuu.setEnabled(false);
-        btnLuu.addActionListener(e -> saveGheNgoi());
+//        btnLuu.addActionListener(e -> saveGheNgoi());
+        btnLuu.addActionListener(this);
         panelChucNang.add(btnLuu);
 
         btnHuy = new JButton("Hủy");
@@ -168,29 +174,31 @@ public class GheNgoiUI extends JPanel {
         btnHuy.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHuy.setIcon(new ImageIcon(GheNgoiUI.class.getResource("/icons/icons8-cancel-20.png")));
         btnHuy.setEnabled(false);
-        btnHuy.addActionListener(e -> cancelEditMode());
+//        btnHuy.addActionListener(e -> cancelEditMode());
+        btnHuy.addActionListener(this);
         panelChucNang.add(btnHuy);
 
         btnThoat = new JButton("Thoát");
         btnThoat.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnThoat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThoat.setIcon(new ImageIcon(GheNgoiUI.class.getResource("/icons/icons8-exit-20.png")));
-        btnThoat.addActionListener(e -> {
-             int confirm = JOptionPane.showConfirmDialog(
-                    GheNgoiUI.this,
-                    "Bạn có chắc chắn muốn thoát?",
-                    "Xác nhận thoát",
-                    JOptionPane.YES_NO_OPTION
-                );
-             if (confirm == JOptionPane.YES_OPTION) {
-                 Window window = SwingUtilities.getWindowAncestor(this);
-                 if (window != null) {
-                     window.dispose();
-                 } else {
-                     System.exit(0);
-                 }
-             }
-        });
+//        btnThoat.addActionListener(e -> {
+//             int confirm = JOptionPane.showConfirmDialog(
+//                    GheNgoiUI.this,
+//                    "Bạn có chắc chắn muốn thoát?",
+//                    "Xác nhận thoát",
+//                    JOptionPane.YES_NO_OPTION
+//                );
+//             if (confirm == JOptionPane.YES_OPTION) {
+//                 Window window = SwingUtilities.getWindowAncestor(this);
+//                 if (window != null) {
+//                     window.dispose();
+//                 } else {
+//                     System.exit(0);
+//                 }
+//             }
+//        });
+        btnThoat.addActionListener(this);
         panelChucNang.add(btnThoat);
 
         loadPhongChieuComboBox();
@@ -203,6 +211,8 @@ public class GheNgoiUI extends JPanel {
         }
     }
 
+    //Dl - Phòng Chiếu
+    //Nạp ds Phòng chiếu vào COMBOBOX
     private void loadPhongChieuComboBox() {
         try {
             List<PhongChieu> phongChieuList = PhongChieuDAO.readAll();
@@ -235,6 +245,8 @@ public class GheNgoiUI extends JPanel {
         }
     }
 
+    //DL- Phòng Chiếu
+    //Ktra trạng thái , load ghế mới - Khi chọn phòng chiếu khác
      private void handlePhongChieuSelectionChange() {
          if (currentState != EditState.IDLE) {
              int choice = JOptionPane.showConfirmDialog(this,
@@ -264,6 +276,8 @@ public class GheNgoiUI extends JPanel {
          updateButtonStates(); // Update buttons (Sua/Xoa should be disabled)
      }
 
+     //SĐ Ghế ngồi
+     //Tạo lưới ghế ngồi (dựa trên dl Ghế của Phòng Chiếu)
      private void renderSeatGrid(List<GheNgoi> seats) {
          panelSeatGrid.removeAll();
          seatButtonMap.clear();
@@ -372,16 +386,9 @@ public class GheNgoiUI extends JPanel {
          panelSeatGrid.repaint();
      }
 
-    private Color getSeatColor(String trangThai) {
-        if (trangThai == null) return Color.DARK_GRAY;
-        switch (trangThai) {
-            case "Trống": return COLOR_TRONG;
-            case "Đã đặt": return COLOR_DA_DAT;
-            case "Bảo trì": return COLOR_BAO_TRI;
-            default: return Color.DARK_GRAY;
-        }
-    }
 
+    //SĐ ghế ngồi
+    //Chọn ghế: cập nhật thông tin hiển thị và trạng thái giao diện
     private void updateSelectedSeatButton(JButton newlySelected) {
         // Only deselect the OLD button if it's different from the new one
         if (selectedSeatButton != null && selectedSeatButton != newlySelected) {
@@ -394,7 +401,8 @@ public class GheNgoiUI extends JPanel {
         }
     }
 
-    // --- Modified deselectSeatButton ---
+    //SĐ ghế ngồi
+    //Bỏ chọn ghế đang chọn
     private void deselectSeatButton() {
         // Only remove border from the currently selected button visually
         if (selectedSeatButton != null) {
@@ -405,7 +413,8 @@ public class GheNgoiUI extends JPanel {
         selectedGheNgoi = null;
     }
 
-
+    //SĐ ghế ngồi
+    // Gán dữ liệu từ đối tượng ghế vào các ô nhập liệu
     private void populateFieldsFromGheNgoi(GheNgoi gheNgoi) {
         if (gheNgoi != null) {
             txtMaGhe.setText(gheNgoi.getMaGhe());
@@ -414,6 +423,16 @@ public class GheNgoiUI extends JPanel {
             comboBoxTrangThai.setSelectedItem(gheNgoi.getTrangThai());
         } else {
             clearFields();
+        }
+    }
+    
+    private Color getSeatColor(String trangThai) {
+        if (trangThai == null) return Color.DARK_GRAY;
+        switch (trangThai) {		//Combobox trạng thái ghế: Trống, đã đặt, bảo trì
+            case "Trống": return COLOR_TRONG;
+            case "Đã đặt": return COLOR_DA_DAT;
+            case "Bảo trì": return COLOR_BAO_TRI;
+            default: return Color.DARK_GRAY;
         }
     }
 
@@ -427,6 +446,8 @@ public class GheNgoiUI extends JPanel {
         // Don't clear selectedGheNgoi here - let deselectSeatButton handle it
     }
 
+    //Chức năng trạng thái
+    // Cho phép nhập dữ liệu (khi thêm/sửa)
     private void setFieldsEditable(boolean isEditable) {
         txtHang.setEditable(isEditable);
         txtSoGhe.setEditable(isEditable);
@@ -440,6 +461,8 @@ public class GheNgoiUI extends JPanel {
         comboBoxPhong.setBackground(!isEditable ? Color.WHITE : Color.LIGHT_GRAY);
     }
 
+    //Chức năng trạng thái
+    // Cập nhật trạng thái các nút và khả năng chỉnh sửa của các ô
     private void updateButtonStates() {
         boolean isIdle = (currentState == EditState.IDLE);
         boolean seatSelected = (selectedGheNgoi != null);
@@ -454,6 +477,8 @@ public class GheNgoiUI extends JPanel {
         setFieldsEditable(!isIdle);
     }
 
+    //Chức năng trạng thái
+    //Đặt lại trạng thái ban đầu
     private void setInitialState() {
         currentState = EditState.IDLE;
         deselectSeatButton(); // This now also sets selectedGheNgoi to null
@@ -461,6 +486,8 @@ public class GheNgoiUI extends JPanel {
         updateButtonStates();
     }
 
+    //Chức năng
+    //Thêm ghế mới
     private void enterAddMode() {
         PhongChieu selectedPhong = (PhongChieu) comboBoxPhong.getSelectedItem();
         if (selectedPhong == null) {
@@ -475,9 +502,11 @@ public class GheNgoiUI extends JPanel {
         txtHang.requestFocus();
     }
 
+    //Chức năng
+    //Sửa thông tin ghế đã chọn
     private void enterEditMode() {
         if (selectedGheNgoi == null) {
-            showValidationError("Vui lòng chọn một ghế để sửa.", panelSeatGrid);
+            showValidationError("Vui lòng chọn một ghế để sửa.", panelSeatGrid); //panelSeatGrid chứa sơ đồ ghế
             return;
         }
         currentState = EditState.EDITING;
@@ -485,6 +514,8 @@ public class GheNgoiUI extends JPanel {
         txtHang.requestFocus();
     }
 
+    //Chức năng
+    //Xóa ghế đang chọn
     private void deleteSelectedGheNgoi() {
         if (selectedGheNgoi == null) {
             showValidationError("Vui lòng chọn một ghế để xóa.", panelSeatGrid);
@@ -493,6 +524,7 @@ public class GheNgoiUI extends JPanel {
         String maGhe = selectedGheNgoi.getMaGhe();
         String viTri = selectedGheNgoi.getHang() + selectedGheNgoi.getSoGhe();
         String tenPhong = selectedGheNgoi.getPhongChieu() != null ? selectedGheNgoi.getPhongChieu().getTenPhong() : "N/A";
+        //Xác nhận lại
         int choice = JOptionPane.showConfirmDialog(this,
                 "Bạn có chắc chắn muốn xóa Ghế ngồi:\nMã: " + maGhe + "\nPhòng: " + tenPhong + "\nVị trí: " + viTri + "?",
                 "Xác nhận xóa Ghế ngồi",
@@ -513,6 +545,8 @@ public class GheNgoiUI extends JPanel {
         }
     }
 
+    //Chức năng
+    //Lưu dl khi thêm/sửa ghế (kèm kiểm tra trùng mã, định dạng, trạng thái)
     private void saveGheNgoi() {
         PhongChieu selectedPhong = (PhongChieu) comboBoxPhong.getSelectedItem();
         String hangInput = txtHang.getText().trim().toUpperCase();
@@ -609,11 +643,16 @@ public class GheNgoiUI extends JPanel {
         }
     }
 
+    //Chức năng
+    // Hủy thao tác thêm/sửa và quay lại trạng thái ban đầu
     private void cancelEditMode() {
         setInitialState(); // Lệnh xóa dtuong và hủy chọn hiển thị hiện tại
 //        hủy chế độ chỉnh sửa, giao diện sẽ trở về trạng thái ban đầu - không cần phải thao tác lại trên các nút chức năng.
     }
 
+    
+    //HT Lỗi
+    //Hiển thị tb lỗi nhập liệu - Focus lại ô lỗi
      private void showValidationError(String message, Component componentToFocus) {
 		JOptionPane.showMessageDialog(this, message, "Dữ liệu không hợp lệ", JOptionPane.WARNING_MESSAGE);
 		if (componentToFocus != null) {
@@ -628,6 +667,8 @@ public class GheNgoiUI extends JPanel {
 		}
 	}
 
+     //HT Lỗi
+     //Hiển thị lỗi Hệ thống
 	private void showError(String message, Exception ex) {
 		String detailedMessage = message;
 		if (ex != null) {
@@ -636,5 +677,36 @@ public class GheNgoiUI extends JPanel {
 			System.err.println(message + "\n" + ex.getMessage());
 		}
 		JOptionPane.showMessageDialog(this, detailedMessage, "Lỗi Hệ Thống", JOptionPane.ERROR_MESSAGE);
+	}
+
+	//Xử lý sk
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+
+	    if (o.equals(btnThem)) {
+	        enterAddMode();
+	    } else if (o.equals(btnSua)) {
+	        enterEditMode();
+	    } else if (o.equals(btnXoa)) {
+	        deleteSelectedGheNgoi();
+	    } else if (o.equals(btnLuu)) {
+	        saveGheNgoi();
+	    } else if (o.equals(btnHuy)) {
+	        cancelEditMode();
+	    } else if (o.equals(btnThoat)) {
+	        int confirm = JOptionPane.showConfirmDialog(this,
+	                "Bạn có chắc chắn muốn thoát?", "Xác nhận thoát",
+	                JOptionPane.YES_NO_OPTION);
+	        if (confirm == JOptionPane.YES_OPTION) {
+	            Window window = SwingUtilities.getWindowAncestor(this);
+	            if (window != null) {
+	                window.dispose();
+	            } else {
+	                System.exit(0);
+	            }
+	        }
+	    }
+		
 	}
 }
