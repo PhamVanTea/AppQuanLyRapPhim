@@ -98,7 +98,7 @@ public class GheNgoiDAO {
 
             stmt.setString(1, maGhe);
 
-            int rowsAffected = stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();	//thực thi câu lệnh delete
             return rowsAffected > 0;
         } catch (SQLException e) {
              if (e.getMessage().toLowerCase().contains("foreign key constraint")) {

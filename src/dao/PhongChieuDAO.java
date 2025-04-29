@@ -20,13 +20,13 @@ public class PhongChieuDAO {
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, phongChieu.getMaPhong());
+            stmt.setString(1, phongChieu.getMaPhong());	//Gán gtri cho tham số ?,?,? bằng phongChieu.get...
             stmt.setString(2, phongChieu.getTenPhong());
             stmt.setInt(3, phongChieu.getSoGhe());
 
-            return stmt.executeUpdate() > 0;
+            return stmt.executeUpdate() > 0;	//số dòng ảnh hường >0 - true
         } catch (SQLException e) {
-            if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) {
+            if (e.getMessage().toLowerCase().contains("duplicate entry") || e.getMessage().toLowerCase().contains("unique constraint")) { //gặp lỗi duplicate entry | unique constraint từ sql -> THông báo lỗi đã tồn tại 
                 System.err.println("Tạo phòng chiếu thất bại: Phòng chiếu với mã '" + phongChieu.getMaPhong() + "' đã tồn tại.");
             } else {
                 System.err.println("Tạo phòng chiếu thất bại: " + e.getMessage());
@@ -38,8 +38,8 @@ public class PhongChieuDAO {
     // Phương thức đọc tất cả phòng chiếu
     public static List<PhongChieu> readAll() {
         List<PhongChieu> list = new ArrayList<>();
-        String sql = "SELECT maPhong, tenPhong, soGhe FROM PhongChieu ORDER BY tenPhong";
-        try (Connection conn = DbConnect.getConnection();
+        String sql = "SELECT maPhong, tenPhong, soGhe FROM PhongChieu ORDER BY tenPhong"; //sx theo tên phòng
+        try (Connection conn = DbConnect.getConnection();	//mở kết nối csdl
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -47,7 +47,7 @@ public class PhongChieuDAO {
                 String maPhong = rs.getString("maPhong");
                 String tenPhong = rs.getString("tenPhong");
                 int soGhe = rs.getInt("soGhe");
-                list.add(new PhongChieu(maPhong, tenPhong, soGhe));
+                list.add(new PhongChieu(maPhong, tenPhong, soGhe)); //tạo đối tượng phongChieu với dl lấy được thêm vào list
             }
         } catch (SQLException e) {
             System.err.println("Đọc phòng chiếu thất bại: " + e.getMessage());
@@ -99,12 +99,12 @@ public class PhongChieuDAO {
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, maPhong);
+            stmt.setString(1, maPhong);	//gán gtri maPhong vào ?
 
-            int rowsAffected = stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();	//thực thi câu lệnh delete
             return rowsAffected > 0;
         } catch (SQLException e) {
-            if (e.getMessage().toLowerCase().contains("foreign key constraint")) {
+            if (e.getMessage().toLowerCase().contains("foreign key constraint")) { //ktra nếu có tb lỗi về khóa ngoại
                 System.err.println("Xóa phòng chiếu thất bại cho maPhong=" + maPhong + ": Không thể xóa phòng chiếu vì đang được tham chiếu (ví dụ: trong Suất Chiếu hoặc Ghế Ngồi).");
             } else {
                 System.err.println("Xóa phòng chiếu thất bại cho maPhong=" + maPhong + ": " + e.getMessage());

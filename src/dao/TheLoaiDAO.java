@@ -14,14 +14,14 @@ public class TheLoaiDAO {
 
     // Phương thức tạo mã thể loại duy nhất
     public static String generateMaTheLoai() {
-        return "TL" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        return "TL" + UUID.randomUUID().toString().substring(0, 8).toUpperCase(); //UUID tạo mã ngẫu nhiên, lấy 8 kí tự đầu và tiền tố "TL"
     }
     
     // Phương thức tạo mới một thể loại
     public static boolean create(TheLoai theLoai) {
         String sql = "INSERT INTO TheLoai (maTheLoai, tenTheLoai, moTa) VALUES (?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) { //PreparedStatement chạy lệnh SQL Insert
 
             stmt.setString(1, theLoai.getMaTheLoai());
             stmt.setString(2, theLoai.getTenTheLoai());
@@ -79,7 +79,7 @@ public class TheLoaiDAO {
 
             stmt.setString(1, maTheLoai);
 
-            return stmt.executeUpdate() > 0;
+            return stmt.executeUpdate() > 0; //thực thi câu lệnh delete, số dòng >0 -> xóa thành công -> true
         } catch (SQLException e) {
             System.err.println("Xóa thể loại thất bại: " + e.getMessage());
         }
@@ -88,16 +88,16 @@ public class TheLoaiDAO {
 
     // Phương thức tìm kiếm thể loại theo tên
     public static List<TheLoai> searchByName(String keyword) {
-        List<TheLoai> list = new ArrayList<>();
-        String sql = "SELECT * FROM TheLoai WHERE tenTheLoai LIKE ?";
+        List<TheLoai> list = new ArrayList<>();	//tạo ds rỗng để lưu kq
+        String sql = "SELECT * FROM TheLoai WHERE tenTheLoai LIKE ?"; // " ? " tham số truyền vào keyword
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, "%" + keyword + "%");
+            stmt.setString(1, "%" + keyword + "%"); 
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String maTheLoai = rs.getString("maTheLoai");
+                String maTheLoai = rs.getString("maTheLoai"); //lấy dl dạng String theo tên cột
                 String tenTheLoai = rs.getString("tenTheLoai");
                 String moTa = rs.getString("moTa");
                 list.add(new TheLoai(maTheLoai, tenTheLoai, moTa));
