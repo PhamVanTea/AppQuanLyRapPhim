@@ -1,6 +1,6 @@
 package session;
 
-import entity.NhanVien;
+import Entity.NhanVien;
 
 public class StaticVariable {
 	public static NhanVien nhanVien;
