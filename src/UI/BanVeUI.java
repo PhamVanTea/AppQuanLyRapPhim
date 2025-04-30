@@ -34,22 +34,30 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.lowagie.text.Chunk;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
+//thư viện pdf
+import com.lowagie.text.Chunk; //tạo văn bản 
+import com.lowagie.text.Document; //tài liệu pdf
+import com.lowagie.text.DocumentException; 
 import com.lowagie.text.Element;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.PdfPCell; //tạo bảng trong pdf
+import com.lowagie.text.pdf.PdfPTable; //tạo bảng trong pdf
+import com.lowagie.text.pdf.PdfWriter; //ghi nội dung vào pdf
+
+//đoạn code sử dụng iText để xây dựng file PDF hóa đơn bán vé.
+//nội dung PDF gồm tiêu đề, thông tin hóa đơn, chi tiết vé, tổng tiền và chân trang.
+//font tiếng Việt được xử lý bằng font DejaVuSans được nhúng vào PDF.
+//file PDF được lưu ra ổ đĩa và tự động mở sau khi tạo thành công.
+//việc tạo PDF được tích hợp chặt chẽ trong quy trình đặt vé, giúp người dùng có thể in hoặc lưu hóa đơn nhanh chóng.
 
 import DAO.*;
 import Entity.*;
-
+//JPanel là một thành phần (component) trong thư viện Swing dùng để nhóm nhiều thành phần con
+//(JButton, JTable, JTextField, v.v.) lại với nhau. Bạn có thể xem nó như một "khối xây dựng giao diện".
 // Lớp BanVeUI kế thừa từ JPanel và implements ActionListener
 public class BanVeUI extends JPanel implements ActionListener {
     // Khai báo các thành phần giao diện và biến cần thiết
@@ -83,7 +91,7 @@ public class BanVeUI extends JPanel implements ActionListener {
     private static com.lowagie.text.Font fontHeader;
     private static com.lowagie.text.Font fontNormal;
     private static com.lowagie.text.Font fontBold;
-    private static String FONT_PATH = "/fonts/DejaVuSans.ttf";
+    private static String FONT_PATH = "/fonts/DejaVuSans.ttf"; //đoạn code tải font tiếng việt để đảm bảo PDF hiển thị tiếng Việt đúng.
     private JTextField txtKhachHang;
 
     // Khối static để tải font cho PDF
