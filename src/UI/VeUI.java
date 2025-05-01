@@ -12,6 +12,8 @@ import DAO.*;
 import Entity.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
@@ -19,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class VeUI extends JPanel {
+public class VeUI extends JPanel implements ActionListener {
 	private JTable table;
 	private JTextField txtTimKiem;
 	private DefaultTableModel tableModel;
@@ -27,7 +29,7 @@ public class VeUI extends JPanel {
     private final DecimalFormat currencyFormatter = new DecimalFormat("#,##0 VNĐ");
     private final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM HH:mm");
     private final SimpleDateFormat dbDateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+// giao diện vé
 	public VeUI() {
 		setLayout(null);
         setPreferredSize(new Dimension(1000, 680));
@@ -86,23 +88,23 @@ public class VeUI extends JPanel {
         btnTimKiem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnTimKiem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnTimKiem.setIcon(new ImageIcon(VeUI.class.getResource("/icons/icons8-search-20.png"))); // Added Icon
-		btnTimKiem.addActionListener(e -> searchVe());
+        btnTimKiem.addActionListener(this);
 		btnTimKiem.setBounds(415, 5, 117, 27);
 		panelSearch.add(btnTimKiem);
 
 		loadTableData(VeDAO.readAll());
 		setInitialState();
 	}
-
+	// xóa trắng ô nhập dữ liệu (tìm kiếm)
     private void clearFields() {
 		txtTimKiem.setText("");
         table.clearSelection();
 	}
-
+// làm sạch dữ liệu
 	private void setInitialState() {
         clearFields();
     }
-
+// tìm kiếm vé theo Mã Hóa Đơn 
     private void searchVe() {
         String keyword = txtTimKiem.getText().trim();
         List<Ve> results;
@@ -117,6 +119,7 @@ public class VeUI extends JPanel {
         }
         loadTableData(results);
     }
+//hiển thị danh sách các đối tượng vé lên bảng
 
     private void loadTableData(List<Ve> list) {
 		if (tableModel.getColumnCount() == 0) {
@@ -131,9 +134,9 @@ public class VeUI extends JPanel {
             table.getColumnModel().getColumn(5).setPreferredWidth(110);
             table.getColumnModel().getColumn(6).setPreferredWidth(90);
         }
-
+		 // xóa dl bảng cũ
 		tableModel.setRowCount(0);
-
+	    // thêm dữ liệu vào bảng mới
 		if (list != null) {
 			for (Ve ve : list) {
                 String maHD = (ve.getHoaDon() != null) ? ve.getHoaDon().getMaHoaDon() : "N/A";
@@ -169,7 +172,7 @@ public class VeUI extends JPanel {
         table.setRowSorter(sorter);
         table.clearSelection();
 	}
-
+// chuyển đổi định dạng, kiểm tra lỗi nếu sai trả về N/A
     private String formatDateTime(String dbDateTime) {
         if (dbDateTime == null || dbDateTime.isEmpty()) {
             return "N/A";
@@ -181,7 +184,7 @@ public class VeUI extends JPanel {
             return dbDateTime;
         }
     }
-
+  //hiển thị thông báo lỗi --> focus về trường nhập liệu có lỗi
     private void showValidationError(String message, Component componentToFocus) {
         JOptionPane.showMessageDialog(this, message, "Dữ liệu không hợp lệ", JOptionPane.WARNING_MESSAGE);
         if (componentToFocus != null) {
@@ -193,7 +196,8 @@ public class VeUI extends JPanel {
             });
         }
     }
-
+  //HT Lỗi
+  		//Hiển thị tb lỗi hệ thống, kèm theo chi tiết ngoại lệ
     private void showError(String message, Exception ex) {
          String detailedMessage = message;
          if (ex != null) {
@@ -203,4 +207,14 @@ public class VeUI extends JPanel {
          }
          JOptionPane.showMessageDialog(this, detailedMessage, "Lỗi Hệ Thống", JOptionPane.ERROR_MESSAGE);
     }
+    // xử lí sk
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnTimKiem)) {
+            searchVe();
+        }
+    }
+
+    
 }
