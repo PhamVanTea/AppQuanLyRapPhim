@@ -20,7 +20,7 @@ public class PhimDAO {
     }
 
     // Phương thức tạo mới một phim
-    public static boolean create(Phim phim) {
+    public static boolean tao(Phim phim) {
         String sql = "INSERT INTO Phim (maPhim, tenPhim, daoDien, dienVien, maTheLoai, thoiLuong, xepHang, moTa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -114,7 +114,7 @@ public class PhimDAO {
     }
 
     // Phương thức cập nhật thông tin phim
-    public static boolean update(Phim phim) {
+    public static boolean capNhat(Phim phim) {
         String sql = "UPDATE Phim SET tenPhim = ?, daoDien = ?, dienVien = ?, maTheLoai = ?, thoiLuong = ?, xepHang = ?, moTa = ? WHERE maPhim = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -142,7 +142,7 @@ public class PhimDAO {
     }
 
     // Phương thức xóa phim
-    public static boolean delete(String maPhim) {
+    public static boolean xoa(String maPhim) {
         String sql = "DELETE FROM Phim WHERE maPhim = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

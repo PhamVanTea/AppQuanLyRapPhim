@@ -12,7 +12,7 @@ import Entity.NhanVien;
 public class HoaDonDAO {
 
     // Phương thức tạo mới một hóa đơn
-    public static boolean create(HoaDon hoaDon) {
+    public static boolean tao(HoaDon hoaDon) {
         String sql = "INSERT INTO HoaDon (maHoaDon, maNhanVien, maKhachHang, tongTien, ngayLapHoaDon, trangThai) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -60,7 +60,7 @@ public class HoaDonDAO {
     }
 
     // Phương thức cập nhật thông tin hóa đơn
-    public static boolean update(HoaDon hoaDon) {
+    public static boolean capNhat(HoaDon hoaDon) {
         String sql = "UPDATE HoaDon SET maNhanVien = ?, maKhachHang = ?, tongTien = ?, ngayLapHoaDon = ?, trangThai = ? WHERE maHoaDon = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -80,7 +80,7 @@ public class HoaDonDAO {
     }
 
     // Phương thức xóa hóa đơn
-    public static boolean delete(String maHoaDon) {
+    public static boolean xoa(String maHoaDon) {
         String sql = "DELETE FROM HoaDon WHERE maHoaDon = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

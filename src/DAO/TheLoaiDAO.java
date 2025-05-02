@@ -19,7 +19,7 @@ public class TheLoaiDAO {
     }
     
     // Phương thức tạo mới một thể loại
-    public static boolean create(TheLoai theLoai) {
+    public static boolean tao(TheLoai theLoai) {
         String sql = "INSERT INTO TheLoai (maTheLoai, tenTheLoai, moTa) VALUES (?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) { //PreparedStatement chạy lệnh SQL Insert
@@ -31,6 +31,22 @@ public class TheLoaiDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Tạo thể loại thất bại: " + e.getMessage());
+        }
+        return false;
+    }
+    
+ // Kiểm tra xem tên thể loại đã tồn tại (không phân biệt chữ hoa/thường)
+    public static boolean daTonTaiTen(String tenTheLoai) {
+        String sql = "SELECT COUNT(*) FROM TheLoai WHERE LOWER(tenTheLoai) = LOWER(?)";
+        try (Connection conn = DbConnect.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, tenTheLoai.trim());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi kiểm tra trùng tên thể loại: " + e.getMessage());
         }
         return false;
     }
@@ -56,7 +72,7 @@ public class TheLoaiDAO {
     }
 
     // Phương thức cập nhật thông tin thể loại
-    public static boolean update(TheLoai theLoai) {
+    public static boolean capNhat(TheLoai theLoai) {
         String sql = "UPDATE TheLoai SET tenTheLoai = ?, moTa = ? WHERE maTheLoai = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -73,7 +89,7 @@ public class TheLoaiDAO {
     }
 
     // Phương thức xóa thể loại
-    public static boolean delete(String maTheLoai) {
+    public static boolean xoa(String maTheLoai) {
         String sql = "DELETE FROM TheLoai WHERE maTheLoai = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

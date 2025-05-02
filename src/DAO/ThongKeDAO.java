@@ -20,7 +20,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức tạo mới một thống kê
-    public static boolean create(ThongKe thongKe) {
+    public static boolean tao(ThongKe thongKe) {
         String sql = "INSERT INTO ThongKe (MaThongKe, TongDoanhThu, TongSoVe, TongSoKhachHang, " +
                      "TongSoNhanVien, TongSoPhim, TongSoPhongChieu, TuNgay, DenNgay) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -122,7 +122,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức cập nhật thông tin thống kê
-    public static boolean update(ThongKe thongKe) {
+    public static boolean capNhat(ThongKe thongKe) {
         String sql = "UPDATE ThongKe SET TongDoanhThu = ?, TongSoVe = ?, TongSoKhachHang = ?, " +
                      "TongSoNhanVien = ?, TongSoPhim = ?, TongSoPhongChieu = ?, TuNgay = ?, DenNgay = ? " +
                      "WHERE MaThongKe = ?";
@@ -147,7 +147,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức xóa thống kê
-    public static boolean delete(String maThongKe) {
+    public static boolean xoa(String maThongKe) {
         String sql = "DELETE FROM ThongKe WHERE MaThongKe = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -161,7 +161,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức tính tổng doanh thu
-    public static BigDecimal calculateTongDoanhThu(LocalDate startDate, LocalDate endDate) {
+    public static BigDecimal tinhTongDoanhThu(LocalDate startDate, LocalDate endDate) {
         String sql = "SELECT SUM(tongTien) FROM HoaDon WHERE CAST(ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
         BigDecimal total = BigDecimal.ZERO;
         try (Connection conn = DbConnect.getConnection();
@@ -185,7 +185,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức tính tổng số vé
-    public static int calculateTongSoVe(LocalDate startDate, LocalDate endDate) {
+    public static int tinhTongSoVe(LocalDate startDate, LocalDate endDate) {
         String sql = "SELECT COUNT(v.maVe) FROM Ve v JOIN HoaDon h ON v.maHoaDon = h.maHoaDon WHERE CAST(h.ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -206,7 +206,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức tính tổng số khách hàng
-    public static int calculateTongSoKhachHang(LocalDate startDate, LocalDate endDate) {
+    public static int tinhTongSoKhachHang(LocalDate startDate, LocalDate endDate) {
         String sql = "SELECT COUNT(DISTINCT maKhachHang) FROM HoaDon WHERE CAST(ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -227,7 +227,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức tính tổng số nhân viên
-    public static int calculateTongSoNhanVien(LocalDate startDate, LocalDate endDate) {
+    public static int tinhTongSoNhanVien(LocalDate startDate, LocalDate endDate) {
         String sql = "SELECT COUNT(DISTINCT maNhanVien) FROM HoaDon WHERE CAST(ngayLapHoaDon AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -248,7 +248,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức tính tổng số phim
-    public static int calculateTongSoPhim(LocalDate startDate, LocalDate endDate) {
+    public static int tinhTongSoPhim(LocalDate startDate, LocalDate endDate) {
         String sql = "SELECT COUNT(DISTINCT maPhim) FROM SuatChieu WHERE CAST(thoiGianBD AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
@@ -269,7 +269,7 @@ public class ThongKeDAO {
     }
 
     // Phương thức tính tổng số phòng chiếu
-    public static int calculateTongSoPhongChieu(LocalDate startDate, LocalDate endDate) {
+    public static int tinhTongSoPhongChieu(LocalDate startDate, LocalDate endDate) {
         String sql = "SELECT COUNT(DISTINCT maPhong) FROM SuatChieu WHERE CAST(thoiGianBD AS DATE) BETWEEN ? AND ?";
         int count = 0;
         try (Connection conn = DbConnect.getConnection();
