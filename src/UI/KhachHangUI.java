@@ -349,7 +349,7 @@ public class KhachHangUI extends JPanel  {
 				JOptionPane.WARNING_MESSAGE);
 		if (choice == JOptionPane.YES_OPTION) {
 			try {
-                boolean success = KhachHangDAO.delete(maKhachHang);
+                boolean success = KhachHangDAO.xoa(maKhachHang);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Xóa khách hàng thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                     loadTableData(KhachHangDAO.readAll());
@@ -411,7 +411,7 @@ public class KhachHangUI extends JPanel  {
 			if (currentState == EditState.ADDING) {
                 ma = KhachHangDAO.generateMaKhachHang();
                 kh = new KhachHang(ma, ten, sdt, email);
-				success = KhachHangDAO.create(kh);
+				success = KhachHangDAO.tao(kh);
 				successMessage = "Thêm khách hàng thành công!";
 				errorMessage = "Thêm khách hàng thất bại. Mã, SĐT hoặc Email có thể đã tồn tại.";
 
@@ -422,7 +422,7 @@ public class KhachHangUI extends JPanel  {
                      return;
                  }
                 kh = new KhachHang(ma, ten, sdt, email);
-				success = KhachHangDAO.update(kh);
+				success = KhachHangDAO.capNhat(kh);
 				successMessage = "Cập nhật khách hàng thành công!";
 				errorMessage = "Cập nhật khách hàng thất bại. SĐT hoặc Email có thể bị trùng.";
 			} else {

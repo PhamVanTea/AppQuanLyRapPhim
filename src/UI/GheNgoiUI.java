@@ -533,7 +533,7 @@ public class GheNgoiUI extends JPanel implements ActionListener {
                 JOptionPane.WARNING_MESSAGE);
         if (choice == JOptionPane.YES_OPTION) {
             try {
-                boolean success = GheNgoiDAO.delete(maGhe);
+                boolean success = GheNgoiDAO.xoa(maGhe);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Xóa ghế ngồi thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                     handlePhongChieuSelectionChange(); // Reload grid calls setInitialState
@@ -610,7 +610,7 @@ public class GheNgoiUI extends JPanel implements ActionListener {
                     return;
                  }
                 gheNgoi = new GheNgoi(generatedMaGhe, selectedPhong, hangInput, soGhe, trangThai);
-                success = GheNgoiDAO.create(gheNgoi);
+                success = GheNgoiDAO.tao(gheNgoi);
                 successMessage = "Thêm ghế ngồi thành công!";
                 errorMessage = "Thêm ghế ngồi thất bại.";
 
@@ -625,7 +625,7 @@ public class GheNgoiUI extends JPanel implements ActionListener {
                      return;
                  }
                  gheNgoi = new GheNgoi(currentMaGhe, selectedPhong, hangInput, soGhe, trangThai);
-                 success = GheNgoiDAO.update(gheNgoi);
+                 success = GheNgoiDAO.capNhat(gheNgoi);
                  successMessage = "Cập nhật ghế ngồi thành công!";
                  errorMessage = "Cập nhật ghế ngồi thất bại.";
             }

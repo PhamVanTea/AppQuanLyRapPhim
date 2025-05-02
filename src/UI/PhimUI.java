@@ -454,7 +454,7 @@ public class PhimUI extends JPanel implements ActionListener {
 			JOptionPane.WARNING_MESSAGE);
 		if (choice == JOptionPane.YES_OPTION) {
 			try {
-				boolean success = PhimDAO.delete(maPhim);
+				boolean success = PhimDAO.xoa(maPhim);
 				if (success) {
 					JOptionPane.showMessageDialog(this, "Xóa phim thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
 					loadPhimTableData(PhimDAO.readAll());
@@ -539,7 +539,7 @@ public class PhimUI extends JPanel implements ActionListener {
 			if (currentState == EditState.ADDING) {
 				ma = PhimDAO.generateMaPhim(); // Generate ID using DAO
 				phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
-				success = PhimDAO.create(phim);
+				success = PhimDAO.tao(phim);
 				successMessage = "Thêm phim thành công!";
 				errorMessage = "Thêm phim thất bại. Mã phim có thể đã tồn tại.";
 			} else if (currentState == EditState.EDITING) {
@@ -549,7 +549,7 @@ public class PhimUI extends JPanel implements ActionListener {
 					return;
 				}
 				phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
-				success = PhimDAO.update(phim);
+				success = PhimDAO.capNhat(phim);
 				successMessage = "Cập nhật phim thành công!";
 				errorMessage = "Cập nhật phim thất bại.";
 			} else {

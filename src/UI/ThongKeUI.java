@@ -136,12 +136,12 @@ public class ThongKeUI extends JPanel implements ActionListener{
         LocalDate endDate = denNgayDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         try {
-            BigDecimal tongDoanhThu = ThongKeDAO.calculateTongDoanhThu(startDate, endDate);
-            int tongSoVe = ThongKeDAO.calculateTongSoVe(startDate, endDate);
-            int tongSoKhachHang = ThongKeDAO.calculateTongSoKhachHang(startDate, endDate);
-            int tongSoNhanVien = ThongKeDAO.calculateTongSoNhanVien(startDate, endDate);
-            int tongSoPhim = ThongKeDAO.calculateTongSoPhim(startDate, endDate);
-            int tongSoPhongChieu = ThongKeDAO.calculateTongSoPhongChieu(startDate, endDate);
+            BigDecimal tongDoanhThu = ThongKeDAO.tinhTongDoanhThu(startDate, endDate);
+            int tongSoVe = ThongKeDAO.tinhTongSoVe(startDate, endDate);
+            int tongSoKhachHang = ThongKeDAO.tinhTongSoKhachHang(startDate, endDate);
+            int tongSoNhanVien = ThongKeDAO.tinhTongSoNhanVien(startDate, endDate);
+            int tongSoPhim = ThongKeDAO.tinhTongSoPhim(startDate, endDate);
+            int tongSoPhongChieu = ThongKeDAO.tinhTongSoPhongChieu(startDate, endDate);
 
             tableModelThongKe.setRowCount(0);
 
