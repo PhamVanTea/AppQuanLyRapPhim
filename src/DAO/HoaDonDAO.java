@@ -109,7 +109,6 @@ public class HoaDonDAO {
 
             stmt.setString(1, maKhachHang);
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
                 String maHoaDon = rs.getString("maHoaDon");
                 NhanVien nhanVien = new NhanVien(rs.getString("maNhanVien"), rs.getString("tenNhanVien"));
@@ -117,6 +116,8 @@ public class HoaDonDAO {
                 float tongTien = rs.getFloat("tongTien");
                 String ngayLapHoaDon = rs.getString("ngayLapHoaDon");
                 String trangThai = rs.getString("trangThai");
+//                HoaDon = new HoaDon(maHoaDon, nhanVien, khachHang, tongTien, ngayLapHoaDon, trangThai)
+//                list.add(HoaDon);
                 list.add(new HoaDon(maHoaDon, nhanVien, khachHang, tongTien, ngayLapHoaDon, trangThai));
             }
         } catch (SQLException e) {
