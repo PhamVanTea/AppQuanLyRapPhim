@@ -9,6 +9,8 @@ import com.toedter.calendar.JDateChooser;
 import DAO.ThongKeDAO;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -16,14 +18,14 @@ import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.table.DefaultTableCellRenderer; // Import for renderer
 
-public class ThongKeUI extends JPanel {
+public class ThongKeUI extends JPanel implements ActionListener{
     private JTable tableThongKe;
     private JDateChooser dateChooserTuNgay;
     private JDateChooser dateChooserDenNgay;
     private DefaultTableModel tableModelThongKe;
     private JButton btnThongKe;
     private final DecimalFormat currencyFormatter = new DecimalFormat("#,##0 VNĐ");
-
+// giao diện thống kê
     public ThongKeUI() {
         setLayout(null);
         setPreferredSize(new Dimension(1000, 680));
@@ -91,11 +93,12 @@ public class ThongKeUI extends JPanel {
         btnThongKe.setIcon(new ImageIcon(ThongKeUI.class.getResource("/icons/icons8-statistics-20.png"))); // Thêm icon
         btnThongKe.setBounds(764, 29, 144, 43);
         panelLuaChon.add(btnThongKe);
-        btnThongKe.addActionListener(e -> tinhVaHienThiThongKe());
+        btnThongKe.addActionListener(this);
+
 
         setInitialTableColumns();
     }
-
+// cấu trúc bangr thống kê
     private void setInitialTableColumns() {
          if (tableModelThongKe.getColumnCount() == 0) {
              tableModelThongKe.setColumnIdentifiers(new Object[]{"Loại Thống Kê", "Số Lượng / Giá Trị"});
@@ -108,7 +111,7 @@ public class ThongKeUI extends JPanel {
          }
          tableModelThongKe.setRowCount(0);
     }
-
+//xử lý và hiển thị các thống kê từ dữ liệu trong khoảng thời gian được chọn.
     private void tinhVaHienThiThongKe() {
         Date tuNgayDate = dateChooserTuNgay.getDate();
         Date denNgayDate = dateChooserDenNgay.getDate();
@@ -153,7 +156,7 @@ public class ThongKeUI extends JPanel {
             showError("Đã xảy ra lỗi trong quá trình tính toán thống kê.", ex);
         }
     }
-
+    //hiển thị thông báo lỗi --> focus về trường nhập liệu có lỗi
     private void showValidationError(String message, Component componentToFocus) {
         JOptionPane.showMessageDialog(this, message, "Dữ liệu không hợp lệ", JOptionPane.WARNING_MESSAGE);
         if (componentToFocus != null) {
@@ -165,7 +168,8 @@ public class ThongKeUI extends JPanel {
             });
         }
     }
-
+    //HT Lỗi
+		//Hiển thị tb lỗi hệ thống, kèm theo chi tiết ngoại lệ
     private void showError(String message, Exception ex) {
          String detailedMessage = message;
          if (ex != null) {
@@ -174,5 +178,12 @@ public class ThongKeUI extends JPanel {
              System.err.println(message + "\n" + ex.getMessage());
          }
          JOptionPane.showMessageDialog(this, detailedMessage, "Lỗi Hệ Thống", JOptionPane.ERROR_MESSAGE);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnThongKe)) {
+            tinhVaHienThiThongKe();  // Gọi phương thức thống kê khi nút được nhấn
+        }
     }
 }

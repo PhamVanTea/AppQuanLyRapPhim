@@ -11,11 +11,13 @@ import DAO.KhachHangDAO;
 import Entity.KhachHang;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class KhachHangUI extends JPanel {
+public class KhachHangUI extends JPanel  {
 	private JTable table;
 	private JTextField txtMaKhachHang;
 	private JTextField txtTenKhachHang;
@@ -32,7 +34,7 @@ public class KhachHangUI extends JPanel {
 	private JButton btnThoat;
 	private enum EditState { IDLE, ADDING, EDITING }
 	private EditState currentState = EditState.IDLE;
-
+// Giao diện Khách Hàng
 	public KhachHangUI() {
 		setLayout(null);
         setPreferredSize(new Dimension(1000, 680));
@@ -45,7 +47,7 @@ public class KhachHangUI extends JPanel {
 
 		JScrollPane scrollPane = new JScrollPane();
 		panelDanhSach.add(scrollPane);
-
+///
 		table = new JTable();
 		tableModel = new DefaultTableModel() {
 			@Override public boolean isCellEditable(int row, int column) { return false; }
@@ -213,7 +215,7 @@ public class KhachHangUI extends JPanel {
 		loadTableData(KhachHangDAO.readAll());
 		setInitialState();
 	}
-
+//Hiển thị dữ liệu chi tiết của một khách hàng được chọn từ bảng
 	private void populateFieldsFromSelectedRow(int selectedRow) {
 		if (selectedRow != -1) {
              if (selectedRow < tableModel.getRowCount()) {
@@ -233,7 +235,7 @@ public class KhachHangUI extends JPanel {
              }
 		}
 	}
-
+// xóa trắng ô nhập dữ liệu (Hủy)
 	private void clearFields() {
 		txtMaKhachHang.setText("");
 		txtTenKhachHang.setText("");
@@ -244,7 +246,7 @@ public class KhachHangUI extends JPanel {
              txtMaKhachHang.setText("(Tự động)");
         }
 	}
-
+// cho phép sửa tên, sdt, email còn mã KH là khóa ; ô màu 
 	private void setFieldsEditable(boolean isEditable, boolean isMaEditable) {
 		txtMaKhachHang.setEditable(isMaEditable);
 		txtTenKhachHang.setEditable(isEditable);
@@ -255,7 +257,7 @@ public class KhachHangUI extends JPanel {
         txtSDT.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
         txtEmail.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
 	}
-
+//Cập nhật trạng thái (bật/tắt) của các nút bấm
 	private void updateButtonStates() {
 		boolean isIdle = (currentState == EditState.IDLE);
 		boolean rowSelected = (table.getSelectedRow() != -1);
@@ -270,14 +272,14 @@ public class KhachHangUI extends JPanel {
         table.setEnabled(isIdle);
         setFieldsEditable(!isIdle, currentState == EditState.ADDING && false);
 	}
-
+//reset giao diện về trạng thái mặc định ban đầu
 	private void setInitialState() {
         currentState = EditState.IDLE;
         clearFields();
         table.clearSelection();
         updateButtonStates();
     }
-
+// tìm kiếm theo tên...
     private void searchKhachHang() {
         String keyword = txtTimKiem.getText().trim();
         List<KhachHang> results;
@@ -288,7 +290,7 @@ public class KhachHangUI extends JPanel {
         }
         loadTableData(results);
     }
-
+// Tải dữ liệu khachs hàng vào bảng
     private void loadTableData(List<KhachHang> list) {
 		if (tableModel.getColumnCount() == 0) {
             tableModel.setColumnIdentifiers(new Object[]{
@@ -312,7 +314,7 @@ public class KhachHangUI extends JPanel {
 		}
 		setInitialState();
 	}
-
+//chế độ thêm
 	private void enterAddMode() {
 		currentState = EditState.ADDING;
 		table.clearSelection();
@@ -320,7 +322,7 @@ public class KhachHangUI extends JPanel {
 		updateButtonStates();
 		txtTenKhachHang.requestFocusInWindow();
 	}
-
+	// chế độ sửa
 	private void enterEditMode() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
@@ -331,7 +333,7 @@ public class KhachHangUI extends JPanel {
 		updateButtonStates();
 		txtTenKhachHang.requestFocusInWindow();
 	}
-
+	//xóa khách hàng được chọn từ bảng
 	private void deleteSelectedKhachHang() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
@@ -359,7 +361,7 @@ public class KhachHangUI extends JPanel {
             }
 		}
 	}
-
+// lưu khách hàng sau khi thêm, chỉnh sửa
 	private void saveKhachHang() {
 		String ma;
 		String ten = txtTenKhachHang.getText().trim();
@@ -440,11 +442,11 @@ public class KhachHangUI extends JPanel {
             showError("Đã xảy ra lỗi hệ thống trong quá trình lưu.", ex);
 		}
 	}
-
+	//Hủy thao tác lúc đang Thêm/Sửa
 	private void cancelEditMode() {
         setInitialState();
     }
-
+//hiển thị thông báo lỗi --> focus về trường nhập liệu có lỗi
 	private void showValidationError(String message, Component componentToFocus) {
 		JOptionPane.showMessageDialog(this, message, "Dữ liệu không hợp lệ", JOptionPane.WARNING_MESSAGE);
 		if (componentToFocus != null) {
@@ -456,7 +458,8 @@ public class KhachHangUI extends JPanel {
 			});
 		}
 	}
-
+	//HT Lỗi
+		//Hiển thị tb lỗi hệ thống, kèm theo chi tiết ngoại lệ
 	private void showError(String message, Exception ex) {
 		String detailedMessage = message;
 		if (ex != null) {
@@ -467,5 +470,35 @@ public class KhachHangUI extends JPanel {
 		JOptionPane.showMessageDialog(this, detailedMessage, "Lỗi Hệ Thống", JOptionPane.ERROR_MESSAGE);
 	}
 
+	//Xử lý sk
+		public void actionPerformed(ActionEvent e) {
+			Object o = e.getSource();
+		    if (o.equals(btnThem)) {
+		        enterAddMode();
+		    } else if (o.equals(btnSua)) {
+		        enterEditMode();
+		    } else if (o.equals(btnXoa)) {
+		        deleteSelectedKhachHang();
+		    } else if (o.equals(btnLuu)) {
+		        saveKhachHang();
+		    } else if (o.equals(btnHuy)) {
+		        cancelEditMode();
+		    } else if (o.equals(btnThoat)) {
+		        Window window = SwingUtilities.getWindowAncestor(KhachHangUI.this);
+		        if (window != null) {
+		            int confirm = JOptionPane.showConfirmDialog(KhachHangUI.this,
+		                    "Bạn có chắc chắn muốn đóng tab Khách Hàng ?", "Xác nhận thoát",
+		                    JOptionPane.YES_NO_OPTION);
+		            if (confirm == JOptionPane.YES_OPTION) {
+		                window.dispose();
+		            }
+		        } else {
+		            System.exit(0);
+		        }
+		    } else if (o.equals(btnTimKiem)) {
+		        searchKhachHang();
+		    }
+			
+		}
 
 }
