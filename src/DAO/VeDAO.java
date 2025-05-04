@@ -56,7 +56,7 @@ public class VeDAO {
     }
 
     // Phương thức ResultSet đối tượng Ve
-    //Dùng mapResultSetToVe() để convert dữ liệu từng dòng
+    //Dùng mapResultSetToVe() để convert dữ liệu từng 	
     private static Ve mapResultSetToVe(ResultSet rs) throws SQLException {
         String maVe = rs.getString("maVe");
         float giaVe = rs.getFloat("giaVe");

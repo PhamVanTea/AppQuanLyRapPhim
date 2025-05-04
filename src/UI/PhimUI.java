@@ -615,18 +615,18 @@ public class PhimUI extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-		if (source.equals(btnThem)) {
+		Object o = e.getSource();
+		if (o.equals(btnThem)) {
 			enterAddMode();
-		} else if (source.equals(btnSua)) {
+		} else if (o.equals(btnSua)) {
 			enterEditMode();
-		} else if (source.equals(btnXoa)) {
+		} else if (o.equals(btnXoa)) {
 			deleteSelectedPhim();
-		} else if (source.equals(btnLuu)) {
+		} else if (o.equals(btnLuu)) {
 			savePhim();
-		} else if (source.equals(btnHuy)) {
+		} else if (o.equals(btnHuy)) {
 			cancelEditMode();
-		} else if (source.equals(btnThoat)) {
+		} else if (o.equals(btnThoat)) {
 			int confirm = JOptionPane.showConfirmDialog(
 				PhimUI.this,
 				"Bạn có chắc chắn muốn thoát?",
@@ -641,7 +641,7 @@ public class PhimUI extends JPanel implements ActionListener {
 					System.exit(0);
 				}
 			}
-		} else if (source.equals(btnTimKiem)) {
+		} else if (o.equals(btnTimKiem)) {
 			searchPhim();
 		}
 	}
