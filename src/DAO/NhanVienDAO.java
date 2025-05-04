@@ -43,7 +43,7 @@ public class NhanVienDAO {
     }
 
     // Phương thức tạo mới một nhân viên
-    public static boolean create(NhanVien nv) {
+    public static boolean tao(NhanVien nv) {
         String sql = "INSERT INTO NhanVien (maNhanVien, tenNhanVien, chucVu, tenDangNhap, matKhau) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -88,7 +88,7 @@ public class NhanVienDAO {
     }
 
     // Phương thức cập nhật thông tin nhân viên
-    public static boolean update(NhanVien nv) {
+    public static boolean capNhat(NhanVien nv) {
         String sql = "UPDATE NhanVien SET tenNhanVien = ?, chucVu = ?, tenDangNhap = ?, matKhau = ? WHERE maNhanVien = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -111,7 +111,7 @@ public class NhanVienDAO {
     }
 
     // Phương thức xóa nhân viên
-    public static boolean delete(String maNhanVien) {
+    public static boolean xoa(String maNhanVien) {
         String sql = "DELETE FROM NhanVien WHERE maNhanVien = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -22,7 +22,7 @@ public class VeDAO {
     }
     
     // Phương thức tạo mới một vé
-    public static boolean create(Ve ve) {
+    public static boolean tao(Ve ve) {
         String sql = "INSERT INTO Ve (maVe, maHoaDon, maSuatChieu, giaVe, maGhe) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -185,7 +185,7 @@ public class VeDAO {
     }
 
     // Phương thức cập nhật thông tin vé
-    public static boolean update(Ve ve) {
+    public static boolean capNhat(Ve ve) {
         String sql = "UPDATE Ve SET maHoaDon = ?, maSuatChieu = ?, giaVe = ?, maGhe = ? WHERE maVe = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -212,7 +212,7 @@ public class VeDAO {
     }
 
     // Phương thức xóa vé
-    public static boolean delete(String maVe) {
+    public static boolean xoa(String maVe) {
         String sql = "DELETE FROM Ve WHERE maVe = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

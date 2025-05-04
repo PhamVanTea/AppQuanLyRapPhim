@@ -16,7 +16,7 @@ public class KhachHangDAO {
     }
 
     // Phương thức thêm mới khách hàng
-    public static boolean create(KhachHang khachHang) {
+    public static boolean tao(KhachHang khachHang) {
         String sql = "INSERT INTO KhachHang (maKhachHang, tenKhachHang, SDT, email) VALUES (?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -52,7 +52,7 @@ public class KhachHangDAO {
     }
 
     // Phương thức cập nhật thông tin khách hàng
-    public static boolean update(KhachHang khachHang) {
+    public static boolean capNhat(KhachHang khachHang) {
         String sql = "UPDATE KhachHang SET tenKhachHang = ?, SDT = ?, email = ? WHERE maKhachHang = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -70,7 +70,7 @@ public class KhachHangDAO {
     }
 
     // Phương thức xóa khách hàng
-    public static boolean delete(String maKhachHang) {
+    public static boolean xoa(String maKhachHang) {
         String sql = "DELETE FROM KhachHang WHERE maKhachHang = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

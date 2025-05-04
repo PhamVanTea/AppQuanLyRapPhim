@@ -16,7 +16,7 @@ public class PhongChieuDAO {
     }
 
     // Phương thức tạo mới một phòng chiếu
-    public static boolean create(PhongChieu phongChieu) {
+    public static boolean tao(PhongChieu phongChieu) {
         String sql = "INSERT INTO PhongChieu (maPhong, tenPhong, soGhe) VALUES (?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -78,7 +78,7 @@ public class PhongChieuDAO {
     }
 
     // Phương thức cập nhật thông tin phòng chiếu
-    public static boolean update(PhongChieu phongChieu) {
+    public static boolean capNhat(PhongChieu phongChieu) {
         String sql = "UPDATE PhongChieu SET tenPhong = ?, soGhe = ? WHERE maPhong = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -95,7 +95,7 @@ public class PhongChieuDAO {
     }
 
     // Phương thức xóa phòng chiếu
-    public static boolean delete(String maPhong) {
+    public static boolean xoa(String maPhong) {
         String sql = "DELETE FROM PhongChieu WHERE maPhong = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

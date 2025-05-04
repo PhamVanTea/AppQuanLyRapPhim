@@ -25,7 +25,7 @@ public class SuatChieuDAO {
 
     // Tạo mới một suất chiếu
     
-    public static boolean create(SuatChieu suatChieu) {
+    public static boolean tao(SuatChieu suatChieu) {
         String sql = "INSERT INTO SuatChieu (maSuatChieu, maPhim, maPhong, gia, thoiGianBD, thoiGianKetThuc) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -127,7 +127,7 @@ public class SuatChieuDAO {
     }
 
     // Cập nhật thông tin suất chiếu
-    public static boolean update(SuatChieu suatChieu) {
+    public static boolean capNhat(SuatChieu suatChieu) {
         String sql = "UPDATE SuatChieu SET maPhim = ?, maPhong = ?, gia = ?, thoiGianBD = ?, thoiGianKetThuc = ? WHERE maSuatChieu = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -156,7 +156,7 @@ public class SuatChieuDAO {
     }
 
     // Xóa suất chiếu theo mã
-    public static boolean delete(String maSuatChieu) {
+    public static boolean xoa(String maSuatChieu) {
         String sql = "DELETE FROM SuatChieu WHERE maSuatChieu = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

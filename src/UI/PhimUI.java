@@ -454,7 +454,7 @@ public class PhimUI extends JPanel implements ActionListener {
 			JOptionPane.WARNING_MESSAGE);
 		if (choice == JOptionPane.YES_OPTION) {
 			try {
-				boolean success = PhimDAO.delete(maPhim);
+				boolean success = PhimDAO.xoa(maPhim);
 				if (success) {
 					JOptionPane.showMessageDialog(this, "Xóa phim thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
 					loadPhimTableData(PhimDAO.readAll());
@@ -539,7 +539,7 @@ public class PhimUI extends JPanel implements ActionListener {
 			if (currentState == EditState.ADDING) {
 				ma = PhimDAO.generateMaPhim(); // Generate ID using DAO
 				phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
-				success = PhimDAO.create(phim);
+				success = PhimDAO.tao(phim);
 				successMessage = "Thêm phim thành công!";
 				errorMessage = "Thêm phim thất bại. Mã phim có thể đã tồn tại.";
 			} else if (currentState == EditState.EDITING) {
@@ -549,7 +549,7 @@ public class PhimUI extends JPanel implements ActionListener {
 					return;
 				}
 				phim = new Phim(ma, ten, daoDien, dienVien, selectedTheLoai, thoiLuong, xepHang, moTa);
-				success = PhimDAO.update(phim);
+				success = PhimDAO.capNhat(phim);
 				successMessage = "Cập nhật phim thành công!";
 				errorMessage = "Cập nhật phim thất bại.";
 			} else {
@@ -615,18 +615,18 @@ public class PhimUI extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-		if (source.equals(btnThem)) {
+		Object o = e.getSource();
+		if (o.equals(btnThem)) {
 			enterAddMode();
-		} else if (source.equals(btnSua)) {
+		} else if (o.equals(btnSua)) {
 			enterEditMode();
-		} else if (source.equals(btnXoa)) {
+		} else if (o.equals(btnXoa)) {
 			deleteSelectedPhim();
-		} else if (source.equals(btnLuu)) {
+		} else if (o.equals(btnLuu)) {
 			savePhim();
-		} else if (source.equals(btnHuy)) {
+		} else if (o.equals(btnHuy)) {
 			cancelEditMode();
-		} else if (source.equals(btnThoat)) {
+		} else if (o.equals(btnThoat)) {
 			int confirm = JOptionPane.showConfirmDialog(
 				PhimUI.this,
 				"Bạn có chắc chắn muốn thoát?",
@@ -641,7 +641,7 @@ public class PhimUI extends JPanel implements ActionListener {
 					System.exit(0);
 				}
 			}
-		} else if (source.equals(btnTimKiem)) {
+		} else if (o.equals(btnTimKiem)) {
 			searchPhim();
 		}
 	}

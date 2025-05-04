@@ -601,7 +601,7 @@ public class BanVeUI extends JPanel implements ActionListener {
         boolean transactionSuccess = false;
 
         try {
-            boolean hoaDonCreated = HoaDonDAO.create(hoaDon);
+            boolean hoaDonCreated = HoaDonDAO.tao(hoaDon);
 
             if (!hoaDonCreated) {
                 throw new SQLException("Không thể tạo hóa đơn.");
@@ -611,7 +611,7 @@ public class BanVeUI extends JPanel implements ActionListener {
             for (GheNgoi ghe : selectedSeatsList) {
                 String maVe = "VE" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
                 Ve ve = new Ve(maVe, hoaDon, selectedSuatChieu, giaVe, ghe);
-                boolean veCreated = VeDAO.create(ve);
+                boolean veCreated = VeDAO.tao(ve);
                 if (!veCreated) {
                     throw new SQLException("Không thể tạo vé cho ghế: " + ghe.getMaGhe());
                 }

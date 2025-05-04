@@ -11,7 +11,7 @@ import Entity.PhongChieu;
 public class GheNgoiDAO {
 
     // Phương thức tạo mới một Ghế Ngồi
-    public static boolean create(GheNgoi gheNgoi) {
+    public static boolean tao(GheNgoi gheNgoi) {
     	//Tạo câu lệnh SQL INSERT với 5 tham số (maGhe, maPhong, hang, soGhe, trangThai)
         String sql = "INSERT INTO GheNgoi (maGhe, maPhong, hang, soGhe, trangThai) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnect.getConnection();
@@ -69,7 +69,7 @@ public class GheNgoiDAO {
     }
 
     // Phương thức cập nhật Ghế Ngồi
-    public static boolean update(GheNgoi gheNgoi) {
+    public static boolean capNhat(GheNgoi gheNgoi) {
         String sql = "UPDATE GheNgoi SET maPhong = ?, hang = ?, soGhe = ?, trangThai = ? WHERE maGhe = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -92,7 +92,7 @@ public class GheNgoiDAO {
     }
 
     // Phương thức xóa Ghế Ngồi
-    public static boolean delete(String maGhe) {
+    public static boolean xoa(String maGhe) {
         String sql = "DELETE FROM GheNgoi WHERE maGhe = ?";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

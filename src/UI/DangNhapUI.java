@@ -1,4 +1,4 @@
-package UI;
+	package UI;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;

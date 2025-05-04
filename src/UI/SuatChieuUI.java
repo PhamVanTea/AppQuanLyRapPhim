@@ -491,7 +491,7 @@ public class SuatChieuUI extends JPanel implements ActionListener {
                 JOptionPane.WARNING_MESSAGE);
         if (choice == JOptionPane.YES_OPTION) {
             try {
-                boolean success = SuatChieuDAO.delete(maSuat);
+                boolean success = SuatChieuDAO.xoa(maSuat);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Xóa suất chiếu thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                     handlePhimSelectionChange();
@@ -604,7 +604,7 @@ public class SuatChieuUI extends JPanel implements ActionListener {
             if (currentState == EditState.ADDING) {
                 String newMaSuat = SuatChieuDAO.generateMaSuatChieu();
                 suatChieu = new SuatChieu(newMaSuat, selectedPhim, selectedPhong, gia, thoiGianBDStrDAO, thoiGianKTStrDAO);
-                success = SuatChieuDAO.create(suatChieu);
+                success = SuatChieuDAO.tao(suatChieu);
                 successMessage = "Thêm suất chiếu thành công!";
                 errorMessage = "Thêm suất chiếu thất bại.";
             } else {
@@ -614,7 +614,7 @@ public class SuatChieuUI extends JPanel implements ActionListener {
                     return;
                 }
                 suatChieu = new SuatChieu(currentMaSuat, selectedPhim, selectedPhong, gia, thoiGianBDStrDAO, thoiGianKTStrDAO);
-                success = SuatChieuDAO.update(suatChieu);
+                success = SuatChieuDAO.capNhat(suatChieu);
                 successMessage = "Cập nhật suất chiếu thành công!";
                 errorMessage = "Cập nhật suất chiếu thất bại.";
             }

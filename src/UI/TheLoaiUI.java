@@ -403,7 +403,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 				JOptionPane.WARNING_MESSAGE);
 		if (choice == JOptionPane.YES_OPTION) {
 			try {
-				boolean success = TheLoaiDAO.delete(maTheLoai);
+				boolean success = TheLoaiDAO.xoa(maTheLoai);
 				if (success) {
 					JOptionPane.showMessageDialog(this, "Xóa thể loại thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
 					loadTableData(TheLoaiDAO.readAll());
@@ -440,9 +440,13 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		String errorMessage = "";
 		try {
 			if (currentState == EditState.ADDING) {
+				if (TheLoaiDAO.daTonTaiTen(ten)) {
+					showValidationError("Tên thể loại đã tồn tại.", txtTenTheLoai);
+					return;
+				}
 				ma = TheLoaiDAO.generateMaTheLoai();
 				theLoai = new TheLoai(ma, ten, moTa);
-				success = TheLoaiDAO.create(theLoai);
+				success = TheLoaiDAO.tao(theLoai);
 				successMessage = "Thêm thể loại thành công!";
 				errorMessage = "Thêm thể loại thất bại. Mã thể loại có thể đã tồn tại hoặc có lỗi khác.";
 			} else if (currentState == EditState.EDITING) {
@@ -452,7 +456,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 					return;
 				}
 				theLoai = new TheLoai(ma, ten, moTa);
-				success = TheLoaiDAO.update(theLoai);
+				success = TheLoaiDAO.capNhat(theLoai);
 				successMessage = "Cập nhật thể loại thành công!";
 				errorMessage = "Cập nhật thể loại thất bại. Có lỗi xảy ra.";
 			} else {

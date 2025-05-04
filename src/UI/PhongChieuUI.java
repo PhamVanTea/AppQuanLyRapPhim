@@ -357,7 +357,7 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 				JOptionPane.WARNING_MESSAGE);
 		if (choice == JOptionPane.YES_OPTION) {
 			try {
-                boolean success = PhongChieuDAO.delete(maPhongChieu);
+                boolean success = PhongChieuDAO.xoa(maPhongChieu);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Xóa phòng chiếu thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                     loadPhongChieuTableData(PhongChieuDAO.readAll());
@@ -412,7 +412,7 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 			if (currentState == EditState.ADDING) {
                 ma = PhongChieuDAO.generateMaPhongChieu(); // Generate ID
                 phongChieu = new PhongChieu(ma, ten, soGhe);
-				success = PhongChieuDAO.create(phongChieu);
+				success = PhongChieuDAO.tao(phongChieu);
 				successMessage = "Thêm phòng chiếu thành công!";
                 errorMessage = "Thêm phòng chiếu thất bại. Mã phòng có thể đã tồn tại.";
 			} else if (currentState == EditState.EDITING) {
@@ -422,7 +422,7 @@ public class PhongChieuUI extends JPanel implements ActionListener {
                     return;
                  }
                  phongChieu = new PhongChieu(ma, ten, soGhe);
-				 success = PhongChieuDAO.update(phongChieu);
+				 success = PhongChieuDAO.capNhat(phongChieu);
 				 successMessage = "Cập nhật phòng chiếu thành công!";
                  errorMessage = "Cập nhật phòng chiếu thất bại.";
 			} else {
