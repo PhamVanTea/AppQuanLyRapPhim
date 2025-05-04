@@ -82,7 +82,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 				if (!e.getValueIsAdjusting() && currentState == EditState.IDLE) {
 					int selectedRow = table.getSelectedRow();
 					if (selectedRow != -1) {
-						populateFieldsFromSelectedRow(selectedRow);
+						showThongTinDongChon(selectedRow);
 					} else {
 						clearFields();
 					}
@@ -156,7 +156,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		btnThem.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-add-20.png")));
 //		btnThem.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {
-//				enterAddMode();
+//				vaoCheDoThem();
 //			}
 //		});
 		btnThem.addActionListener(this);
@@ -167,7 +167,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		btnSua.setEnabled(false);
 //		btnSua.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {
-//				enterEditMode();
+//				vaoCheDoChinhSua();
 //			}
 //		});
 		btnSua.addActionListener(this);
@@ -178,7 +178,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		btnXoa.setEnabled(false);
 //		btnXoa.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {
-//				deleteSelectedTheLoai();
+//				xoaTheLoaiDuocChon();
 //			}
 //		});
 		btnXoa.addActionListener(this);
@@ -200,7 +200,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		btnHuy.setEnabled(false);
 //		btnHuy.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {
-//				cancelEditMode();
+//				dongCheDoChinhSua();
 //			}
 //		});
 		btnHuy.addActionListener(this);
@@ -235,7 +235,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		btnTimKiem.setIcon(new ImageIcon(TheLoaiUI.class.getResource("/icons/icons8-search-20.png")));
 //		btnTimKiem.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {
-//				searchTheLoai();
+//				timTheLoai();
 //			}
 //		});
 		btnTimKiem.addActionListener(this);
@@ -249,7 +249,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					searchTheLoai();
+					timTheLoai();
 				}
 			}
 		});
@@ -263,7 +263,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 
 	//HT
 	//Hiển thị thông tin thể loại được chọn từ dòng lên ô nhập
-	private void populateFieldsFromSelectedRow(int selectedRow) {
+	private void showThongTinDongChon(int selectedRow) {
 		if (selectedRow != -1) {
 			if (selectedRow < tableModel.getRowCount()) {
 				String maTheLoai = tableModel.getValueAt(selectedRow, 0).toString();
@@ -294,7 +294,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 
 	//HT
 	//Cài đặt trạng thái có thể chỉnh sửa hay k cho các ô nhập
-	private void setFieldsEditable(boolean isEditable, boolean isMaEditable_IGNORED) {
+	private void setTrangThaiChinhSua(boolean isEditable, boolean isMaEditable_IGNORED) {
 		txtMaTheLoai.setEditable(false);
 		txtTenTheLoai.setEditable(isEditable);
 		txtMoTa.setEditable(isEditable);
@@ -317,7 +317,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		btnTimKiem.setEnabled(isIdle);
 		txtTimKiem.setEnabled(isIdle);
 		table.setEnabled(isIdle);
-		setFieldsEditable(!isIdle, false);
+		setTrangThaiChinhSua(!isIdle, false);
 	}
 
 	//HT
@@ -329,13 +329,13 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		updateButtonStates();
 	}
 
-	private void searchTheLoai() {
+	private void timTheLoai() {
 		String keyword = txtTimKiem.getText().trim();
 		List<TheLoai> results;
 		if (keyword.isEmpty()) {
 			results = TheLoaiDAO.readAll();
 		} else {
-			results = TheLoaiDAO.searchByName(keyword);
+			results = TheLoaiDAO.timTheoTen(keyword);
 		}
 		loadTableData(results);
 	}
@@ -364,7 +364,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 
 	//CS
 	//Vào chế độ thêm mới thể loại
-	private void enterAddMode() {
+	private void vaoCheDoThem() {
 		currentState = EditState.ADDING;
 		table.clearSelection();
 		clearFields();
@@ -374,7 +374,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 
 	//CS
 	//Vào chế độ chỉnh sửa tt
-	private void enterEditMode() {
+	private void vaoCheDoChinhSua() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
 			showValidationError("Vui lòng chọn một thể loại để sửa.", table);
@@ -387,7 +387,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 
 	//CS
 	//Xóa thể loại được chọn
-	private void deleteSelectedTheLoai() {
+	private void xoaTheLoaiDuocChon() {
 		int selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
 			showValidationError("Vui lòng chọn một thể loại để xóa.", table);
@@ -440,7 +440,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 		String errorMessage = "";
 		try {
 			if (currentState == EditState.ADDING) {
-				if (TheLoaiDAO.daTonTaiTen(ten)) {
+				if (TheLoaiDAO.kiemTraTonTaiTen(ten)) {
 					showValidationError("Tên thể loại đã tồn tại.", txtTenTheLoai);
 					return;
 				}
@@ -477,7 +477,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 	}
 
 	//Hủy thao tác lúc đang Thêm/Sửa
-	private void cancelEditMode() {
+	private void dongCheDoChinhSua() {
 		setInitialState();	//Quay lại trạng thái ban đầu
 	}
 
@@ -513,15 +513,15 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 	    if (o.equals(btnThem)) {
-	        enterAddMode();
+	        vaoCheDoThem();
 	    } else if (o.equals(btnSua)) {
-	        enterEditMode();
+	        vaoCheDoChinhSua();
 	    } else if (o.equals(btnXoa)) {
-	        deleteSelectedTheLoai();
+	        xoaTheLoaiDuocChon();
 	    } else if (o.equals(btnLuu)) {
 	        saveTheLoai();
 	    } else if (o.equals(btnHuy)) {
-	        cancelEditMode();
+	        dongCheDoChinhSua();
 	    } else if (o.equals(btnThoat)) {
 	        Window window = SwingUtilities.getWindowAncestor(TheLoaiUI.this);
 	        if (window != null) {
@@ -535,7 +535,7 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 	            System.exit(0);
 	        }
 	    } else if (o.equals(btnTimKiem)) {
-	        searchTheLoai();
+	        timTheLoai();
 	    }
 		
 	}

@@ -57,7 +57,7 @@ public class PhongChieuDAO {
     }
 
     // Phương thức tìm phòng chiếu theo mã
-    public static PhongChieu findById(String maPhong) {
+    public static PhongChieu timTheoMaPhong(String maPhong) {
         PhongChieu phongChieu = null;
         String sql = "SELECT maPhong, tenPhong, soGhe FROM PhongChieu WHERE maPhong = ?";
         try (Connection conn = DbConnect.getConnection();
@@ -115,7 +115,7 @@ public class PhongChieuDAO {
     }
 
     // Phương thức tìm kiếm phòng chiếu theo tên
-    public static List<PhongChieu> searchByName(String keyword) {
+    public static List<PhongChieu> timTheoTenPhongChieu(String keyword) {
         List<PhongChieu> list = new ArrayList<>();
         String sql = "SELECT maPhong, tenPhong, soGhe FROM PhongChieu WHERE LOWER(tenPhong) LIKE LOWER(?) ORDER BY tenPhong";
         try (Connection conn = DbConnect.getConnection();

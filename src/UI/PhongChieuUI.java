@@ -40,7 +40,7 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 	private JButton btnTimKiem;
 	private JTextField txtTimKiem;
 	private enum EditState { IDLE, ADDING, EDITING }
-	private EditState currentState = EditState.IDLE;
+	private EditState trangThaiHienTai = EditState.IDLE;
 
 	//Giao diện Phòng Chiếu
 	public PhongChieuUI() {
@@ -76,14 +76,14 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 		tablePhongChieu.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting() && currentState == EditState.IDLE) {
+				if (!e.getValueIsAdjusting() && trangThaiHienTai == EditState.IDLE) {
 					int selectedRow = tablePhongChieu.getSelectedRow();
 					if (selectedRow != -1) {
-						populateFieldsFromSelectedRow(selectedRow);
+						capNhatFieldTuDongDuocChon(selectedRow);
 					} else {
 						clearFields();
 					}
-                    updateButtonStates(); // Cập nhật trạng thái nút
+                    capNhatTrangThaiNut(); // Cập nhật trạng thái nút
 				}
 			}
 		});
@@ -134,7 +134,6 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         btnThem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnThem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThem.setIcon(new ImageIcon(PhongChieuUI.class.getResource("/icons/icons8-add-20.png")));
-//		btnThem.addActionListener(e -> enterAddMode());
         btnThem.addActionListener(this);
 		panelChucNang.add(btnThem);
 
@@ -142,7 +141,6 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         btnSua.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnSua.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSua.setIcon(new ImageIcon(PhongChieuUI.class.getResource("/icons/icons8-edit-20.png")));
-//		btnSua.addActionListener(e -> enterEditMode());
         btnSua.addActionListener(this);
 		panelChucNang.add(btnSua);
 
@@ -150,7 +148,6 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         btnXoa.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnXoa.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnXoa.setIcon(new ImageIcon(PhongChieuUI.class.getResource("/icons/icons8-delete-20.png")));
-//		btnXoa.addActionListener(e -> deleteSelectedPhongChieu());
         btnXoa.addActionListener(this);
 		panelChucNang.add(btnXoa);
 
@@ -158,7 +155,6 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         btnLuu.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnLuu.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLuu.setIcon(new ImageIcon(PhongChieuUI.class.getResource("/icons/icons8-save-20.png")));
-//		btnLuu.addActionListener(e -> savePhongChieu());
         btnLuu.addActionListener(this);
 		panelChucNang.add(btnLuu);
 
@@ -166,7 +162,6 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         btnHuy.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnHuy.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnHuy.setIcon(new ImageIcon(PhongChieuUI.class.getResource("/icons/icons8-cancel-20.png")));
-//		btnHuy.addActionListener(e -> cancelEditMode());
 		btnHuy.addActionListener(this);
 		panelChucNang.add(btnHuy);
 
@@ -174,22 +169,6 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         btnThoat.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnThoat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThoat.setIcon(new ImageIcon(PhongChieuUI.class.getResource("/icons/icons8-exit-20.png")));
-//		btnThoat.addActionListener(e -> {
-//             int confirm = JOptionPane.showConfirmDialog(
-//                    PhongChieuUI.this,
-//                    "Bạn có chắc chắn muốn thoát?",
-//                    "Xác nhận thoát",
-//                    JOptionPane.YES_NO_OPTION
-//                );
-//             if (confirm == JOptionPane.YES_OPTION) {
-//                 Window win = SwingUtilities.getWindowAncestor(this);
-//                 if (win != null) {
-//                    win.dispose();
-//                 } else {
-//                     System.exit(0);
-//                 }
-//             }
-//        });
         btnThoat.addActionListener(this);
 		panelChucNang.add(btnThoat);
 
@@ -208,7 +187,7 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         btnTimKiem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         btnTimKiem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnTimKiem.setIcon(new ImageIcon(PhongChieuUI.class.getResource("/icons/icons8-search-20.png")));
-//		btnTimKiem.addActionListener(e -> searchPhongChieu());
+//		btnTimKiem.addActionListener(e -> timPhongChieu());
         btnTimKiem.addActionListener(this);
 		btnTimKiem.setBounds(316, 3, 117, 26);
 		panelTimKiem.add(btnTimKiem);
@@ -217,25 +196,25 @@ public class PhongChieuUI extends JPanel implements ActionListener {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    searchPhongChieu();
+                    timPhongChieu();
                 }
             }
         });
 
-		loadPhongChieuTableData(PhongChieuDAO.readAll());
+		loadDuLieuBangPhongChieu(PhongChieuDAO.readAll());
 		setInitialState();
 	}
 
 	//GD
 	// Hiển thị thông tin phòng chiếu lên các ô khi chọn dòng trong bảng
-	private void populateFieldsFromSelectedRow(int selectedRow) {
-		if (selectedRow != -1 && currentState == EditState.IDLE) {
-            if (selectedRow < tableModelPhongChieu.getRowCount()) { // Check bounds
-                String maPhongChieu = tableModelPhongChieu.getValueAt(selectedRow, 0).toString();
+	private void capNhatFieldTuDongDuocChon(int selectedRow) {
+		if (selectedRow != -1 && trangThaiHienTai == EditState.IDLE) {
+            if (selectedRow < tableModelPhongChieu.getRowCount()) { // Check selectedRow thuộc phạm vi hợp lệ của bảng
+                String maPhongChieu = tableModelPhongChieu.getValueAt(selectedRow, 0).toString();	//lấy dl
                 String tenPhongChieu = tableModelPhongChieu.getValueAt(selectedRow, 1).toString();
                 String soGhe = tableModelPhongChieu.getValueAt(selectedRow, 2).toString();
 
-                txtMaPhongChieu.setText(maPhongChieu);
+                txtMaPhongChieu.setText(maPhongChieu);	//điền vào field trên GD
                 txtTenPhongChieu.setText(tenPhongChieu);
                 txtSoGhe.setText(soGhe);
             } else {
@@ -251,40 +230,39 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 		txtTenPhongChieu.setText("");
 		txtSoGhe.setText("");
 		txtTimKiem.setText("");
-        if (currentState == EditState.ADDING) {
+        if (trangThaiHienTai == EditState.ADDING) {
             txtMaPhongChieu.setText("(Tự động)");
         }
 	}
 
 	//GD
 	//Trạng thái chỉnh sửa các ô nhập
-	private void setFieldsEditable(boolean isEditable, boolean isMaEditable_IGNORED) {
+	private void setTrangThaiChinhSua(boolean isEditable, boolean isMaEditable_IGNORED) {
 		txtMaPhongChieu.setEditable(false); // MaPhong không cho phép chỉnh sửa
 		txtTenPhongChieu.setEditable(isEditable);
 		txtSoGhe.setEditable(isEditable);
 
-        txtMaPhongChieu.setBackground(Color.LIGHT_GRAY); // Hiển thị màu nền xám - như k cho phép chỉnh
+        txtMaPhongChieu.setBackground(Color.LIGHT_GRAY); // Hiển thị màu nền xám - k cho phép chỉnh sửa
         txtTenPhongChieu.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
         txtSoGhe.setBackground(isEditable ? Color.WHITE : Color.LIGHT_GRAY);
 	}
 
 	//DK trạng thái
 	//Cập nhật trạng thái các nút, trường nhập theo trạng thái hiện tại
-	private void updateButtonStates() {
-		boolean isIdle = (currentState == EditState.IDLE);
+	private void capNhatTrangThaiNut() {
+		boolean isIdle = (trangThaiHienTai == EditState.IDLE);	//isIdle = true ở chế độ nghỉ, false khi ở chế độ thao tác (thêm, sửa, xóa).
 		boolean rowSelected = (tablePhongChieu.getSelectedRow() != -1);
 
 		btnThem.setEnabled(isIdle);
-		btnSua.setEnabled(isIdle && rowSelected);
+		btnSua.setEnabled(isIdle && rowSelected);	//nút sửa và xóa kích hoạt khi đang từ chế độ nghỉ và đã chọn 1 dòng
 		btnXoa.setEnabled(isIdle && rowSelected);
 		btnLuu.setEnabled(!isIdle);
 		btnHuy.setEnabled(!isIdle);
 		btnThoat.setEnabled(isIdle);
 		btnTimKiem.setEnabled(isIdle);
 		txtTimKiem.setEnabled(isIdle);
-
         tablePhongChieu.setEnabled(isIdle);
-        setFieldsEditable(!isIdle, false); // MaPhong không chỉnh sửa
+        setTrangThaiChinhSua(!isIdle, false); // MaPhong không chỉnh sửa
 
         if (!isIdle) {
              tablePhongChieu.clearSelection();
@@ -292,18 +270,18 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 	}
 
 	//DK trạng thái
-	//Thiết lập trạng thái ban đầu
+	//Thiết lập trạng thái ban đầu		//đặt về chế độ nghỉ, xóa dl trên field, bỏ chọn các dòng trong table, cập nhật lại nút
 	private void setInitialState() {
-        currentState = EditState.IDLE;
+        trangThaiHienTai = EditState.IDLE;	
         clearFields();
         tablePhongChieu.clearSelection();
-        updateButtonStates();
+        capNhatTrangThaiNut();
     }
 
 	//DL Bảng
 	//Nạp ds Phòng chiếu vào bảng
-	private void loadPhongChieuTableData(List<PhongChieu> list) {
-        tableModelPhongChieu.setRowCount(0);
+	private void loadDuLieuBangPhongChieu(List<PhongChieu> list) {
+        tableModelPhongChieu.setRowCount(0);	//Đặt dòng về 0, xóa dl hiện có trong bảng
 		if (list != null) {
 			for (PhongChieu pc : list) {
 				tableModelPhongChieu.addRow(new Object[]{
@@ -318,36 +296,36 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 
 	//Chức năng
 	//Vào chế độ thêm mới
-	private void enterAddMode() {
-		currentState = EditState.ADDING;
+	private void vaoCheDoThem() {
+		trangThaiHienTai = EditState.ADDING;
 		tablePhongChieu.clearSelection();
 		clearFields();
-        updateButtonStates(); // Cho phép chỉnh sửa các trường
+        capNhatTrangThaiNut(); // Cho phép chỉnh sửa các trường
 		txtTenPhongChieu.requestFocusInWindow(); // Focus TenPhong
 	}
 
 	//Chức năng
 	//Vào chế độ chỉnh sửa được chọn
-	private void enterEditMode() {
+	private void vaoCheDoChinhSua() {
 		int selectedRow = tablePhongChieu.getSelectedRow();
-		if (selectedRow == -1) {
+		if (selectedRow == -1) {	//-1 : gtri mặc định khi k có dòng đc chọn
 			showValidationError("Vui lòng chọn một phòng chiếu để sửa.", tablePhongChieu);
 			return;
 		}
-		currentState = EditState.EDITING;
-		updateButtonStates(); // Makes fields editable
+		trangThaiHienTai = EditState.EDITING;
+		capNhatTrangThaiNut(); // fields editable
 		txtTenPhongChieu.requestFocusInWindow();
 	}
 
 	//Chức năng
 	//Xóa phòng phiếu đang được chọn
-	private void deleteSelectedPhongChieu() {
+	private void xoaPhongChieuDuocChon() {
 		int selectedRow = tablePhongChieu.getSelectedRow();
 		if (selectedRow == -1) {
 			showValidationError("Vui lòng chọn một phòng chiếu để xóa.", tablePhongChieu);
 			return;
 		}
-		String maPhongChieu = tableModelPhongChieu.getValueAt(selectedRow, 0).toString();
+		String maPhongChieu = tableModelPhongChieu.getValueAt(selectedRow, 0).toString();	//lấy mã, tên của phòng được chọn (Cho thông báo)
 		String tenPhongChieu = tableModelPhongChieu.getValueAt(selectedRow, 1).toString();
 		//Xác nhận lại
 		int choice = JOptionPane.showConfirmDialog(this,
@@ -360,7 +338,7 @@ public class PhongChieuUI extends JPanel implements ActionListener {
                 boolean success = PhongChieuDAO.xoa(maPhongChieu);
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Xóa phòng chiếu thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                    loadPhongChieuTableData(PhongChieuDAO.readAll());
+                    loadDuLieuBangPhongChieu(PhongChieuDAO.readAll());
                 } else {
                     showError("Xóa phòng chiếu thất bại. Vui lòng kiểm tra xem phòng có đang được sử dụng không.", null);
                 }
@@ -409,13 +387,13 @@ public class PhongChieuUI extends JPanel implements ActionListener {
         String errorMessage = "";
 
 		try {
-			if (currentState == EditState.ADDING) {
+			if (trangThaiHienTai == EditState.ADDING) {
                 ma = PhongChieuDAO.generateMaPhongChieu(); // Generate ID
                 phongChieu = new PhongChieu(ma, ten, soGhe);
 				success = PhongChieuDAO.tao(phongChieu);
 				successMessage = "Thêm phòng chiếu thành công!";
                 errorMessage = "Thêm phòng chiếu thất bại. Mã phòng có thể đã tồn tại.";
-			} else if (currentState == EditState.EDITING) {
+			} else if (trangThaiHienTai == EditState.EDITING) {
                  ma = txtMaPhongChieu.getText().trim(); // Get existing ID
                  if(ma.isEmpty() || ma.equals("(Tự động)")) {
                     showError("Lỗi: Không xác định được Mã phòng để cập nhật.", null);
@@ -426,15 +404,15 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 				 successMessage = "Cập nhật phòng chiếu thành công!";
                  errorMessage = "Cập nhật phòng chiếu thất bại.";
 			} else {
-                return; // Should not happen
+                return; 
             }
 
 			if (success) {
 				JOptionPane.showMessageDialog(this, successMessage, "Thành công", JOptionPane.INFORMATION_MESSAGE);
-				loadPhongChieuTableData(PhongChieuDAO.readAll());
+				loadDuLieuBangPhongChieu(PhongChieuDAO.readAll());
 			} else {
                  showValidationError(errorMessage, txtTenPhongChieu);
-                 if (currentState == EditState.ADDING) {
+                 if (trangThaiHienTai == EditState.ADDING) {
                      txtMaPhongChieu.setText("(Tự động)");
                  }
 			}
@@ -445,26 +423,26 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 
 	//Chức năng
 	//Hủy thao tác thêm,sửa. - Trở lại trạng thái ban đầu
-	private void cancelEditMode() {
+	private void dongCheDoChinhSua() {
         setInitialState();
-        loadPhongChieuTableData(PhongChieuDAO.readAll());
+        loadDuLieuBangPhongChieu(PhongChieuDAO.readAll());
     }
 
 	//Tìm kiếm
 	//Tìm kiếm phòng chiếu theo tên
-	private void searchPhongChieu() {
+	private void timPhongChieu() {
 		String keyword = txtTimKiem.getText().trim();
 		List<PhongChieu> results;
 		if (keyword.isEmpty()) {
 			results = PhongChieuDAO.readAll();
 		} else {
-			results = PhongChieuDAO.searchByName(keyword);
+			results = PhongChieuDAO.timTheoTenPhongChieu(keyword);
 			if (results.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Không tìm thấy phòng chiếu nào có tên chứa '" + keyword + "'", "Không tìm thấy", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
-		loadPhongChieuTableData(results);
-		// setInitialState is called by loadPhongChieuTableData
+		loadDuLieuBangPhongChieu(results);
+		// setInitialState is called by loadDuLieuBangPhongChieu
 	}
 
 	//Hiển thị lỗi
@@ -499,15 +477,15 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 		Object o = e.getSource();
 
 	    if (o.equals(btnThem)) {
-	        enterAddMode();
+	        vaoCheDoThem();
 	    } else if (o.equals(btnSua)) {
-	        enterEditMode();
+	        vaoCheDoChinhSua();
 	    } else if (o.equals(btnXoa)) {
-	        deleteSelectedPhongChieu();
+	        xoaPhongChieuDuocChon();
 	    } else if (o.equals(btnLuu)) {
 	        savePhongChieu();
 	    } else if (o.equals(btnHuy)) {
-	        cancelEditMode();
+	        dongCheDoChinhSua();
 	    } else if (o.equals(btnThoat)) {
 	        int confirm = JOptionPane.showConfirmDialog(this,
 	                "Bạn có chắc chắn muốn thoát?", "Xác nhận thoát",
@@ -519,7 +497,7 @@ public class PhongChieuUI extends JPanel implements ActionListener {
 	            }
 	        }
 	    } else if (o.equals(btnTimKiem)) {
-	        searchPhongChieu();
+	        timPhongChieu();
 	    }
 		
 	}

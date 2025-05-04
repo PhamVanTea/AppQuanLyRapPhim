@@ -36,7 +36,7 @@ public class TheLoaiDAO {
     }
     
  // Kiểm tra xem tên thể loại đã tồn tại (không phân biệt chữ hoa/thường)
-    public static boolean daTonTaiTen(String tenTheLoai) {
+    public static boolean kiemTraTonTaiTen(String tenTheLoai) {
         String sql = "SELECT COUNT(*) FROM TheLoai WHERE LOWER(tenTheLoai) = LOWER(?)";
         try (Connection conn = DbConnect.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -104,7 +104,7 @@ public class TheLoaiDAO {
     }
 
     // Phương thức tìm kiếm thể loại theo tên
-    public static List<TheLoai> searchByName(String keyword) {
+    public static List<TheLoai> timTheoTen(String keyword) {
         List<TheLoai> list = new ArrayList<>();	//tạo ds rỗng để lưu kq
         String sql = "SELECT * FROM TheLoai WHERE tenTheLoai LIKE ?"; // " ? " tham số truyền vào keyword
         try (Connection conn = DbConnect.getConnection();

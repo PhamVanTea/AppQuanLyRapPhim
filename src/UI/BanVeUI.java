@@ -290,7 +290,7 @@ public class BanVeUI extends JPanel implements ActionListener {
     // Xử lý sự kiện khi nhấn vào nút ghế
     private void handleSeatButtonClick(JButton clickedButton) {
         String maGhe = clickedButton.getActionCommand();
-        GheNgoi ghe = GheNgoiDAO.findById(maGhe);
+        GheNgoi ghe = GheNgoiDAO.timTheoMaGhe(maGhe);
 
         if (ghe != null) {
             if (selectedSeatsList.contains(ghe)) {
@@ -419,7 +419,7 @@ public class BanVeUI extends JPanel implements ActionListener {
 
                 if (selectedSuatChieu != null && selectedSuatChieu.getPhongChieu() != null) {
                     String maPhong = selectedSuatChieu.getPhongChieu().getMaPhong();
-                    List<GheNgoi> allSeatsInRoom = GheNgoiDAO.searchByPhongChieu(maPhong);
+                    List<GheNgoi> allSeatsInRoom = GheNgoiDAO.timTheoMaPhongChieu(maPhong);
                     List<Ve> bookedTicketsForShowtime = VeDAO.findBySuatChieuId(selectedSuatChieu.getMaSuatChieu());
 
                     Set<String> bookedSeatIds = new HashSet<>();
