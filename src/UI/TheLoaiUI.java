@@ -427,6 +427,10 @@ public class TheLoaiUI extends JPanel implements ActionListener {
 			throw new RuntimeException("Tên thể loại không được để trống.");
 //			return;
 		}
+		if (!ten.matches("^[A-Za-zÀ-ỹ0-9]+(\\s[A-Za-zÀ-ỹ0-9]+)*$")) {
+			showValidationError("Tên thể loại chỉ được chứa chữ cái (có dấu), số và khoảng trắng giữa các từ.", txtTenTheLoai);
+			throw new RuntimeException("Lỗi: Tên thể loại không hợp lệ!");
+		}
 		
 		//Mô tả có thể để trống
 //		if (moTa.isEmpty()) {
